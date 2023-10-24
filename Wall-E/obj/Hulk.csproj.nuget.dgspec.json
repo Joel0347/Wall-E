@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E.csproj": {}
+    "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Hulk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E.csproj": {
+    "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Hulk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E.csproj",
-        "projectName": "Wall-E",
-        "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E.csproj",
+        "projectUniqueName": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Hulk.csproj",
+        "projectName": "Hulk",
+        "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Hulk.csproj",
         "packagesPath": "C:\\Users\\joela\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\obj\\",
         "projectStyle": "PackageReference",
