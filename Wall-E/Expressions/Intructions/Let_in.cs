@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace Hulk;
+namespace WallE;
 
 // Clase que evalúa las instrucciones 'let-in'
 public class Let_in 
@@ -47,7 +47,7 @@ public class Let_in
         // Se revisa que no haya nada inválido delante de la instrucción
         if (s[..(index_let + 1)].Trim() != "") {
             string tempS = s[..(index_let + 1)].Trim();
-            string[] keys = {"in", "else"};
+            string[] keys = {"if", "in", "else", "elif", "then"};
             
             if (!keys.Any(Regex.Replace(tempS, @"[^_""ñÑA-Za-z0-9]", " ").EndsWith) &&
                 !symbols.Any(s[..(index_let + 1)].Trim().EndsWith)) 
@@ -57,8 +57,9 @@ public class Let_in
                 return "";
             }
         }
-    
-        int stop = m.IndexOf(";", index_in + 1);
+
+        int tempStop = m.IndexOf(";", index_in + 1);
+        int stop =  tempStop != -1? tempStop : s.Length;
 
         // Se obtiene el índice donde termina la instrucción 'let-in'
         if (m[index_let] == '(') {
@@ -219,6 +220,30 @@ public class Let_in
             body = s[(index_in + 2)..stop];
         }
 
+        m = String.StringsToSpaces(body);
+        m = Regex.Replace(m, @"[^_""ñÑ,A-Za-z0-9]", " ");
+
+        if (m.Contains(" then ")) {
+            int then_index = m.LastIndexOf(" then ");
+            int if_index = m[..then_index].LastIndexOf(" if ");
+           
+            while (if_index != -1) {
+                then_index = m.IndexOf(" then ", if_index);
+                m = m.Remove(if_index, then_index + 5 - if_index);
+                string spaces = new(' ', then_index + 5 - if_index);
+                m = m.Insert(if_index, spaces);
+                then_index = m.LastIndexOf(" then ");
+                if (then_index == -1) break;
+                if_index = m[..then_index].LastIndexOf(" if ");
+            }
+           
+            if (m.Contains(" then ") && Conditional.IsConditional(s[..(index_in + 2 + m.IndexOf(" then "))])) {
+                stop = index_in + 2 + m.IndexOf(" then ");
+            }
+
+            body = s[(index_in + 2)..stop];
+        }
+
         // Se realizan más revisiones a las variables
         if (!vars.All(x => Check.VariableRevision(x))) return "";
 
@@ -234,6 +259,6 @@ public class Let_in
 
         /* En caso de estar dentro de una función no se retorna la evaluación de la expresión,
         sino solamente la expresión con el cuerpo sustituido */
-        return  function? s : Principal.Analize(s);
+        return  s;//function? s : Principal.Analize(s);
     }
 }

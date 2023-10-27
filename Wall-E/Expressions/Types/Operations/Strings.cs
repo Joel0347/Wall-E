@@ -1,4 +1,4 @@
-namespace Hulk;
+namespace WallE;
 
 // Clase donde se evalúa el operador de concatenación '@'
 public class Concatenate : String 

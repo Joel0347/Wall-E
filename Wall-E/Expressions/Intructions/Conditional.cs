@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-namespace Hulk;
+namespace WallE;
 
 // Clase que evalúa las condicionales (if-else)
 public class Conditional       
@@ -33,10 +33,10 @@ public class Conditional
         if (!conditionalData.Item1) return "";
 
         // Se copian los datos en sus variables correspondientes
-        string eval = Main.Parse(conditionalData.Item2);
-        if (eval == "") return "";
+        string conditionEval = Main.Parse(conditionalData.Item2);
+        if (conditionEval == "") return "";
         
-        bool condition = bool.Parse(eval);
+        string condition = conditionEval;
         string body_true = conditionalData.Item3;
         string body_false = conditionalData.Item4;
         int index_if = conditionalData.Item5;
@@ -44,17 +44,17 @@ public class Conditional
         s = conditionalData.Item7;
 
         // Se decide cuál es el cuerpo que retorna la condicional
-        string body = condition? body_true : body_false;
+        string body = condition == "1"? body_true : body_false;
 
         if(string.IsNullOrEmpty(body)) return "";
 
         // Se evalúa el cuerpo y se inserta en la expresión global
         s = s.Remove(index_if + 1, stop - index_if - 1);
         body = Main.Parse(body);
-        s = s.Insert(index_if + 1, $"{body}");
+        s = s.Insert(index_if + 1, $" {body} ");
 
         // Se evalúa la expresión global con el valor de retorno de la condicional
-        return Principal.Analize(s);
+        return s;
     }
 
     // Método para obtener los datos de la condicional
@@ -82,7 +82,7 @@ public class Conditional
         // Se revisa que no haya nada inválido antes del 'if'
         if (s[..(index_if + 1)].Trim() != "") {
             string tempS = s[..(index_if + 1)].Trim();
-            string[] keys = {"in", "else"};
+            string[] keys = {"if", "then", "in", "else", "elif"};
             
             if (!keys.Any(Regex.Replace(tempS, @"[^_""ñÑA-Za-z0-9]", " ").EndsWith) &&
                 !symbols.Any(s[..(index_if + 1)].Trim().EndsWith)) 
@@ -112,14 +112,6 @@ public class Conditional
             string temp = m;
             (int, string) tuple = Extra.GetClosingParenthesis(index_if, indexParenthesis_1, temp);
             stop = tuple.Item2.IndexOf(")", tuple.Item1);
-        }
-
-        /* Condición por si la condicional es interna de una declaración de función y tiene una variable
-        como condición */
-        if (vars is null || !vars.Contains(condition)) {
-            condition = Principal.Analize(condition);
-            if(booleanValues.Contains(condition)) condition = "false";
-            else condition = "true";
         }
 
         // Se determina si la condicional tiene como segundo cuerpo un 'elif' o 'else's
@@ -183,9 +175,15 @@ public class Conditional
             body_false = s[start..stop];
         }
 
-        // 4. Análogo a lo anterior se detiene el 'stop'd
+        // 4. Análogo a lo anterior se detiene el 'stop'
         if (m.Contains(" elif ") && (start == (index_2 + 4))) {
             stop = start + String.StringsToSpaces(m).LastIndexOf(" elif ");
+            body_false = s[start..stop];
+        }
+
+         // 4. Análogo a lo anterior se detiene el 'stop'
+        if (m.Contains(" then ") && (start == (index_2 + 4))) {
+            stop = start + String.StringsToSpaces(m).LastIndexOf(" then ");
             body_false = s[start..stop];
         }
 

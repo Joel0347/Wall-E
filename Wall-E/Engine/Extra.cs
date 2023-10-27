@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-namespace Hulk;
+namespace WallE;
 
 // Clase que contiene métodos necesarios en el funcionamiento del intérprete
 public static class Extra
@@ -301,6 +301,20 @@ public static class Extra
     }
 
     #endregion
+
+    // #region Let_In Methods
+    // public static string LetInToSpaces(string s) {
+    //     s = s.Insert(0, " ");
+    //     s = s.Insert(s.Length, " ");
+
+    //     string n = String.StringsToSpaces(s);
+    //     string m = Regex.Replace(n, @"[^_""ñÑA-Za-z0-9]", " ");
+
+    //     int let_count = n.Split(" let ").Length + 1;
+    //     int in_count = n.Split(" in ").Length + 1;
+    // }
+
+    // #endregion
 
     // Métodos para resetear el programa
     #region Reset Program

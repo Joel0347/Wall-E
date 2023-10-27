@@ -1,4 +1,4 @@
-namespace Hulk;
+namespace WallE;
 
 // Clase que evalúa los tipos específicos (bool, string, number)
 public class Types

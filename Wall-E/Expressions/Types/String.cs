@@ -1,6 +1,6 @@
 using System.Data;
 using System.Text.RegularExpressions;
-namespace Hulk;
+namespace WallE;
 
 // Clase que evalúa los strings
 public class String : Types

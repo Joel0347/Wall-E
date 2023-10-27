@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
 
-namespace Hulk;
+namespace WallE;
 
 // Clase que evalúa los tipos numéricos
 public class Numeric : Types
@@ -24,8 +24,8 @@ public class Numeric : Types
     public static string Eval(string s)
     {
         string temp = (s.StartsWith("+") || s.StartsWith("-"))? s[1..] : s;
-        if (Wall_E.Data.constantValues.ContainsKey(temp.Trim())) {
-            s = Wall_E.Data.constantValues[temp.Trim()];
+        if (Data.constantValues.ContainsKey(temp.Trim())) {
+            s = Data.constantValues[temp.Trim()];
         }
 
         s = Extra.SpacesBetweenTokens(s);

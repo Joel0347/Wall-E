@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
-namespace Hulk;
+namespace WallE;
 
 // Clase que chequea la gran mayoría de los errores
-public class Check 
+public class Check
 {
    public static List<string> funcVars = new();
    public static List<string> vars = new();
@@ -45,7 +45,7 @@ public class Check
         if (Conditional.IsConditional(s) || Let_in.IsLet_in(s)) return true;
 
         // A este punto si llega un llamado 'function' será un error
-        if (FuncInstruction.IsFunctionInstruction(s)) {
+        if (FuncInstruction.IsFunctionInstruction(s).Item1) {
             string m = "Invalid 'function' instruction";
             SetErrors("SYNTAX", m);
             return false;
@@ -61,6 +61,8 @@ public class Check
             "~", "`", "#", "$", "{", "}", "[", "]", 
             "\\", ":", ";", "'", "?"
         };
+
+        string[] scapes = {"if", "else", "then", "and", "or", "not"};
 
         List<string> tokens = new();
 
@@ -149,7 +151,7 @@ public class Check
                 tokens[i + 1].Any(char.IsPunctuation))) {
 
                 if (simpleSymbols.Contains(tokens[i + 1]) && tokens[i + 1] != "(") continue;
-                if (tokens[i + 1] == "else") continue;
+                if (scapes.Contains(tokens[i + 1])) continue;
 
                 invalid = true;
                 if(tokens[i + 1].Contains("\"")) tokens[i + 1] = "string";
@@ -172,7 +174,8 @@ public class Check
             if (tokens[i].Any(char.IsLetterOrDigit) && tokens[i + 1].Any(char.IsLetterOrDigit) ) { 
         
                 if (simpleSymbols.Contains(tokens[i]) || simpleSymbols.Contains(tokens[i + 1])) continue;
-                if (tokens[i] == "else" || tokens[i + 1] == "else") continue;
+                if (scapes.Contains(tokens[i + 1])) continue;
+                if (scapes.Contains(tokens[i])) continue;
 
                 invalid = true;
                 mssg = $"'{tokens[i + 1]}' after '{tokens[i]}'";
@@ -225,27 +228,23 @@ public class Check
             // Miembro derecho vacío o izquierdo no vacío
             if (!string.IsNullOrWhiteSpace(leftSide) || string.IsNullOrWhiteSpace(rightSide)) {
                 string message = (!string.IsNullOrWhiteSpace(leftSide))? "can not have a left" : "needs a right";
-                string mssg = $"Operator '!' {message} member";
+                string mssg = $"Operator 'not' {message} member";
                 SetErrors("SEMANTIC", mssg);
                 return false;
             }
 
-            if (Wall_E.Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Wall_E.Data.constantValues[rightSide.Trim()];
+            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Data.constantValues[rightSide.Trim()];
             }
 
             // Se revisa el MD y además se verifica que sea bool
             if(!SemanticCheck(rightSide)) return false;
-            
-            if (!Boolean.IsBoolean(rightSide)) {
-                string mssg = $"Operator '{symbol}' can not be used before '{Types.GetType(rightSide)}'";
-                SetErrors("SEMANTIC", mssg);
-                return false;
-            }
         }
 
         // Si alguno de los miembros es vacío
         else if (string.IsNullOrWhiteSpace(leftSide) || string.IsNullOrWhiteSpace(rightSide)) {
+            if (symbol == "&") symbol = "and";
+            else if (symbol == "|") symbol = "or";
             string mssg = $"Missing expression in '{symbol}' operation";
             SetErrors("SEMANTIC", mssg);
             Console.ForegroundColor = ConsoleColor.Red;
@@ -255,12 +254,12 @@ public class Check
         // Revisión de '@'
         if (symbol == "@") {
 
-            if (Wall_E.Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Wall_E.Data.constantValues[leftSide.Trim()];
+            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Data.constantValues[leftSide.Trim()];
             }
 
-            if (Wall_E.Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Wall_E.Data.constantValues[rightSide.Trim()];
+            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Data.constantValues[rightSide.Trim()];
             }
 
             // Se revisa que ambos miembros sean correctos y al menos uno sea string
@@ -277,12 +276,12 @@ public class Check
         // Revisión de tokens con miembros numéricos
         else if (numerics.Contains(symbol)) {
 
-            if (Wall_E.Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Wall_E.Data.constantValues[leftSide.Trim()];
+            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Data.constantValues[leftSide.Trim()];
             }
 
-            if (Wall_E.Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Wall_E.Data.constantValues[rightSide.Trim()];
+            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Data.constantValues[rightSide.Trim()];
             }
 
             // Se revisan ambos miembros
@@ -307,35 +306,29 @@ public class Check
         //  Revisión de tokens con miembros booleanos
         else if (booleans1.Contains(symbol)) {
 
-            if (Wall_E.Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Wall_E.Data.constantValues[leftSide.Trim()];
+            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Data.constantValues[leftSide.Trim()];
             }
 
-            if (Wall_E.Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Wall_E.Data.constantValues[rightSide.Trim()];
+            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Data.constantValues[rightSide.Trim()];
             }
 
             // Se revisan ambos miembros
             if (!SemanticCheck(leftSide) || !SemanticCheck(rightSide)) {
                 return false;
             }
-            
-            // Se revisa que ambos sean booleanos
-            if (!Boolean.IsBoolean(leftSide) || !Boolean.IsBoolean(rightSide)) {
-                SetErrors(Types.GetType(leftSide), Types.GetType(rightSide), symbol);
-                return false;
-            }    
         }
 
         // Revisión de '==' y '!='
         else if (booleans2.Contains(symbol)) {
 
-            if (Wall_E.Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Wall_E.Data.constantValues[leftSide.Trim()];
+            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Data.constantValues[leftSide.Trim()];
             }
 
-            if (Wall_E.Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Wall_E.Data.constantValues[rightSide.Trim()];
+            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Data.constantValues[rightSide.Trim()];
             }
 
             // Se revisan ambos miembros
@@ -364,7 +357,8 @@ public class Check
 
         // Se normaliza la expresión quitando los strings y espacios innceserarios
         s = Extra.SpacesBeforeParenthesis(s);
-        s = String.StringsToSpaces(s);
+        s = $" {String.StringsToSpaces(s)} ";
+        string m =  Regex.Replace(s, @"[^_""ñÑA-Za-z0-9]", " ");
         
         variables ??= new();
         if (vars.Count == 0) vars.AddRange(variables);
@@ -610,11 +604,11 @@ public class Check
         }
 
         // Explicación análoga a la anterior
-        if (s.Contains('&') || s.Contains('|')) {
-            int index = Math.Max(s.LastIndexOf("&"), s.LastIndexOf("|"));
-            char operation = s[index];
-            string left = Extra.SpacesBeforeParenthesis(s[..index]);
-            string right = Extra.SpacesBeforeParenthesis(s[(index + 1)..]);
+        if (m.Contains(" and ") || s.Contains(" or ")) {
+            int index = Math.Max(m.LastIndexOf(" and "), m.LastIndexOf(" or "));
+            char operation = (s[(index + 1)..(index + 4)] == "and")? '&' : '|';
+            string left = Extra.SpacesBeforeParenthesis(s[..(index + 1)]);
+            string right = Extra.SpacesBeforeParenthesis(s[(index + 4)..]);
             left = (left == "~")? "true" : left;
             right = (right == "~")? "true" : right;
 
@@ -944,10 +938,10 @@ public class Check
             return TokensCheck(left, right, operation.ToString());
         }
 
-        if (s.Contains('!')) {
-            int index = s.LastIndexOf("!");
-            string left = Extra.SpacesBeforeParenthesis(s[..index]);
-            string right = Extra.SpacesBeforeParenthesis(s[(index + 1)..]);
+        if (m.Contains(" not ")) {
+            int index = m.LastIndexOf(" not ");
+            string left = Extra.SpacesBeforeParenthesis(s[..(index + 1)]);
+            string right = Extra.SpacesBeforeParenthesis(s[(index + 4)..]);
             left = (left == "~")? "true" : left;
             right = (right == "~")? "true" : right;
 
@@ -1325,9 +1319,9 @@ public class Check
         }
         
         // Se revisa que el cuerpo comience con '=>'
-        if (!body.StartsWith("=>")) {
+        if (!body.StartsWith("=")) {
             Console.ForegroundColor = ConsoleColor.Red;
-            SetErrors("SYNTAX", $"'=>' was expected after '{funcName}({argument})'");
+            SetErrors("SYNTAX", $"'=' was expected after '{funcName}({argument})'");
             return false;
         }
 
@@ -1416,8 +1410,8 @@ public class Check
         }
         
         // Se revisa que el cuerpo no sea vacío
-        if (body == "=>") {
-            SetErrors("SYNTAX", $"Missing expression after '=>' in '{funcName}' declaration");
+        if (body == "=") {
+            SetErrors("SYNTAX", $"Missing expression after '=' in '{funcName}' declaration");
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
                 Cache.InputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
@@ -1427,14 +1421,14 @@ public class Check
         }
 
         // Si el cuerpo es un 'let-in' se resuelve internamente
-        if (Let_in.IsLet_in(body[2..])) {
+        while (Let_in.IsLet_in(body[1..])) {
             funcVars = vars;
             Cache.keyWords.AddRange(vars);
-            body = $"=>{Let_in.Eval(body[2..], true)}";
+            body = $"={Let_in.Eval(body[1..], true)}";
             Cache.keyWords.RemoveRange(Cache.keyWords.Count - vars.Count, vars.Count);
             funcVars = new();
 
-            if (body == "=>") {
+            if (body == "=") {
                 if(!Cache.defaultFunctions.Contains(funcName + "(")) {
                     Cache.InputType.Remove(funcName + "(");
                     Cache.returnType.Remove(funcName + "(");
@@ -1445,7 +1439,7 @@ public class Check
         }
 
         // Se revisa la sintaxis del cuerpo
-        if (!BodyRevision(body[2..], vars, funcName)) {
+        if (!BodyRevision(body[1..], vars, funcName)) {
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
                 if (Cache.recursionFunc.Contains(funcName + "(")) {
                     Cache.recursionFunc.Remove(funcName + "(");
@@ -1463,7 +1457,7 @@ public class Check
         Check.funcName = "";
 
         // Se revisa la semántica del cuerpo
-        if (!SemanticCheck(body[2..], funcName, vars)) {
+        if (!SemanticCheck(body[1..], funcName, vars)) {
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
                 if (Cache.recursionFunc.Contains(funcName + "(")) {
                     Cache.recursionFunc.Remove(funcName + "(");
@@ -1502,8 +1496,8 @@ public class Check
         string n = body.Replace(" ", "");
 
         // Se revisa que no haya una 'keyword' sin contexto
-        if (Cache.keyWords.GetRange(0, 13).Contains(n) && n.ToLower() != "true" &&  
-            n.ToLower() != "false" && n != "PI" &&  n != "E") 
+        if (Cache.keyWords.GetRange(0, 12).Contains(n) && n != "and" &&  
+            n != "or" && n != "not" && n != "PI" &&  n != "E") 
         {
             string mssg = $"Invalid token '{n}'";
             SetErrors("SYNTAX", mssg);
@@ -1630,7 +1624,7 @@ public class Check
             return false;
         }
 
-        if (Wall_E.Data.constantsType.ContainsKey(var)) {
+        if (Data.constantsType.ContainsKey(var)) {
             string mssg = $"'{var}' is already defined as a constant";
             SetErrors("SYNTAX", mssg);
             return false;
@@ -1685,19 +1679,21 @@ public class Check
         
         return true;
     }
-   
+
     #endregion
 
     // Métodos para setear Errores
     #region Set Errors
-    
+
     // Ambos métodos imprimen el error en rojo y actualizan el campo 'error'
-    public static void SetErrors(string typeError, string mssg) {
+    public static void SetErrors(string typeError, string mssg)
+    {
         if (Main.error) return;
 
         Main.error = true;
         Console.ForegroundColor = ConsoleColor.DarkRed;
         Console.WriteLine($"!{typeError} ERROR: {mssg}");
+        //Input.Text = $"!{typeError} ERROR: {mssg}";
     }
 
     public static void SetErrors(string left, string right, string op) {

@@ -1,4 +1,4 @@
-namespace Hulk;
+namespace WallE;
 
 // Clases que evalúan los tokens numéricos
 public class Add : Numeric 

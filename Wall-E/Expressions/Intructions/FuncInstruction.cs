@@ -1,19 +1,49 @@
 using System.Reflection.Metadata.Ecma335;
+using System.Text.RegularExpressions;
 
-namespace Hulk;
+namespace WallE;
 
 /* Clase que evalúa la instrucción 'function' y las funciones ya creadas
 mediante esta instrucción */
 public class FuncInstruction
 {
     // Método que determina si la entrada es una instrucción 'function'
-    public static bool IsFunctionInstruction(string s) {
-        return s.StartsWith("function ");
+    public static (bool, int) IsFunctionInstruction(string s) {
+        string n = String.StringsToSpaces(s);
+        int equalIndex = n.IndexOf("=");
+
+        while (equalIndex != -1) {
+            if(n[equalIndex + 1] != '=') {
+                if(n[..equalIndex].Contains("(")) return (true, equalIndex);
+            }
+
+            equalIndex = n.IndexOf("=", equalIndex + 1);
+        }
+
+        return (false, -1);
     }
 
     // Método que crea las funciones
-    public static string CreateFunction(string s) {
+    public static string CreateFunction(string s, int equalIndex) {
         int count = 0;
+        // s = $" {s} ";
+        // string n = String.StringsToSpaces(s);
+        // string m = Regex.Replace(n, @"[^_""ñÑA-Za-z0-9]", " ");
+        // n = n.Replace("let;", "let");
+
+        // int initial = Math.Max(n[..equalIndex].LastIndexOf(";") + 1, 0);
+        // int semicolonIndex = n.IndexOf(";", equalIndex);
+        // int let_index = m[semicolonIndex..].IndexOf(" let ");
+        // int in_index = m[semicolonIndex..].IndexOf(" in ");
+
+        // while (in_index < let_index) {
+        //     semicolonIndex = n.IndexOf(";", semicolonIndex + 1);
+        //     let_index = m[semicolonIndex..].IndexOf(" let ");
+        //     in_index = m[semicolonIndex..].IndexOf(" in ");
+        // }
+
+        // int stop = Math.Min(semicolonIndex, s.Length);
+        // s = s[initial..stop];
 
         while (s.StartsWith("(")) {
             s = s.Remove(0, 1); 
@@ -21,15 +51,15 @@ public class FuncInstruction
         }
         
         s = s.Remove(s.Length - count);
-        s = Extra.SpacesBeforeParenthesis(s)[8..];
-        string n = s.Replace(" ", "");
+        // s = Extra.SpacesBeforeParenthesis(s)[8..];
+        // string n = s.Replace(" ", "");
 
-        if (n.StartsWith('(') || (!char.IsDigit(n[0]) && !char.IsLetter(n[0]) && n[0] != '_') ||
-            Check.ParenthesisRevision(s) != 0) 
-        {
-            Check.SetErrors("SYNTAX", $"Invalid 'function' instruction");
-            return "";
-        }
+        // if (n.StartsWith('(') || (!char.IsDigit(n[0]) && !char.IsLetter(n[0]) && n[0] != '_') ||
+        //     Check.ParenthesisRevision(s) != 0) 
+        // {
+        //     Check.SetErrors("SYNTAX", $"Invalid 'function' instruction");
+        //     return "";
+        // }
 
         // Se revisa que no haya errores
         if (!Check.FunctionRevision(s)) return "";
@@ -37,7 +67,7 @@ public class FuncInstruction
         // Se almacenan los datos de la función
         string funcName = Extra.SpacesBeforeParenthesis(s[..(s.IndexOf("(") + 1)]);
         string argument = s.Substring(s.IndexOf("(") + 1, s.IndexOf(")") - s.IndexOf("(") - 1);
-        string body = Extra.SpacesBeforeParenthesis(s[(s.IndexOf("=>") + 2)..]);
+        string body = Extra.SpacesBeforeParenthesis(s[(s.IndexOf("=") + 1)..]);
         List<string> vars = argument.Split(",").ToList();
 
         for (int i = 0; i < vars.Count; i++) 
@@ -51,7 +81,9 @@ public class FuncInstruction
             Cache.returnType[funcName] = Types.GetFunctionType(body, vars);
         }
 
-        return "";     
+        // s = s.Remove(initial, stop - initial);
+
+        return s;     
     }
 
     // Método que evalúa las funciones creadas mediante 'function'

@@ -1,4 +1,4 @@
-namespace Hulk;
+namespace WallE;
 
 // Clase que almacena los datos guardados (cache)
 public static class Cache
@@ -33,8 +33,8 @@ public static class Cache
 
     // Palabras reservadas por el intérprete
     public static List<string> keyWords = new() {
-        "True", "False", "true", "false", "function", "if", 
-        "elif", "else", "let", "in", "PI", "E", "print"
+        "and", "not", "or", "if", "elif", "else", 
+        "then", "let", "in", "PI", "E", "print"
     };
 
     // Todas las funciones (Creadas por el usuario y las definidas por defecto)

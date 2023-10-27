@@ -1,7 +1,7 @@
-namespace Wall_E;
+namespace WallE;
 
 // Clase para evaluar el tipo punto.
-public class Point
+public class Points
 {
     // Método que determina si es un punto.
     public static bool IsPoint(string s) {
@@ -11,8 +11,9 @@ public class Point
 
     // Método que le provee el tipo 'point' a la constante.
     public static void Eval(string s) {
-        s = s[5..];
+        s = s[5..s.IndexOf(";")];
         s = s.Trim();
         Data.constantsType[s] = "point";
+        Data.constantValues[s] = s;
     }
 }

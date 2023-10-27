@@ -1,4 +1,4 @@
-namespace Wall_E;
+namespace WallE;
 
 public class Circle 
 {

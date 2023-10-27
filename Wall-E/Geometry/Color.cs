@@ -1,6 +1,6 @@
-namespace Wall_E;
+namespace WallE;
 
-public class Color
+public class Colors
 {
     public static bool IsColor(string s) {
         s = s.Trim();

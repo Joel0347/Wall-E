@@ -1,4 +1,4 @@
-namespace Hulk;
+namespace WallE;
 
 public class Constants
 {
@@ -16,8 +16,8 @@ public class Constants
         string value = Main.Parse(s[(equalIndex + 1)..]);
 
         if (Check.VariableRevision(constant)) {
-            Wall_E.Data.constantsType[constant] = Types.GetType(value);
-            Wall_E.Data.constantValues[constant] = value;
+            Data.constantsType[constant] = Types.GetType(value);
+            Data.constantValues[constant] = value;
         }
     }
 }

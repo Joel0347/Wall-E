@@ -1,12 +1,12 @@
 using System.Drawing;
 
-namespace Wall_E;
+namespace WallE;
 
-public class Main 
+public class Main_Grapher 
 {
     public static void Parsing(string s) {
-        if (Point.IsPoint(s)) {
-            Point.Eval(s);
+        if (Points.IsPoint(s)) {
+            Points.Eval(s);
             return;
         }
 
@@ -30,8 +30,8 @@ public class Main
             return;
         }
 
-        if (Color.IsColor(s)) {
-            Point.Eval(s);
+        if (Colors.IsColor(s)) {
+            Points.Eval(s);
             return;
         }
     }

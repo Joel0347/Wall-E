@@ -1,6 +1,4 @@
-using Wall_E;
-
-namespace Hulk;
+namespace WallE;
 
 // Clase principal del intérprete
 public static class Main

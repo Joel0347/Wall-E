@@ -1,4 +1,4 @@
-namespace Hulk;
+namespace WallE;
 
 // Clase que evalúa las funciones
 public class Function 
