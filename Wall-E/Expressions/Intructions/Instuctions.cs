@@ -8,11 +8,7 @@ public class Instructions
     // Si es una instrucción se evalúa
     public static bool IsInstruction(string s) {
 
-        (bool, int) IsFunctionDeclaration = FuncInstruction.IsFunctionInstruction(s);
-        if (IsFunctionDeclaration.Item1) {
-            result = FuncInstruction.CreateFunction(s, IsFunctionDeclaration.Item2);
-        }
-        
+        if (FuncInstruction.IsFunctionInstruction(s))  result = FuncInstruction.CreateFunction(s);
         else if (Let_in.IsLet_in(s)) result = Let_in.Eval(s);
         else if (Conditional.IsConditional(s)) result = Conditional.Eval(s);
         else return false;

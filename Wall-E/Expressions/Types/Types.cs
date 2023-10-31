@@ -27,7 +27,7 @@ public class Types
         if (string.IsNullOrWhiteSpace(s)) return "";
         
         if (String.IsString(s)) return "string";
-        if (Boolean.IsBoolean(s)) return "boolean";
+        if (Boolean.IsBoolean(s)) return "number";
         if (Numeric.IsNumeric(s)) return "number";
         if (Function.IsFunction(s)) return Cache.returnType[s[..(s.IndexOf("(") + 1)]];
 

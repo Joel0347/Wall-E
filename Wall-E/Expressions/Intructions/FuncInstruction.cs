@@ -8,42 +8,25 @@ mediante esta instrucción */
 public class FuncInstruction
 {
     // Método que determina si la entrada es una instrucción 'function'
-    public static (bool, int) IsFunctionInstruction(string s) {
+    public static bool IsFunctionInstruction(string s) {
         string n = String.StringsToSpaces(s);
         int equalIndex = n.IndexOf("=");
 
         while (equalIndex != -1) {
             if(n[equalIndex + 1] != '=') {
-                if(n[..equalIndex].Contains("(")) return (true, equalIndex);
+                string leftSide = n[..equalIndex].Trim();
+                if(leftSide.EndsWith(")")) return true;
             }
 
             equalIndex = n.IndexOf("=", equalIndex + 1);
         }
 
-        return (false, -1);
+        return false;
     }
 
     // Método que crea las funciones
-    public static string CreateFunction(string s, int equalIndex) {
+    public static string CreateFunction(string s) {
         int count = 0;
-        // s = $" {s} ";
-        // string n = String.StringsToSpaces(s);
-        // string m = Regex.Replace(n, @"[^_""ñÑA-Za-z0-9]", " ");
-        // n = n.Replace("let;", "let");
-
-        // int initial = Math.Max(n[..equalIndex].LastIndexOf(";") + 1, 0);
-        // int semicolonIndex = n.IndexOf(";", equalIndex);
-        // int let_index = m[semicolonIndex..].IndexOf(" let ");
-        // int in_index = m[semicolonIndex..].IndexOf(" in ");
-
-        // while (in_index < let_index) {
-        //     semicolonIndex = n.IndexOf(";", semicolonIndex + 1);
-        //     let_index = m[semicolonIndex..].IndexOf(" let ");
-        //     in_index = m[semicolonIndex..].IndexOf(" in ");
-        // }
-
-        // int stop = Math.Min(semicolonIndex, s.Length);
-        // s = s[initial..stop];
 
         while (s.StartsWith("(")) {
             s = s.Remove(0, 1); 
@@ -51,15 +34,14 @@ public class FuncInstruction
         }
         
         s = s.Remove(s.Length - count);
-        // s = Extra.SpacesBeforeParenthesis(s)[8..];
-        // string n = s.Replace(" ", "");
+        string n = s.Replace(" ", "");
 
-        // if (n.StartsWith('(') || (!char.IsDigit(n[0]) && !char.IsLetter(n[0]) && n[0] != '_') ||
-        //     Check.ParenthesisRevision(s) != 0) 
-        // {
-        //     Check.SetErrors("SYNTAX", $"Invalid 'function' instruction");
-        //     return "";
-        // }
+        if (n.StartsWith('(') || (!char.IsDigit(n[0]) && !char.IsLetter(n[0]) && n[0] != '_') ||
+            Check.ParenthesisRevision(s) != 0) 
+        {
+            Check.SetErrors("SYNTAX", $"Invalid 'function' declaration");
+            return "";
+        }
 
         // Se revisa que no haya errores
         if (!Check.FunctionRevision(s)) return "";

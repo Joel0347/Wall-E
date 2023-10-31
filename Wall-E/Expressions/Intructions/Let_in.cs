@@ -12,6 +12,7 @@ public class Let_in
         ")", ">", "<", "&","|","!", ",", "=", " ", ";"
     };
 
+
     // Método que determina si la instrucción es 'let-in'
     public static bool IsLet_in(string s) {
         s = String.StringsToSpaces(s);
@@ -23,10 +24,10 @@ public class Let_in
     public static string Eval(string s, bool function = false) {  
         s = s.Insert(0, " ");
         s = s.Insert(s.Length, " ");
-    
+       
         List<string> allVars = new();
         List<string> allValues = new();
-        
+
         // Se ignoran los strings en 'm' y todo lo que no sea letra, número o '_' en 'n'
         string m = String.StringsToSpaces(s);
         string n = Regex.Replace(m, @"[^_""ñÑA-Za-z0-9]", " ");
@@ -42,12 +43,12 @@ public class Let_in
         m = String.StringsToSpaces(s);
         n = Regex.Replace(m, @"[^_""ñÑA-Za-z0-9]", " ");
 
-        int index_in = n.IndexOf(" in ", index_let) + 1;
+        int index_in = n.IndexOf(" In ", index_let) + 1;
 
         // Se revisa que no haya nada inválido delante de la instrucción
         if (s[..(index_let + 1)].Trim() != "") {
             string tempS = s[..(index_let + 1)].Trim();
-            string[] keys = {"if", "in", "else", "elif", "then"};
+            string[] keys = {"if", "In", "else", "elif", "then"};
             
             if (!keys.Any(Regex.Replace(tempS, @"[^_""ñÑA-Za-z0-9]", " ").EndsWith) &&
                 !symbols.Any(s[..(index_let + 1)].Trim().EndsWith)) 
@@ -69,11 +70,11 @@ public class Let_in
             stop = tuple.Item2.IndexOf(")", tuple.Item1);
         }
 
-        // Si falta el token 'in' se detecta el error
-        if (index_in == 0 || stop < index_in) {
-            Check.SetErrors("SYNTAX", "Missing 'in' in 'let-in' expression");
-            return "";
-        }
+        // // Si falta el token 'in' se detecta el error
+        // if (index_in == 0 || stop < index_in) {
+        //     Check.SetErrors("SYNTAX", "Missing 'in' in 'let-in' expression");
+        //     return "";
+        // }
 
         // Se guarda el argumento completo
         string argument = m[(index_let + 4)..index_in];
@@ -168,7 +169,7 @@ public class Let_in
 
         /* 2. En caso de haber otro 'in' implica que la instrucción es un valor asignado 
         a una de las variables de un 'let-in' más externo. Por tanto se ajusta el 'stop' */
-        if (m.Contains(" in ")) {
+        if (m.Contains(" In ")) {
             stop = index_in + 2 + m.IndexOf(" in ");
             body = s[(index_in + 2)..stop];
         }
@@ -259,6 +260,6 @@ public class Let_in
 
         /* En caso de estar dentro de una función no se retorna la evaluación de la expresión,
         sino solamente la expresión con el cuerpo sustituido */
-        return  s;//function? s : Principal.Analize(s);
+        return  function? s : Main.Parse(s);
     }
 }

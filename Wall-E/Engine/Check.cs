@@ -45,7 +45,7 @@ public class Check
         if (Conditional.IsConditional(s) || Let_in.IsLet_in(s)) return true;
 
         // A este punto si llega un llamado 'function' será un error
-        if (FuncInstruction.IsFunctionInstruction(s).Item1) {
+        if (FuncInstruction.IsFunctionInstruction(s)) {
             string m = "Invalid 'function' instruction";
             SetErrors("SYNTAX", m);
             return false;
@@ -356,7 +356,7 @@ public class Check
         if(!Extra.SlashRevision(s)) return false;
 
         // Se normaliza la expresión quitando los strings y espacios innceserarios
-        s = Extra.SpacesBeforeParenthesis(s);
+    
         s = $" {String.StringsToSpaces(s)} ";
         string m =  Regex.Replace(s, @"[^_""ñÑA-Za-z0-9]", " ");
         
@@ -399,7 +399,7 @@ public class Check
         
         // Se definen los valores por defecto de cada tipo
         Dictionary<string, string> defaultValues = new() {
-            ["string"] = "\" \"", ["number"] = "2", ["boolean"] = "true", 
+            ["string"] = "\" \"", ["number"] = "2", ["boolean"] = "0", 
             ["undefined expression"] = "", ["all"] = "~", [""] = ""
         };
 
@@ -516,7 +516,8 @@ public class Check
         }
 
         //Se analizan los operadores
-
+        s = Extra.SpacesBeforeParenthesis(s);
+        
         if (s.Contains('@')) {
             int index = s.LastIndexOf('@');
             string left = Extra.SpacesBeforeParenthesis(s[..index]);
@@ -609,77 +610,77 @@ public class Check
             char operation = (s[(index + 1)..(index + 4)] == "and")? '&' : '|';
             string left = Extra.SpacesBeforeParenthesis(s[..(index + 1)]);
             string right = Extra.SpacesBeforeParenthesis(s[(index + 4)..]);
-            left = (left == "~")? "true" : left;
-            right = (right == "~")? "true" : right;
+            left = (left == "~")? "0" : left;
+            right = (right == "~")? "0" : right;
 
             if (vars.Contains(left)) {
 
-                if (left == funcName) { 
-                    if (Cache.returnType[funcName + "("] == "all") {
-                        Cache.returnType[funcName + "("] = "boolean";
-                    }
+                // if (left == funcName) { 
+                //     if (Cache.returnType[funcName + "("] == "all") {
+                //         Cache.returnType[funcName + "("] = "number";
+                //     }
 
-                    else if (Cache.returnType[funcName + "("] != "boolean") {
-                        string type = Cache.returnType[funcName + "("];
-                        string mssg = $"'{left}' can not return 'boolean' and '{type}'";
-                        SetErrors("SEMANTIC", mssg);
-                        return false;
-                    }
+                //     else if (Cache.returnType[funcName + "("] != "boolean") {
+                //         string type = Cache.returnType[funcName + "("];
+                //         string mssg = $"'{left}' can not return 'boolean' and '{type}'";
+                //         SetErrors("SEMANTIC", mssg);
+                //         return false;
+                //     }
 
-                    left = defaultValues["boolean"]; 
-                }
+                //     left = defaultValues["boolean"]; 
+                // }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                // else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(left)] = "boolean";
-                    left = defaultValues["boolean"]; 
-                }
+                //     Cache.InputType[funcName + "("][vars.IndexOf(left)] = "boolean";
+                //     left = defaultValues["boolean"]; 
+                // }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "boolean") {
-                    left = defaultValues["boolean"];    
-                }
+                // else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "boolean") {
+                //     left = defaultValues["boolean"];    
+                // }
 
-                else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
-                    string mssg = $"Variable '{left}' can not be 'boolean' and '{type}'";
-                    SetErrors("SEMANTIC", mssg);
-                    return false;
-                }      
+                // else {
+                //     string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                //     string mssg = $"Variable '{left}' can not be 'boolean' and '{type}'";
+                //     SetErrors("SEMANTIC", mssg);
+                //     return false;
+                // }      
             }
 
             if (vars.Contains(right)) {
 
-                if (right == funcName) { 
-                    if (Cache.returnType[funcName + "("] == "all") {
-                        Cache.returnType[funcName + "("] = "boolean";
-                    }
+                // if (right == funcName) { 
+                //     if (Cache.returnType[funcName + "("] == "all") {
+                //         Cache.returnType[funcName + "("] = "boolean";
+                //     }
 
-                    else if (Cache.returnType[funcName + "("] != "boolean") {
-                        string type = Cache.returnType[funcName + "("];
-                        string mssg = $"'{right}' can not return 'boolean' and '{type}'";
-                        SetErrors("SEMANTIC", mssg);
-                        return false;
-                    }
+                //     else if (Cache.returnType[funcName + "("] != "boolean") {
+                //         string type = Cache.returnType[funcName + "("];
+                //         string mssg = $"'{right}' can not return 'boolean' and '{type}'";
+                //         SetErrors("SEMANTIC", mssg);
+                //         return false;
+                //     }
 
-                    right = defaultValues["boolean"]; 
-                }
+                //     right = defaultValues["boolean"]; 
+                // }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                // else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = "boolean";
-                    right = defaultValues["boolean"]; 
-                }
+                //     Cache.InputType[funcName + "("][vars.IndexOf(right)] = "boolean";
+                //     right = defaultValues["boolean"]; 
+                // }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "boolean") {
-                    right = defaultValues["boolean"];    
-                }
+                // else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "boolean") {
+                //     right = defaultValues["boolean"];    
+                // }
 
-                else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
-                    string mssg = $"Variable '{right}' can not be 'boolean' and '{type}'";
-                    SetErrors("SEMANTIC", mssg);
-                    return false;
-                }
+                // else {
+                //     string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                //     string mssg = $"Variable '{right}' can not be 'boolean' and '{type}'";
+                //     SetErrors("SEMANTIC", mssg);
+                //     return false;
+                // }
             }
 
             if (left.Contains("==") || left.Contains("!=")) (left, right) = (right, left);
@@ -942,44 +943,44 @@ public class Check
             int index = m.LastIndexOf(" not ");
             string left = Extra.SpacesBeforeParenthesis(s[..(index + 1)]);
             string right = Extra.SpacesBeforeParenthesis(s[(index + 4)..]);
-            left = (left == "~")? "true" : left;
-            right = (right == "~")? "true" : right;
+            left = (left == "~")? "0" : left;
+            right = (right == "~")? "0" : right;
 
             // Misma explicación, pero solo para un miembro
-            if (vars.Contains(right)) {
+            // if (vars.Contains(right)) {
 
-                if (right == funcName) { 
-                    if (Cache.returnType[funcName + "("] == "all") {
-                        Cache.returnType[funcName + "("] = "boolean";
-                    }
+            //     if (right == funcName) { 
+            //         if (Cache.returnType[funcName + "("] == "all") {
+            //             Cache.returnType[funcName + "("] = "boolean";
+            //         }
 
-                    else if (Cache.returnType[funcName + "("] != "boolean") {
-                        string type = Cache.returnType[funcName + "("];
-                        string mssg = $"'{right}' can not return 'boolean' and '{type}'";
-                        SetErrors("SEMANTIC", mssg);
-                        return false;
-                    }
+            //         else if (Cache.returnType[funcName + "("] != "boolean") {
+            //             string type = Cache.returnType[funcName + "("];
+            //             string mssg = $"'{right}' can not return 'boolean' and '{type}'";
+            //             SetErrors("SEMANTIC", mssg);
+            //             return false;
+            //         }
 
-                    right = defaultValues["boolean"]; 
-                }
+            //         right = defaultValues["boolean"]; 
+            //     }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+            //     else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = "boolean";
-                    right = defaultValues["boolean"]; 
-                }
+            //         Cache.InputType[funcName + "("][vars.IndexOf(right)] = "boolean";
+            //         right = defaultValues["boolean"]; 
+            //     }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "boolean") {
-                    right = defaultValues["boolean"];    
-                }
+            //     else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "boolean") {
+            //         right = defaultValues["boolean"];    
+            //     }
 
-                else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
-                    string mssg = $"Variable '{right}' can not be 'boolean' and '{type}'";
-                    SetErrors("SEMANTIC", mssg);
-                    return false;
-                }
-            }
+            //     else {
+            //         string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+            //         string mssg = $"Variable '{right}' can not be 'boolean' and '{type}'";
+            //         SetErrors("SEMANTIC", mssg);
+            //         return false;
+            //     }
+            // }
 
             return TokensCheck(left, right, "!"); 
         }
@@ -1289,11 +1290,11 @@ public class Check
         string n = String.StringsToSpaces(s);
 
         // Se revisa que contenga al menos un '('
-        if (!n.Contains("(")) {
-            Console.ForegroundColor = ConsoleColor.Red;
-            SetErrors("SYNTAX", "'(' was expected after the 'function name'");
-            return false;
-        }
+        // if (!n.Contains("(")) {
+        //     Console.ForegroundColor = ConsoleColor.Red;
+        //     SetErrors("SYNTAX", "'(' was expected after the 'function name'");
+        //     return false;
+        // }
 
         string funcName = Extra.SpacesBeforeParenthesis(s[..n.IndexOf("(")]);
 
@@ -1321,7 +1322,7 @@ public class Check
         // Se revisa que el cuerpo comience con '=>'
         if (!body.StartsWith("=")) {
             Console.ForegroundColor = ConsoleColor.Red;
-            SetErrors("SYNTAX", $"'=' was expected after '{funcName}({argument})'");
+            SetErrors("SYNTAX", $"Token '=' was expected after '{funcName}({argument})'");
             return false;
         }
 
@@ -1512,8 +1513,9 @@ public class Check
         foreach (string word in words)
         {
             if (!vars.Contains(word) && word != funcName && !Cache.defaultFunctions.Contains(word + "(") 
-                && !Cache.keyWords.Contains(word) && !Numeric.IsNumber(word) && !String.IsString(word)) {
-                
+                && !Cache.keyWords.Contains(word) && !Numeric.IsNumber(word) && !String.IsString(word) && 
+                !Data.constantValues.ContainsKey(word))
+            { 
                 if (!wrongVars.Contains($"'{word}'")) wrongVars.Add($"'{word}'");
             }
 
@@ -1624,7 +1626,7 @@ public class Check
             return false;
         }
 
-        if (Data.constantsType.ContainsKey(var)) {
+        if (Data.constantValues.ContainsKey(var)) {
             string mssg = $"'{var}' is already defined as a constant";
             SetErrors("SYNTAX", mssg);
             return false;
@@ -1669,7 +1671,7 @@ public class Check
             if (!BodyRevision(values[i], newVars)) return false;
 
             string evaluation = FuncInstruction.Eval(values[i], newVars, newValues);
-            string temp = function? evaluation : Main.Parse(evaluation);
+            string temp =  function? evaluation : Main.Parse(evaluation);
 
             if (temp == "") return false;
 

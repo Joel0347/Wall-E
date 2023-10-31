@@ -82,7 +82,7 @@ public class Conditional
         // Se revisa que no haya nada inválido antes del 'if'
         if (s[..(index_if + 1)].Trim() != "") {
             string tempS = s[..(index_if + 1)].Trim();
-            string[] keys = {"if", "then", "in", "else", "elif"};
+            string[] keys = {"if", "then", "In", "else", "elif"};
             
             if (!keys.Any(Regex.Replace(tempS, @"[^_""ñÑA-Za-z0-9]", " ").EndsWith) &&
                 !symbols.Any(s[..(index_if + 1)].Trim().EndsWith)) 
@@ -94,7 +94,7 @@ public class Conditional
         }
 
         // La variable 'stop' determina hasta dónde llega la condicional
-        int stop = m.IndexOf(";", index_then + 1);
+        int stop = s.Length;
 
         // Si la condicional no tiene 'then' se detecta el error
         if (index_then == 0 || stop < index_then) {
@@ -185,6 +185,12 @@ public class Conditional
         if (m.Contains(" then ") && (start == (index_2 + 4))) {
             stop = start + String.StringsToSpaces(m).LastIndexOf(" then ");
             body_false = s[start..stop];
+        }
+
+        // Se revisa que devuelvan un mismo tipo
+        if(Types.GetType(body_true) != Types.GetType(body_false)) {
+            Check.SetErrors("SEMANTIC", "Conditional must return the same type of value in each body");
+            return defaultOutput;
         }
 
         // Se revisan los cuerpos sintáctica y semánticamente
