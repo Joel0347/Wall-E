@@ -233,8 +233,8 @@ public class Check
                 return false;
             }
 
-            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Data.constantValues[rightSide.Trim()];
+            if (Cache.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Cache.constantValues[rightSide.Trim()];
             }
 
             // Se revisa el MD y además se verifica que sea bool
@@ -254,12 +254,12 @@ public class Check
         // Revisión de '@'
         if (symbol == "@") {
 
-            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Data.constantValues[leftSide.Trim()];
+            if (Cache.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Cache.constantValues[leftSide.Trim()];
             }
 
-            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Data.constantValues[rightSide.Trim()];
+            if (Cache.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Cache.constantValues[rightSide.Trim()];
             }
 
             // Se revisa que ambos miembros sean correctos y al menos uno sea string
@@ -268,7 +268,17 @@ public class Check
             }
 
             if (Types.GetType(leftSide) != "string" && Types.GetType(rightSide) != "string") {
-                SetErrors(Types.GetType(leftSide), Types.GetType(rightSide), symbol);
+                string leftType  = Types.GetType(leftSide);
+                string rightType = Types.GetType(rightSide);
+                
+                if (leftType == "undefined expression" || rightType == "undefined expression") {
+                    leftSide = (leftType == "undefined expression")? leftSide : rightSide;
+
+                    SetErrors("SYNTAX", $"'{leftSide.Trim()}' is not defined");
+                }
+
+                else SetErrors(leftType, rightType, symbol);
+                
                 return false;
             }
         }
@@ -276,12 +286,12 @@ public class Check
         // Revisión de tokens con miembros numéricos
         else if (numerics.Contains(symbol)) {
 
-            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Data.constantValues[leftSide.Trim()];
+            if (Cache.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Cache.constantValues[leftSide.Trim()];
             }
 
-            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Data.constantValues[rightSide.Trim()];
+            if (Cache.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Cache.constantValues[rightSide.Trim()];
             }
 
             // Se revisan ambos miembros
@@ -291,7 +301,17 @@ public class Check
 
             // Se revisa que ambos miembros sean numéricos
             if (!Numeric.IsNumeric(leftSide) || !Numeric.IsNumeric(rightSide)) {
-                SetErrors(Types.GetType(leftSide), Types.GetType(rightSide), symbol);
+                string leftType  = Types.GetType(leftSide);
+                string rightType = Types.GetType(rightSide);
+
+                if (leftType == "undefined expression" || rightType == "undefined expression") {
+                    leftSide = (leftType == "undefined expression")? leftSide : rightSide;
+
+                    SetErrors("SYNTAX", $"'{leftSide.Trim()}' is not defined");
+                }
+
+                else SetErrors(leftType, rightType, symbol);
+
                 return false;
             }
 
@@ -306,12 +326,12 @@ public class Check
         //  Revisión de tokens con miembros booleanos
         else if (booleans1.Contains(symbol)) {
 
-            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Data.constantValues[leftSide.Trim()];
+            if (Cache.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Cache.constantValues[leftSide.Trim()];
             }
 
-            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Data.constantValues[rightSide.Trim()];
+            if (Cache.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Cache.constantValues[rightSide.Trim()];
             }
 
             // Se revisan ambos miembros
@@ -323,12 +343,12 @@ public class Check
         // Revisión de '==' y '!='
         else if (booleans2.Contains(symbol)) {
 
-            if (Data.constantValues.ContainsKey(leftSide.Trim())) {
-                leftSide = Data.constantValues[leftSide.Trim()];
+            if (Cache.constantValues.ContainsKey(leftSide.Trim())) {
+                leftSide = Cache.constantValues[leftSide.Trim()];
             }
 
-            if (Data.constantValues.ContainsKey(rightSide.Trim())) {
-                rightSide = Data.constantValues[rightSide.Trim()];
+            if (Cache.constantValues.ContainsKey(rightSide.Trim())) {
+                rightSide = Cache.constantValues[rightSide.Trim()];
             }
 
             // Se revisan ambos miembros
@@ -341,7 +361,14 @@ public class Check
 
             // Se revisa que sean del mismo tipo
             if (leftType != rightType) {
-                SetErrors(leftType, rightType, symbol);
+                if (leftType == "undefined expression" || rightType == "undefined expression") {
+                    leftSide = (leftType == "undefined expression")? leftSide : rightSide;
+
+                    SetErrors("SYNTAX", $"'{leftSide.Trim()}' is not defined");
+                }
+
+                else SetErrors(leftType, rightType, symbol);
+
                 return false;
             }     
         }
@@ -369,7 +396,7 @@ public class Check
             (bool, string, string, string, int, int, string) conditionalData = Conditional.GetData(s, vars);
             if (!conditionalData.Item1) return false;
             if (vars.Contains(conditionalData.Item2)) {
-                Cache.InputType[funcName + "("][vars.IndexOf(conditionalData.Item2)] = "boolean";
+                Cache.inputType[funcName + "("][vars.IndexOf(conditionalData.Item2)] = "boolean";
             }
 
             string body_true = conditionalData.Item3;
@@ -421,7 +448,7 @@ public class Check
                 if (data.Item1) {
                     
                     // 1. Que la función exista
-                    if (!Cache.InputType.ContainsKey(f)) {
+                    if (!Cache.inputType.ContainsKey(f)) {
                         string mssg = $"'{f[..^1]}' is not a valid function";
                         if (double.TryParse(f[..^1], out _)) mssg += " name";
                         SetErrors("SEMANTIC", mssg);
@@ -429,7 +456,7 @@ public class Check
                     }
 
                     // 2. Que tenga la misma cantidad de argumentos
-                    if (!NumberOfArgs(Cache.InputType[f], args.ToList(), f)) return false;
+                    if (!NumberOfArgs(Cache.inputType[f], args.ToList(), f)) return false;
 
                     /* En caso de funciones recursivas, en el cuerpo se eliminan los paréntesis
                     y los argumentos, dejando solo el nombre, para que lo tome como una variable más
@@ -441,7 +468,7 @@ public class Check
                         Array.Resize(ref args, args.Length + 1);
                         args[^1] = funcName;
                         vars.Add(funcName);
-                        Cache.InputType[funcName + "("].Add("all");
+                        Cache.inputType[funcName + "("].Add("all");
                     }
                     
                     for (int i = 0; i < args.Length; i++) {
@@ -459,15 +486,15 @@ public class Check
                         }
 
                         // Se intercambian las variables de los argumentos por su valor por defecto
-                        if (vars.Contains(args[i].Trim()) && Cache.InputType[f][i] != "all") {
+                        if (vars.Contains(args[i].Trim()) && Cache.inputType[f][i] != "all") {
                             int pos = vars.IndexOf(args[i].Trim());
-                            Cache.InputType[funcName + "("][pos] = Cache.InputType[f][i];
-                            args[i] = defaultValues[Cache.InputType[f][i]];
+                            Cache.inputType[funcName + "("][pos] = Cache.inputType[f][i];
+                            args[i] = defaultValues[Cache.inputType[f][i]];
                         }
 
                         /* Si la función en la posición del argumento en cuestión recibe cualquier
                         tipo, pues se sustituye la variable por un '2' sin perder generalidad */
-                        else if (Cache.InputType[f][i] == "all") {
+                        else if (Cache.inputType[f][i] == "all") {
                             args[i] = "2";
                         } 
                     }
@@ -477,7 +504,7 @@ public class Check
                     // Se vuelve a restablecer las variables en las funciones recursivas
                     if (funcName + "(" == f) {
                         Array.Resize(ref args, args.Length - 1);
-                        Cache.InputType[funcName + "("].RemoveAt(Cache.InputType[funcName + "("].Count - 1); 
+                        Cache.inputType[funcName + "("].RemoveAt(Cache.inputType[funcName + "("].Count - 1); 
                     }
 
                     // 3. Se analiza cada uno de los argumentos
@@ -548,16 +575,16 @@ public class Check
                 /* Si la variable puede ser de cualquier tipo, entonces se especifica, según 
                 el operador, que a partir de ahora tomará cierto tipo. Y luego se sustituye
                 por el valor por defecto del tipo */
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
                     left = defaultValues["string"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "string") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "string") {
                     left = defaultValues["string"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                     string mssg = $"Variable '{left}' can not be 'string' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -582,16 +609,16 @@ public class Check
                     right = defaultValues["string"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
                     right = defaultValues["string"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "string") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "string") {
                     right = defaultValues["string"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                     string mssg = $"Varibale '{right}' can not be 'string' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -695,10 +722,10 @@ public class Check
             string right = Extra.SpacesBeforeParenthesis(s[(index + 2)..]);
             
             string typeR = vars.Contains(right)? 
-                Cache.InputType[funcName + "("][vars.IndexOf(right)] : Types.GetType(right);
+                Cache.inputType[funcName + "("][vars.IndexOf(right)] : Types.GetType(right);
 
             string typeL = vars.Contains(left)? 
-                Cache.InputType[funcName + "("][vars.IndexOf(left)] : Types.GetType(left);
+                Cache.inputType[funcName + "("][vars.IndexOf(left)] : Types.GetType(left);
 
             /* En este caso las variables tomarán el tipo del miembro opuesto. En caso de ser ambos
             variables entonces si son de tipos definidos pero distintos dará error en la revisión, y
@@ -720,14 +747,14 @@ public class Check
                     left = defaultValues[typeR]; 
                 }
 
-                if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(left)] = typeR;
+                    Cache.inputType[funcName + "("][vars.IndexOf(left)] = typeR;
                     typeL = typeR;
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] != typeR) {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] != typeR) {
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                     string mssg = $"Variable '{left}' can not be '{typeR}' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;    
@@ -753,14 +780,14 @@ public class Check
                     right = defaultValues[typeL]; 
                 }
 
-                if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = typeL;
+                    Cache.inputType[funcName + "("][vars.IndexOf(right)] = typeL;
                     typeR = typeL;
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] != typeL) {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] != typeL) {
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                     string mssg = $"Variable '{right}' can not be '{typeL}' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;    
@@ -801,18 +828,18 @@ public class Check
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(left)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(left)] = "number";
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "number") {
                     left = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                     string mssg = $"Variable '{left}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -836,18 +863,18 @@ public class Check
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(right)] = "number";
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "number") {
                     right = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                     string mssg = $"Variable '{right}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -883,18 +910,18 @@ public class Check
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(left)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(left)] = "number";
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "number") {
                     left = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                     string mssg = $"Variable '{left}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -918,18 +945,18 @@ public class Check
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(right)] = "number";
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "number") {
                     right = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                     string mssg = $"Variable '{right}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -1032,18 +1059,18 @@ public class Check
                         left = defaultValues["number"]; 
                     }
 
-                    else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                    else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                        Cache.InputType[funcName + "("][vars.IndexOf(left)] = "number";
+                        Cache.inputType[funcName + "("][vars.IndexOf(left)] = "number";
                         left = defaultValues["number"]; 
                     }
 
-                    else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "number") {
+                    else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "number") {
                         left = defaultValues["number"];    
                     }
 
                     else {
-                        string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                        string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                         string mssg = $"Variable '{left}' can not be 'number' and '{type}'";
                         SetErrors("SEMANTIC", mssg);
                         return false;
@@ -1067,18 +1094,18 @@ public class Check
                         right = defaultValues["number"]; 
                     }
 
-                    else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                    else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                        Cache.InputType[funcName + "("][vars.IndexOf(right)] = "number";
+                        Cache.inputType[funcName + "("][vars.IndexOf(right)] = "number";
                         right = defaultValues["number"]; 
                     }
 
-                    else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "number") {
+                    else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "number") {
                         right = defaultValues["number"];    
                     }
 
                     else {
-                        string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                        string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                         string mssg = $"Variable '{right}' can not be 'number' and '{type}'";
                         SetErrors("SEMANTIC", mssg);
                         return false;
@@ -1115,18 +1142,18 @@ public class Check
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(left)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(left)] = "number";
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "number") {
                     left = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                     string mssg = $"Variable '{left}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -1150,18 +1177,18 @@ public class Check
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(right)] = "number";
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "number") {
                     right = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                     string mssg = $"Variable '{right}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -1196,18 +1223,18 @@ public class Check
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(left)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(left)] = "number";
                     left = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(left)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(left)] == "number") {
                     left = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(left)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(left)];
                     string mssg = $"Variable '{left}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -1231,18 +1258,18 @@ public class Check
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "all") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "all") {
 
-                    Cache.InputType[funcName + "("][vars.IndexOf(right)] = "number";
+                    Cache.inputType[funcName + "("][vars.IndexOf(right)] = "number";
                     right = defaultValues["number"]; 
                 }
 
-                else if (Cache.InputType[funcName + "("][vars.IndexOf(right)] == "number") {
+                else if (Cache.inputType[funcName + "("][vars.IndexOf(right)] == "number") {
                     right = defaultValues["number"];    
                 }
 
                 else {
-                    string type = Cache.InputType[funcName + "("][vars.IndexOf(right)];
+                    string type = Cache.inputType[funcName + "("][vars.IndexOf(right)];
                     string mssg = $"Variable '{right}' can not be 'number' and '{type}'";
                     SetErrors("SEMANTIC", mssg);
                     return false;
@@ -1341,17 +1368,17 @@ public class Check
         vars.Add(temp);
 
         // Se inicializa en 'all' los tipos de entrada de la función
-        if (!Cache.InputType.ContainsKey(funcName + "(")) {
-            Cache.InputType[funcName + "("] = new();
+        if (!Cache.inputType.ContainsKey(funcName + "(")) {
+            Cache.inputType[funcName + "("] = new();
             Cache.returnType[funcName + "("] = "all";
 
             for (int i = 0; i < vars.Count; i++) {
                 if (string.IsNullOrWhiteSpace(argument)) {
-                    Cache.InputType[funcName + "("].Add("");
+                    Cache.inputType[funcName + "("].Add("");
                     break;
                 }
 
-                Cache.InputType[funcName + "("].Add("all");
+                Cache.inputType[funcName + "("].Add("all");
             }
         } 
 
@@ -1360,7 +1387,7 @@ public class Check
         // Se revisa que el nombre sea correcto
         if (!VariableRevision(funcName, true)) {
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
             
@@ -1371,7 +1398,7 @@ public class Check
         if (vars.Distinct().Count() != vars.Count) {
             SetErrors("SEMANTIC", "One argument is used more than once");
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1382,7 +1409,7 @@ public class Check
         if (vars.Contains(funcName)) {
             SetErrors("SEMANTIC", $"'{funcName}' is the function name. It can not be a variable");
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1393,7 +1420,7 @@ public class Check
         if (argument != "" && vars.Any(string.IsNullOrWhiteSpace)) {
             SetErrors("SEMANTIC", $"One argument is missing in '{funcName}' function");
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1403,7 +1430,7 @@ public class Check
         // Se revisa cada variable
         if (argument != "" && !vars.All(x => VariableRevision(x))) {
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1414,7 +1441,7 @@ public class Check
         if (body == "=") {
             SetErrors("SYNTAX", $"Missing expression after '=' in '{funcName}' declaration");
             if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1431,7 +1458,7 @@ public class Check
 
             if (body == "=") {
                 if(!Cache.defaultFunctions.Contains(funcName + "(")) {
-                    Cache.InputType.Remove(funcName + "(");
+                    Cache.inputType.Remove(funcName + "(");
                     Cache.returnType.Remove(funcName + "(");
                 }
 
@@ -1446,7 +1473,7 @@ public class Check
                     Cache.recursionFunc.Remove(funcName + "(");
                 }
 
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1464,7 +1491,7 @@ public class Check
                     Cache.recursionFunc.Remove(funcName + "(");
                 }
 
-                Cache.InputType.Remove(funcName + "(");
+                Cache.inputType.Remove(funcName + "(");
                 Cache.returnType.Remove(funcName + "(");
             }
 
@@ -1514,7 +1541,7 @@ public class Check
         {
             if (!vars.Contains(word) && word != funcName && !Cache.defaultFunctions.Contains(word + "(") 
                 && !Cache.keyWords.Contains(word) && !Numeric.IsNumber(word) && !String.IsString(word) && 
-                !Data.constantValues.ContainsKey(word))
+                !Cache.constantValues.ContainsKey(word))
             { 
                 if (!wrongVars.Contains($"'{word}'")) wrongVars.Add($"'{word}'");
             }
@@ -1553,11 +1580,11 @@ public class Check
         }
 
         // Se revisa que los argumentos se correspondan con el tipo de entrada de la función
-        if (args.Any(x => Types.GetType(x) != Cache.InputType[f][Array.IndexOf(args, x)] && 
-            Cache.InputType[f][Array.IndexOf(args, x)] != "all")) 
+        if (args.Any(x => Types.GetType(x) != Cache.inputType[f][Array.IndexOf(args, x)] && 
+            Cache.inputType[f][Array.IndexOf(args, x)] != "all")) 
         {
-            string not = args.First(x => Types.GetType(x) != Cache.InputType[f][Array.IndexOf(args, x)]);
-            string type = Cache.InputType[f][Array.IndexOf(args, not)];
+            string not = args.First(x => Types.GetType(x) != Cache.inputType[f][Array.IndexOf(args, x)]);
+            string type = Cache.inputType[f][Array.IndexOf(args, not)];
             not = Types.GetType(not);
             string mssg = $"Function '{f[..^1]}' receives '{type}', not '{not}'";
             SetErrors("SEMANTIC", mssg);
@@ -1626,7 +1653,7 @@ public class Check
             return false;
         }
 
-        if (Data.constantValues.ContainsKey(var)) {
+        if (Cache.constantValues.ContainsKey(var)) {
             string mssg = $"'{var}' is already defined as a constant";
             SetErrors("SYNTAX", mssg);
             return false;
@@ -1695,11 +1722,10 @@ public class Check
         Main.error = true;
         Console.ForegroundColor = ConsoleColor.DarkRed;
         Console.WriteLine($"!{typeError} ERROR: {mssg}");
-        //Input.Text = $"!{typeError} ERROR: {mssg}";
     }
 
     public static void SetErrors(string left, string right, string op) {
-
+        
         if (Main.error) return;
 
         Main.error = true;

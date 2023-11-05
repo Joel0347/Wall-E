@@ -5,7 +5,7 @@ public class Constants
     public static bool IsConstant(string s) {
         string n = String.StringsToSpaces(s);
         int equalIndex = n.IndexOf("=");
-        if(equalIndex != -1 && n[equalIndex + 1] != '=') return true;
+        if(equalIndex != s.Length - 1 && equalIndex != -1 && n[equalIndex + 1] != '=') return true;
         return false;
     }
 
@@ -16,8 +16,8 @@ public class Constants
         string value = Main.Parse(s[(equalIndex + 1)..]);
 
         if (Check.VariableRevision(constant)) {
-            Data.constantsType[constant] = Types.GetType(value);
-            Data.constantValues[constant] = value;
+            Cache.constantsType[constant] = Types.GetType(value);
+            Cache.constantValues[constant] = value;
         }
     }
 }

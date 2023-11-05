@@ -12,9 +12,9 @@ public class Colors
         if (s.StartsWith("color ")) {
             s = s[5..];
             s = s.Trim();
-            Data.color.Add(s);
+            Cache.color.Add(s);
         }
 
-        else Data.color.RemoveAt(Data.color.Count - 1);
+        else Cache.color.RemoveAt(Cache.color.Count - 1);
     }
 }

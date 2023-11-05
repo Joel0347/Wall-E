@@ -24,26 +24,15 @@ public class Let_in
     public static string Eval(string s, bool function = false) {  
         s = s.Insert(0, " ");
         s = s.Insert(s.Length, " ");
-       
-        List<string> allVars = new();
-        List<string> allValues = new();
 
         // Se ignoran los strings en 'm' y todo lo que no sea letra, número o '_' en 'n'
         string m = String.StringsToSpaces(s);
         string n = Regex.Replace(m, @"[^_""ñÑA-Za-z0-9]", " ");
         
         // Se buscan los tokens principales de la expresión
-        int index_let = n.LastIndexOf(" let ");
-        while (s[(index_let + 4)..].Trim().StartsWith(";")) {
-            int semicolonIndex = m.IndexOf(";", index_let + 1);
-            s = s.Remove(semicolonIndex, 1);
-            s = s.Insert(semicolonIndex, " ");
-        }
-
-        m = String.StringsToSpaces(s);
-        n = Regex.Replace(m, @"[^_""ñÑA-Za-z0-9]", " ");
-
-        int index_in = n.IndexOf(" In ", index_let) + 1;
+        int index_let = n.IndexOf(" let ");
+        (int, string) closing_in = Extra.GetClosingExpression(index_let, n.LastIndexOf(" let "), n, " In ", " let ");
+        int index_in = closing_in.Item2.IndexOf(" In ", closing_in.Item1) + 1;
 
         // Se revisa que no haya nada inválido delante de la instrucción
         if (s[..(index_let + 1)].Trim() != "") {
@@ -66,91 +55,50 @@ public class Let_in
         if (m[index_let] == '(') {
             int indexOpen = m.LastIndexOf("(");
             string temp = m;
-            (int, string) tuple = Extra.GetClosingParenthesis(index_let, indexOpen, temp);
+            (int, string) tuple = Extra.GetClosingExpression(index_let, indexOpen, temp);
             stop = tuple.Item2.IndexOf(")", tuple.Item1);
         }
 
-        // // Si falta el token 'in' se detecta el error
-        // if (index_in == 0 || stop < index_in) {
-        //     Check.SetErrors("SYNTAX", "Missing 'in' in 'let-in' expression");
-        //     return "";
-        // }
-
         // Se guarda el argumento completo
-        string argument = m[(index_let + 4)..index_in];
+        string argument = s[(index_let + 4)..index_in];
 
         if (Check.ParenthesisRevision(argument) == -1) {
             Check.SetErrors("SYNTAX", "Invalid token ')' after 'in' in 'let-in' expression");
             return "";
         }
 
+        string argumentWithOutLetIn = Extra.Let_In_To_Spaces(argument);
+
         // Si pasa las revisiones entonces se separan las declaraciones del argumento en una lista
-        int tempIndex = argument.IndexOf(";");
+        int tempIndex = argumentWithOutLetIn.IndexOf(";");
         List<string> declarations = new(); 
 
         while (tempIndex != -1) {
             declarations.Add(argument[..tempIndex]);
             argument = argument[(tempIndex + 1)..];
-            tempIndex = argument.IndexOf(";");
+            argumentWithOutLetIn = argumentWithOutLetIn[(tempIndex + 1)..];
+            tempIndex = argumentWithOutLetIn.IndexOf(";");
         }
 
         declarations.Add(argument);
-
-        List<string> vars = new();
-        List<string> values = new();
         m = m[(index_let + 4)..];
         
-        // Se divide cada declaración en variables y valores(izq. y der. del '=')
-        for (int i = declarations.Count - 1; i >= 0; i--)
+        int recursionFuncLength     = Cache.recursionFunc.Count, 
+            recursionSpeedLength    = Cache.recursionSpeed.Count, 
+            recursionCountLength    = Cache.recursionCount.Count, 
+            functionLength          = Cache.newFunctions.Count, 
+            constantLength          = Cache.constantsType.Count, 
+            colorLength             = Cache.color.Count;
+
+        for (int i = 0; i < declarations.Count; i++)
         {
             // Se realizan algunas revisiones
             if (string.IsNullOrWhiteSpace(declarations[i])) {
                 continue;
             }
 
-            int equal = declarations[i].IndexOf("=");
-
-            if (equal == -1) {                
-                Check.SetErrors("SYNTAX", $"Missing '=' in '{declarations[i].Trim()}' declaration");
-                return "";
-            }
-
-            if (declarations[i][..equal].Contains("(")) {
-                Check.SetErrors("SYNTAX", "Invalid token '(' in constant in 'let-in' expression");
-                return "";
-            }
-
-            // Se obtiene la variable y si no tiene errores se guarda
-            int lengthVar = declarations[i][..equal].Length;
-            int start = m.IndexOf(declarations[i]) + index_let + 4;
-            string var = s.Substring(start, lengthVar);   
-            
-            if (!Check.SyntaxCheck(var)) return "";
-
-            if (string.IsNullOrWhiteSpace(var)) {
-                Check.SetErrors("SEMANTIC", "Missing constant in 'let-in' expression");
-                return "";
-            }
-
-            vars.Add(var.Trim());
-            allVars.Add(var.Trim());
-
-            // Se obtiene el valor y si no tiene errores se guarda
-            int lengthVal = declarations[i][(equal + 1)..].Length;
-            start = m.IndexOf(declarations[i]) + index_let + lengthVar + 5;
-            string val = s.Substring(start, lengthVal);
-
-            if (!Check.SyntaxCheck($"({val})")) return "";
-
-            if (val.Replace(" ","") != "()") {
-                if (string.IsNullOrWhiteSpace(val)) {
-                    string mssg = $"No value was assigned to constant '{var.Trim()}' in 'let-in' expression";
-                    Check.SetErrors("SYNTAX", mssg);
-                }
-
-                values.Add(val);
-                allValues.Add(val);
-            }
+            Main.Parse(declarations[i]);
+            if (Main.error) return "";
         }
 
         string body = s[(index_in + 2)..stop];
@@ -245,18 +193,13 @@ public class Let_in
             body = s[(index_in + 2)..stop];
         }
 
-        // Se realizan más revisiones a las variables
-        if (!vars.All(x => Check.VariableRevision(x))) return "";
-
-        if (n[..index_let].LastIndexOf(" let ") == -1) {
-            if (!Check.NumberOfArgs(vars, values)) return "";
-            if (!Check.Let_in_Check(allVars, allValues, function)) return "";
-            if (!Check.BodyRevision(body, vars)) return "";
-        }
-
         // Finalmente se sustituyen con el mismo método que las funciones definidas mediante 'function'
         s = s.Remove(index_let + 1, stop - index_let - 1);
-        s = s.Insert(index_let + 1, $"({FuncInstruction.Eval(body, vars, values)})");
+        s = s.Insert(index_let + 1, Main.Parse(body));
+        Cache.CacheReset(
+                recursionFuncLength, recursionSpeedLength, recursionCountLength,
+                functionLength, constantLength, colorLength
+            );
 
         /* En caso de estar dentro de una función no se retorna la evaluación de la expresión,
         sino solamente la expresión con el cuerpo sustituido */

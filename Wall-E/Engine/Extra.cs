@@ -40,14 +40,16 @@ public static class Extra
     #region Parenthesis Methods
 
     // Método para obtener el paréntesis que cierra a uno abierto dado
-    public static (int, string) GetClosingParenthesis(int i, int start, string s) {
-         while (i != start) {
-            int indexParenthesis2 = s.IndexOf(")", start);
-            s = s.Remove(start, 1);
-            s = s.Insert(start, " ");
-            s = s.Remove(indexParenthesis2, 1);
-            s = s.Insert(indexParenthesis2, " ");
-            start = s.LastIndexOf("(");
+    public static (int, string) GetClosingExpression(int i, int start, string s, string end = ")", string begin = "(") {
+        int removeCount = (end == ")")? 1 : 2;
+        string spaces = new(' ', removeCount);
+        while (i != start) {
+            int indexEnd = s.IndexOf(end, start);
+            s = s.Remove(start, removeCount);
+            s = s.Insert(start, spaces);
+            s = s.Remove(indexEnd, removeCount);
+            s = s.Insert(indexEnd, spaces);
+            start = s.LastIndexOf(begin);
         }
 
         return (start, s);
@@ -302,26 +304,32 @@ public static class Extra
 
     #endregion
 
-    // #region Let_In Methods
-    // public static string LetInToSpaces(string s) {
-    //     s = s.Insert(0, " ");
-    //     s = s.Insert(s.Length, " ");
 
-    //     string n = String.StringsToSpaces(s);
-    //     string m = Regex.Replace(n, @"[^_""ñÑA-Za-z0-9]", " ");
+    #region Let_In Methods
+    public static string Let_In_To_Spaces(string s) {
 
-    //     int let_count = n.Split(" let ").Length + 1;
-    //     int in_count = n.Split(" in ").Length + 1;
-    // }
+        while(Let_in.IsLet_in(s)) {
+            string m = Regex.Replace(s, @"[^_""ñÑA-Za-z0-9]", " ");
+            int index_let = m.LastIndexOf(" let ");
+            int index_in = m.IndexOf(" In ", index_let);
 
-    // #endregion
+            s = s.Remove(index_let + 1, 1);
+            s = s.Insert(index_let + 1, "\"");
+            s = s.Remove(index_in + 1, 1);
+            s = s.Insert(index_in + 1, "\"");
+            s = String.StringsToSpaces(s);
+        }
+
+        return s;
+    }
+
+    #endregion
 
     // Métodos para resetear el programa
     #region Reset Program
     public static void Reset() {
         Main.error = false;
-        Cache.recursionCount = new();
-        Check.funcVars = new();
+        // Aqui falta lo de cache
         Check.vars = new();
         Check.funcName = "";
         recursion = false;

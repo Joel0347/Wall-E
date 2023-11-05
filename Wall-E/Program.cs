@@ -10,16 +10,16 @@ public class Program
            string[] filePaths = Directory.GetFiles(Path.Join("..", "archivos"));
            string expression = File.ReadAllText(filePaths[0]);
             
-           string result = Principal.Analize(expression);
+           Principal.Analize(expression);
 
-           if (result != "") {
-               if (result.StartsWith("\"")) {
-                   result = String.SlashEval(result);
-                   result = result[(result.IndexOf("\"") + 1)..result.LastIndexOf("\"")];
-               }
+        //    if (result != "") {
+        //        if (result.StartsWith("\"")) {
+        //            result = String.SlashEval(result);
+        //            result = result[(result.IndexOf("\"") + 1)..result.LastIndexOf("\"")];
+        //        }
                 
-               Console.WriteLine(result);
-           }                 
+        //        Console.WriteLine(result);
+        //    }                 
        }
    }
 }

@@ -3,10 +3,6 @@ namespace WallE;
 
 public class Data 
 {
-    public static Dictionary<string, string> constantsType = new();
-    public static List<string> color = new() {"black"};
-    public static Dictionary<string, string> constantValues = new();
-
     public static bool IsDraw(string s)
     {
         s = s.Trim();
@@ -19,6 +15,6 @@ public class Data
         s = s[4..s.IndexOf(";")].Trim();
 
         //Main_Grapher.Parsing(s);
-        return (constantsType[s], constantValues[s]);
+        return (Cache.constantsType[s], Cache.constantValues[s]);
     }
 }

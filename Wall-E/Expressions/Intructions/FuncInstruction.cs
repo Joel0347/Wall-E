@@ -11,9 +11,9 @@ public class FuncInstruction
     public static bool IsFunctionInstruction(string s) {
         string n = String.StringsToSpaces(s);
         int equalIndex = n.IndexOf("=");
-
+        
         while (equalIndex != -1) {
-            if(n[equalIndex + 1] != '=') {
+            if(equalIndex != s.Length - 1 && n[equalIndex + 1] != '=') {
                 string leftSide = n[..equalIndex].Trim();
                 if(leftSide.EndsWith(")")) return true;
             }

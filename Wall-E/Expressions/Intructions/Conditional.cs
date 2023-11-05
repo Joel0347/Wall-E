@@ -44,7 +44,7 @@ public class Conditional
         s = conditionalData.Item7;
 
         // Se decide cuál es el cuerpo que retorna la condicional
-        string body = condition == "1"? body_true : body_false;
+        string body = !booleanValues.Contains(condition)? body_true : body_false;
 
         if(string.IsNullOrEmpty(body)) return "";
 
@@ -54,7 +54,7 @@ public class Conditional
         s = s.Insert(index_if + 1, $" {body} ");
 
         // Se evalúa la expresión global con el valor de retorno de la condicional
-        return s;
+        return Main.Parse(s);
     }
 
     // Método para obtener los datos de la condicional
@@ -110,7 +110,7 @@ public class Conditional
         if (m[index_if] == '(') {
             int indexParenthesis_1 = m.LastIndexOf("(");
             string temp = m;
-            (int, string) tuple = Extra.GetClosingParenthesis(index_if, indexParenthesis_1, temp);
+            (int, string) tuple = Extra.GetClosingExpression(index_if, indexParenthesis_1, temp);
             stop = tuple.Item2.IndexOf(")", tuple.Item1);
         }
 
