@@ -10,6 +10,6 @@ public class Segment
     public static void Eval(string s) {
         s = s[7..];
         s = s.Trim();
-        Data.constantsType[s] = "segment";
+        Cache.constantsType[s] = "segment";
     }
 }

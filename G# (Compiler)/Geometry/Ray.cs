@@ -10,6 +10,6 @@ public class Ray
     public static void Eval(string s) {
         s = s[3..];
         s = s.Trim();
-        Data.constantsType[s] = "ray";
+        Cache.constantsType[s] = "ray";
     }
 }

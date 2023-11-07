@@ -24,8 +24,8 @@ public class Numeric : Types
     public static string Eval(string s)
     {
         string temp = (s.StartsWith("+") || s.StartsWith("-"))? s[1..] : s;
-        if (Data.constantValues.ContainsKey(temp.Trim())) {
-            s = Data.constantValues[temp.Trim()];
+        if (Cache.constantValues.ContainsKey(temp.Trim())) {
+            s = Cache.constantValues[temp.Trim()];
         }
 
         s = Extra.SpacesBetweenTokens(s);

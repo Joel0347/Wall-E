@@ -13,7 +13,7 @@ public class Points
     public static void Eval(string s) {
         s = s[5..s.IndexOf(";")];
         s = s.Trim();
-        Data.constantsType[s] = "point";
-        Data.constantValues[s] = s;
+        Cache.constantsType[s] = "point";
+        Cache.constantValues[s] = s;
     }
 }

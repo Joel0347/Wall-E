@@ -4,6 +4,10 @@ namespace WallE
 {
     public partial class Form1 : Form
     {
+        public static string Mssg { private get; set; }
+        public static string TypeError { private get; set; }
+        public static bool Error { get; set; }
+
         public Form1()
         {
             InitializeComponent();
@@ -13,72 +17,110 @@ namespace WallE
         {
             Graphics graphic = Grapher.CreateGraphics();
             graphic.Clear(Color.White);
-            Color[] colors = 
-            {
-                Color.Blue, Color.Red, Color.Yellow, Color.Green, Color.Cyan, 
-                Color.Magenta, Color.White,  Color.Gray, Color.Black 
-            };
 
-            string input = Input.Text;
-            char[] splits = { '\r', '\n' };
-            string[] mssgs = input.Split(splits, StringSplitOptions.RemoveEmptyEntries);
+            string s = TextBox.Text;
+                   s = s.Replace("\r", " ");
+                   s = s.Replace("\t", " ");
+                   s = $" {s} ";
 
-            for (int i = 0; i < mssgs.Length; i++)
+            string n = String.StringsToSpaces(s);
+            string m = Regex.Replace(n, @"[^_""Ò—A-Za-z0-9]", " ");
+
+            int letIndex = m.LastIndexOf(" let ");
+
+            while (letIndex >= 0)
             {
-                Main_Grapher.Parsing(mssgs[i]);
-                if (Data.IsDraw(mssgs[i]))
+                int skip = n.IndexOf("\n", letIndex);
+                int inIndex = m.IndexOf(" in ", letIndex) + 1;
+
+                if (inIndex == -1)
                 {
-                    (string, string) data = Data.Draw(mssgs[i]);
-                    string type = data.Item1;
+                    Check.SetErrors("SYNTAX", "Missing token 'in' in 'let-in' expression");
+                    return;
+                }
 
-                    if (type == "point")
+                if (skip == -1) skip = s.Length;
+
+                if (inIndex > skip)
+                {
+                    int newSkip = n.IndexOf("\n", skip + 1, inIndex - skip - 1);
+                    while (newSkip >= 0)
                     {
-                        Random random = new();
-                        Brush brush = new SolidBrush(colors[8]);
-                        graphic.FillEllipse(brush, random.Next(400), random.Next(400), 10, 10);  // Para pintar un punto 
+                        s = s.Remove(newSkip, 1);
+                        n = n.Remove(newSkip, 1);
+                        s = s.Insert(newSkip, " ");
+                        n = n.Insert(newSkip, " ");
+                        newSkip = n.IndexOf("\n", skip + 1, inIndex - skip - 1);
+                    }
+
+                    s = s.Remove(skip, 1);
+                    s = s.Insert(skip, " ");
+                    n = n.Remove(skip, 1);
+                    n = n.Insert(skip, " ");
+                }
+
+                s = s.Remove(inIndex, 1);
+                s = s.Insert(inIndex, "I");
+                n = n.Remove(inIndex, 1);
+                n = n.Insert(inIndex, "I");
+                m = Regex.Replace(n, @"[^_""Ò—A-Za-z0-9]", " ");
+                letIndex = m[..letIndex].LastIndexOf(" let ");
+            }
+
+            List<string> instructions = s.Split("\n", StringSplitOptions.TrimEntries).ToList();
+            instructions.RemoveAll(x => x == "");
+
+            for (int i = 0; i < instructions.Count; i++)
+            {
+                Main.GlobalInput(instructions[i]);
+
+                if (Main.error)
+                {
+                    MessageBoxButtons messageBoxButtons = MessageBoxButtons.RetryCancel;
+
+                    DialogResult result = MessageBox.Show(Mssg, $"!!{TypeError} ERROR: ",
+                        messageBoxButtons, MessageBoxIcon.Error);
+
+                    if (result == DialogResult.Retry)
+                    {
+                        graphic.Clear(Color.White);
+                        Input.Clear();
+                        return;
                     }
                 }
             }
 
-
-
-            //Pen pen = new(colors[8]);
-
-            //// Fill rellena las figuras y Dra
-            ////graphic.DrawEllipse(pen, random.Next(200), random.Next(200), random.Next(200), random.Next(200));  // Para pintar un punto 
-
-
-            //Point point1 = new()
+            //Color[] colors = 
             //{
-            //    X = random.Next(500),
-            //    Y = random.Next(500)
+            //    Color.Blue, Color.Red, Color.Yellow, Color.Green, Color.Cyan, 
+            //    Color.Magenta, Color.White,  Color.Gray, Color.Black 
             //};
-            //Point point2 = new()
-            //{
-            //    X = random.Next(500),
-            //    Y = random.Next(500)
-            //};
-            //Point point3 = new()
-            //{
-            //    X = random.Next(500),
-            //    Y = random.Next(500)
-            //};
-            //Point point4 = new()
-            //{
-            //    X = random.Next(500),
-            //    Y = random.Next(500)
-            //};
-            //Point[] points = { point1, point2, point3, point4};
-            //Rectangle rectangle = new(random.Next(500), random.Next(500), random.Next(500), random.Next(500));
 
-            ////graphic.DrawLine(pen, point1, point2);
-            //graphic.FillRectangle(brush, rectangle);
+            //string input = Input.Text;
+            //char[] splits = { '\r', '\n' };
+            //string[] mssgs = input.Split(splits, StringSplitOptions.RemoveEmptyEntries);
 
+            //for (int i = 0; i < mssgs.Length; i++)
+            //{
+            //    Main_Grapher.Parsing(mssgs[i]);
+            //    if (Data.IsDraw(mssgs[i]))
+            //    {
+            //        (string, string) data = Data.Draw(mssgs[i]);
+            //        string type = data.Item1;
+
+            //        if (type == "point")
+            //        {
+            //            Random random = new();
+            //            Brush brush = new SolidBrush(colors[8]);
+            //            graphic.FillEllipse(brush, random.Next(950), random.Next(950), 10, 10);  // Para pintar un punto 
+            //        }
+            //    }
+            //}
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void Clear_Click(object sender, EventArgs e)

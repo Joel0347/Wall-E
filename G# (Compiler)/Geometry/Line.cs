@@ -10,6 +10,6 @@ public class Line
     public static void Eval(string s) {
         s = s[4..];
         s = s.Trim();
-        Data.constantsType[s] = "line";
+        Cache.constantsType[s] = "line";
     }
 }

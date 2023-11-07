@@ -10,6 +10,6 @@ public class Circle
     public static void Eval(string s) {
         s = s[6..];
         s = s.Trim();
-        Data.constantsType[s] = "circle";
+        Cache.constantsType[s] = "circle";
     }
 }

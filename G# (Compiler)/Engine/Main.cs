@@ -51,13 +51,13 @@ public static class Main
     #region Parsing input
     public static string Parse(string s) {
 
-        if (Data.constantValues.ContainsKey(s.Trim())) {
-            s = Data.constantValues[s.Trim()];
+        if (Cache.constantValues.ContainsKey(s.Trim())) {
+            s = Cache.constantValues[s.Trim()];
         }
         
         if (string.IsNullOrWhiteSpace(s)) return "";
 
-        s = s.Trim();
+        s = s.Trim(); 
 
         // Si la expresión es una instrucción se retorna su evaluación
         if (Instructions.IsInstruction(s)) {

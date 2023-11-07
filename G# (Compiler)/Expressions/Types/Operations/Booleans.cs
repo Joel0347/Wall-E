@@ -7,8 +7,8 @@ public class And : Boolean
 
         if (rightSide == "" || leftSide == "") return "";
 
-        result = (bool.Parse(leftSide) && bool.Parse(rightSide)).ToString();
-
+        result = (!defaultValues.Contains(leftSide) && !defaultValues.Contains(rightSide)).ToString();
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -19,8 +19,8 @@ public class Or : Boolean
 
         if (rightSide == "" || leftSide == "") return "";
 
-        result = (bool.Parse(leftSide) || bool.Parse(rightSide)).ToString();
-
+        result = (!defaultValues.Contains(leftSide) || !defaultValues.Contains(rightSide)).ToString();
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -31,8 +31,8 @@ public class Not : Boolean
 
         if (val == "") return "";
 
-        result = (!bool.Parse(val)).ToString();
-
+        result = defaultValues.Contains(val).ToString();
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -44,7 +44,7 @@ public class Equal : Boolean
         if (rightSide == "" || leftSide == "") return "";
         
         result = (leftSide == rightSide).ToString();
-
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -56,7 +56,7 @@ public class NotEqual : Boolean
         if (rightSide == "" || leftSide == "") return "";
         
         result = (leftSide != rightSide).ToString();
-
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -68,7 +68,7 @@ public class GreatThan : Boolean
         if (rightSide == "" || leftSide == "") return "";
 
         result = (double.Parse(leftSide) > double.Parse(rightSide)).ToString();
-
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -80,7 +80,7 @@ public class GreatEqual : Boolean
         if (rightSide == "" || leftSide == "") return "";
 
         result = (double.Parse(leftSide) >= double.Parse(rightSide)).ToString();
-
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -92,7 +92,7 @@ public class LessThan : Boolean
         if (rightSide == "" || leftSide == "") return "";
 
         result = (double.Parse(leftSide) < double.Parse(rightSide)).ToString();
-
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
@@ -104,7 +104,7 @@ public class LessEqual : Boolean
         if (rightSide == "" || leftSide == "") return "";
 
         result = (double.Parse(leftSide) <= double.Parse(rightSide)).ToString();
-
+        result = bool.Parse(result)? "1" : "0";
         return result;
     }
 }
