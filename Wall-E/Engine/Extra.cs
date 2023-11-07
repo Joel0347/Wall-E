@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 namespace WallE;
 
@@ -324,6 +325,29 @@ public static class Extra
     }
 
     #endregion
+
+
+    // Métodos para las secuencias
+    #region Sequence Methods
+    public static string SequenceToSpaces(string s) {
+        s = FunctionsToSpaces(s);
+        string withOutStrings = String.StringsToSpaces(s);
+        int index = withOutStrings.IndexOf("{");
+
+        while(index != -1) {
+            s = s.Insert(index, "\"");
+            withOutStrings = withOutStrings.Insert(index, " ");
+            int closed = withOutStrings.IndexOf("}", index);
+            s = s.Insert(closed + 1, "\"");
+            withOutStrings = String.StringsToSpaces(s);;
+            index = withOutStrings.IndexOf("{");
+        }
+
+        return String.StringsToSpaces(s);
+    }
+
+    #endregion
+
 
     // Métodos para resetear el programa
     #region Reset Program

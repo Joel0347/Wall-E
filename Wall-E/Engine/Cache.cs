@@ -1,7 +1,7 @@
 namespace WallE;
 
 // Clase que almacena los datos guardados (cache)
-public static class Cache
+public class Cache 
 {
     // Funciones recursivas creadas
     public static List<string> recursionFunc = new(); 
@@ -44,7 +44,7 @@ public static class Cache
 
     public static Dictionary<string, string> constantsType = new();
     public static List<string> color = new() {"black"};
-    public static Dictionary<string, string> constantValues = new();
+    public static Dictionary<string, string> constantValues = new();//arreglar
 
     public static void CacheReset(
         int recursionFuncLength, int recursionSpeedLength, 

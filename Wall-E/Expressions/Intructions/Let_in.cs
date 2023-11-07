@@ -62,7 +62,7 @@ public class Let_in
         // Se guarda el argumento completo
         string argument = s[(index_let + 4)..index_in];
 
-        if (Check.ParenthesisRevision(argument) == -1) {
+        if (Check.BalanceRevision(argument, '(') == -1) {
             Check.SetErrors("SYNTAX", "Invalid token ')' after 'in' in 'let-in' expression");
             return "";
         }

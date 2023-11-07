@@ -22,8 +22,15 @@ public static class Main
         }
 
         // Se comprueba que estén balanceados los paréntesis
-        if (Check.ParenthesisRevision(s) != 0)  {
-            string parenthesis = (Check.ParenthesisRevision(s) == 1)? "'('" : "')'";
+        if (Check.BalanceRevision(s, '(') != 0)  {
+            string parenthesis = (Check.BalanceRevision(s, '(') == 1)? "'('" : "')'";
+            Check.SetErrors("SYNTAX", $"Missing {parenthesis} in global expression");
+            return "";
+        }
+
+        // Se comprueba que estén balanceados los corchetes
+        if (Check.BalanceRevision(s, '{') != 0)  {
+            string parenthesis = (Check.BalanceRevision(s, '{') == 1)? "'{'" : "'}'";
             Check.SetErrors("SYNTAX", $"Missing {parenthesis} in global expression");
             return "";
         }

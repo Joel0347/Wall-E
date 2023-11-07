@@ -53,12 +53,12 @@ public class Check
 
         string[] simpleSymbols = {
             "*", "/", "^", "%", "+", "-", "(", ")", 
-            ">", "<", "&","|","!", ",", "@","_", 
+            ">", "<", "&","|","!", ",", "@","_", "{", "}"
         };
 
         string[] doubleSymbols = {">=", "<=", "!=", "=="};
         string[] invalidSymbols = {
-            "~", "`", "#", "$", "{", "}", "[", "]", 
+            "~", "`", "#", "$", "[", "]", 
             "\\", ":", ";", "'", "?"
         };
 
@@ -118,7 +118,7 @@ public class Check
         }
 
         // Si ignorando las funciones aún quedan comas, se lanza el error
-        if (Extra.FunctionsToSpaces(n).Contains(",")) {
+        if (Extra.SequenceToSpaces(n).Contains(",")) {
             SetErrors("LEXICAL", "Invalid token ','");
             return false;
         }
@@ -1284,26 +1284,28 @@ public class Check
     
     #endregion
 
-    // Revisión de paréntesis balanceados
-    #region Parenthesis Checking
+    // Revisión de paréntesis y corchetes balanceados
+    #region Balance Checking
 
-    // Retorna 1 si falta '(', -1 si falta ')', y 0 si están balanceados
-    public static int ParenthesisRevision(string s) {
+    // Retorna 1 si falta '(' / '{', -1 si falta ')' / '}', y 0 si están balanceados
+    public static int BalanceRevision(string s, char character) {
+        char closingChar = (character == '(')? ')' : '}';
         s = String.StringsToSpaces(s);
 
-        static int ParenthesisRevision(string s, int i, int count = 0) {
+        static int ParenthesisRevision(string s, int i, char character, int count = 0) {
+            char closingChar = (character == '(')? ')' : '}';
 
-            if (s[i] == '(') count++;
-            else if (s[i] == ')') count--;
+            if (s[i] == character) count++;
+            else if (s[i] == closingChar) count--;
             
             if (count < 0) return 1;
             if (s.Length - 1 == i) return (count == 0)? 0 : -1;
 
-            return ParenthesisRevision(s, i + 1, count);
+            return ParenthesisRevision(s, i + 1, character, count);
         }
 
-        if (!s.Contains('(') && !s.Contains(')')) return 0;
-        return ParenthesisRevision(s, 0);
+        if (!s.Contains(character) && !s.Contains(closingChar)) return 0;
+        return ParenthesisRevision(s, 0, character);
     }
     
     #endregion

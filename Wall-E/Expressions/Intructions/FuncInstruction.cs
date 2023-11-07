@@ -37,7 +37,7 @@ public class FuncInstruction
         string n = s.Replace(" ", "");
 
         if (n.StartsWith('(') || (!char.IsDigit(n[0]) && !char.IsLetter(n[0]) && n[0] != '_') ||
-            Check.ParenthesisRevision(s) != 0) 
+            Check.BalanceRevision(s, '(') != 0) 
         {
             Check.SetErrors("SYNTAX", $"Invalid 'function' declaration");
             return "";

@@ -130,7 +130,7 @@ public class Conditional
         string body_true = s[start_body..index_2];
 
         // Se chequea que los paréntesis estén balanceados en el cuerpo true
-        if (Check.ParenthesisRevision(body_true) == -1) {
+        if (Check.BalanceRevision(body_true, '(') == -1) {
             Check.SetErrors("SYNTAX", $"Missing ')' in '{body_true.Trim()}'");
             return defaultOutput;
         }
@@ -152,7 +152,7 @@ public class Conditional
 
         /* 1. Exista al menos un paréntesis desbalanceado, en ese caso ahí detenemos el 'stop' (el
         paréntesis que lo abre debe estar antes del 'if', sino habría dado error) */
-        while (Check.ParenthesisRevision(m) == 1) {
+        while (Check.BalanceRevision(m, '(') == 1) {
             stop = start + String.StringsToSpaces(m).LastIndexOf(")");
             body_false = s[start..stop];
             m = body_false;
