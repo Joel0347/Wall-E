@@ -20,15 +20,23 @@ public class Cache
     
     // Tipo de valor de retorno de cada función 
     public static Dictionary<string, string> returnType = new() {
-        ["print("] = "all",    ["cos("] = "number", ["sin(" ] = "number",  ["tan("] = "number", 
-        ["sqrt(" ] = "number", ["log("] = "number", ["rand("] = "number", ["exp("] = "number"
+        ["print(" ]  = "all",    ["cos("     ] = "number",  ["sin(" ] = "number",  ["tan("] = "number", 
+        ["sqrt("  ]  = "number", ["log("     ] = "number",  ["rand("] = "number",  ["exp("] = "number",
+        ["line("  ]  = "line",   ["segment(" ] = "segment", ["ray(" ] = "ray",     ["arc("] = "arc",
+        ["circle("]  = "circle", ["meeasure("] = "measure"
     };
 
     // Tipos de entrada que reciben las funciones
     public static Dictionary<string, List<string>> inputType = new() {
-        ["print("] = new() {"all"},    ["cos(" ] = new() {"number"},  ["sin("] = new() {"number"}, 
-        ["tan("  ] = new() {"number"}, ["sqrt("] = new() {"number"},  ["log("] = new() {"number", "number"}, 
-        ["rand(" ] = new() {""},       ["exp(" ] = new() {"number"}
+        ["print("] = new() {"all"   },    ["cos(" ] = new() {"number"},  ["sin(" ] = new() {"number"          }, 
+        ["tan("  ] = new() {"number"},    ["sqrt("] = new() {"number"},  ["log(" ] = new() {"number", "number"}, 
+        ["rand(" ] = new() {""      },    ["exp(" ] = new() {"number"},  
+        
+        
+        ["line("    ]     = new() {"point", "point"},  ["segment("] = new() {"point", "point"  }, 
+        ["ray("     ]     = new() {"point", "point"},  ["circle(" ] = new() {"point", "measure"}, 
+        ["meeasure("]     = new() {"point", "point"},
+        ["arc("     ]     = new() {"point", "point", "point", "measure"}, 
     };
 
     // Palabras reservadas por el intérprete

@@ -103,6 +103,10 @@ public class Function
             return FuncInstruction.Eval(Cache.newFunctions[f], Cache.funcVars[f], args.ToList());
         }
 
+        if (GeoFunction.IsGeoFunction(f)) {
+            return GeoFunction.Eval(f, args);
+        }
+
         // Si es 'rand' se evalúa aparte
         if (f[..^1] == "rand") {
             Random r = new();

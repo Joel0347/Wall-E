@@ -455,6 +455,10 @@ public class Check
                         return false;
                     }
 
+                    if (GeoFunction.functions.Contains(f)) {
+                        if (!GeoFunction.Revision(f, args)) return false;
+                    }
+
                     // 2. Que tenga la misma cantidad de argumentos
                     if (!NumberOfArgs(Cache.inputType[f], args.ToList(), f)) return false;
 
@@ -508,7 +512,9 @@ public class Check
                     }
 
                     // 3. Se analiza cada uno de los argumentos
-                    if (CheckingArgs(f, parenthesis, args)) {
+                    if (GeoFunction.functions.Contains(f)) continue;
+                    
+                    else if (CheckingArgs(f, parenthesis, args)) {
                         if (!Cache.defaultFunctions.Contains(f)) Cache.newFunctions.Remove(f);
 
                         /* Si la función es correcta se intercambia en la expresión global
