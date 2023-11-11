@@ -1,7 +1,7 @@
 namespace WallE;
 
 // Clase para evaluar el tipo punto.
-public class Points
+public class Points : Draw
 {
     // Método que determina si es un punto.
     public static bool IsPoint(string s) {

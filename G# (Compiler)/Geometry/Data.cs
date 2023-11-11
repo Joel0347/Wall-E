@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 namespace WallE;
 
-public class Data 
+public class abstract Draw 
 {
     public static bool IsDraw(string s)
     {
@@ -9,12 +9,5 @@ public class Data
         return s.StartsWith("draw ");
     }
 
-    public static (string, string) Draw(string s)
-    {
-        s = s.Trim();
-        s = s[4..s.IndexOf(";")].Trim();
-
-        //Main_Grapher.Parsing(s);
-        return (Cache.constantsType[s], Cache.constantValues[s]);
-    }
+    public abstract void Drawing(string[] args, string color = "black");
 }

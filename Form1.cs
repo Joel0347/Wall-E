@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace WallE
 {
@@ -18,7 +19,7 @@ namespace WallE
             Graphics graphic = Grapher.CreateGraphics();
             graphic.Clear(Color.White);
 
-            string s = TextBox.Text;
+            string s = Input.Text;
                    s = s.Replace("\r", " ");
                    s = s.Replace("\t", " ");
                    s = $" {s} ";
@@ -89,12 +90,6 @@ namespace WallE
                     }
                 }
             }
-
-            //Color[] colors = 
-            //{
-            //    Color.Blue, Color.Red, Color.Yellow, Color.Green, Color.Cyan, 
-            //    Color.Magenta, Color.White,  Color.Gray, Color.Black 
-            //};
 
             //string input = Input.Text;
             //char[] splits = { '\r', '\n' };
