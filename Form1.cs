@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace WallE
 {
@@ -18,7 +19,7 @@ namespace WallE
             Graphics graphic = Grapher.CreateGraphics();
             graphic.Clear(Color.White);
 
-            string s = TextBox.Text;
+            string s = Input.Text;
                    s = s.Replace("\r", " ");
                    s = s.Replace("\t", " ");
                    s = $" {s} ";
@@ -72,7 +73,14 @@ namespace WallE
 
             for (int i = 0; i < instructions.Count; i++)
             {
-                Main.GlobalInput(instructions[i]);
+                if (instructions[i].StartsWith("draw "))
+                {
+                    instructions[i] = instructions[i][4..instructions[i].IndexOf(";")].Trim();
+                    Cache.geometryValues[instructions[i]].Drawing(graphic);
+                    continue;
+                }
+
+                Main_Grapher.Parsing(instructions[i]);
 
                 if (Main.error)
                 {
@@ -89,33 +97,6 @@ namespace WallE
                     }
                 }
             }
-
-            //Color[] colors = 
-            //{
-            //    Color.Blue, Color.Red, Color.Yellow, Color.Green, Color.Cyan, 
-            //    Color.Magenta, Color.White,  Color.Gray, Color.Black 
-            //};
-
-            //string input = Input.Text;
-            //char[] splits = { '\r', '\n' };
-            //string[] mssgs = input.Split(splits, StringSplitOptions.RemoveEmptyEntries);
-
-            //for (int i = 0; i < mssgs.Length; i++)
-            //{
-            //    Main_Grapher.Parsing(mssgs[i]);
-            //    if (Data.IsDraw(mssgs[i]))
-            //    {
-            //        (string, string) data = Data.Draw(mssgs[i]);
-            //        string type = data.Item1;
-
-            //        if (type == "point")
-            //        {
-            //            Random random = new();
-            //            Brush brush = new SolidBrush(colors[8]);
-            //            graphic.FillEllipse(brush, random.Next(950), random.Next(950), 10, 10);  // Para pintar un punto 
-            //        }
-            //    }
-            //}
         }
 
         private void Save_Click(object sender, EventArgs e)
