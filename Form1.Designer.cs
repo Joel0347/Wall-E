@@ -28,23 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Grapher = new System.Windows.Forms.PictureBox();
             this.Input = new System.Windows.Forms.TextBox();
             this.Compile = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Grapher)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // Grapher
             // 
             this.Grapher.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Grapher.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Grapher.InitialImage = null;
-            this.Grapher.Location = new System.Drawing.Point(627, 12);
+            this.Grapher.Location = new System.Drawing.Point(627, 65);
             this.Grapher.Name = "Grapher";
-            this.Grapher.Size = new System.Drawing.Size(1227, 964);
+            this.Grapher.Size = new System.Drawing.Size(1227, 911);
             this.Grapher.TabIndex = 0;
             this.Grapher.TabStop = false;
             // 
@@ -106,22 +112,58 @@
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(977, 14);
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(549, 56);
+            this.trackBar1.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Monotype Corsiva", 13.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(892, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(88, 39);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Zoom";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.Color.MidnightBlue;
+            this.label2.Font = new System.Drawing.Font("Monotype Corsiva", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label2.Image = global::WallE.Properties.Resources.OIP__1_;
+            this.label2.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.label2.Location = new System.Drawing.Point(5, 254);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(136, 35);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Code Here:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1866, 1043);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Clear);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.Compile);
             this.Controls.Add(this.Input);
             this.Controls.Add(this.Grapher);
+            this.Controls.Add(this.trackBar1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "GeoWallE";
             ((System.ComponentModel.ISupportInitialize)(this.Grapher)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,5 +177,8 @@
         private Button Save;
         private Button Clear;
         private PictureBox pictureBox1;
+        private TrackBar trackBar1;
+        private Label label1;
+        private Label label2;
     }
 }
