@@ -5,6 +5,12 @@ namespace WallE;
 public class Main_Grapher 
 {
     public static void Parsing(string s) {
+        if (Arc.IsArc(s))
+        {
+            Arc.Eval(s);
+            return;
+        }
+
         if (Points.IsPoint(s)) {
             Points.Eval(s);
             return;

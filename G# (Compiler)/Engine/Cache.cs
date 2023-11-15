@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace WallE;
 
 // Clase que almacena los datos guardados (cache)
@@ -43,8 +45,18 @@ public static class Cache
     };
 
     public static Dictionary<string, string> constantsType = new();
+
     public static List<string> color = new() {"black"};
+
+    public static Dictionary<string, Color> colors = new()
+    {
+        ["black"]   = Color.Black,   ["blue"]  = Color.Blue,  ["red"]   = Color.Red,
+        ["yellow"]  = Color.Yellow,  ["green"] = Color.Green, ["cyan"]  = Color.Cyan,
+        ["magenta"] = Color.Magenta, ["gray"]  = Color.Gray,  ["white"] = Color.White
+    };
+
     public static Dictionary<string, string> constantValues = new();
+    public static Dictionary<string, Draw> geometryValues = new();
 
     public static void CacheReset(
         int recursionFuncLength, int recursionSpeedLength, 
