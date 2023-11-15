@@ -5,6 +5,7 @@ public class Principal
 {
     public static void Analize(string s) {
         
+        Save.WriteDocument(s, "Joel");
         s = s.Replace("\r", " ");
         s = s.Replace("\t", " ");
         s = $" {s} ";
@@ -48,8 +49,9 @@ public class Principal
         List<string> instructions = s.Split("\n", StringSplitOptions.TrimEntries).ToList();
         instructions.RemoveAll(x => x == "");
 
-        for (int i = 0; i < instructions.Count; i++) {
-            Main.GlobalInput(instructions[i]);
-        }
+       
+        // for (int i = 0; i < instructions.Count; i++) {
+        //     Main.GlobalInput(instructions[i]);
+        // }
     }
 }

@@ -5,9 +5,9 @@ public class Program
    {
        Extra.Visualization();
 
-       while(true) {
+    //    while(true) {
            Extra.Reset();
-           string[] filePaths = Directory.GetFiles(Path.Join("..", "archivos"));
+           string[] filePaths = Directory.GetFiles(Path.Join("..", "Content"));
            string expression = File.ReadAllText(filePaths[0]);
             
            Principal.Analize(expression);
@@ -20,6 +20,6 @@ public class Program
                 
         //        Console.WriteLine(result);
         //    }                 
-       }
+    //    }
    }
 }

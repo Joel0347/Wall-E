@@ -104,7 +104,7 @@ public class Function
         }
 
         if (GeoFunction.IsGeoFunction(f)) {
-            return GeoFunction.Eval(f, args);
+            // return GeoFunction.Eval(f, args);
         }
 
         // Si es 'rand' se evalúa aparte

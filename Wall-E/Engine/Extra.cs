@@ -335,7 +335,7 @@ public static class Extra
         int index = withOutStrings.IndexOf("{");
 
         while(index != -1) {
-            s = s.Insert(index, "\"");
+            s = s.Insert(index, "\""); 
             withOutStrings = withOutStrings.Insert(index, " ");
             int closed = withOutStrings.IndexOf("}", index);
             s = s.Insert(closed + 1, "\"");

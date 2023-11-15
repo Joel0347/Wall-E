@@ -58,15 +58,15 @@ public class GeoFunction
 
         return false;
     }
-    public static Draw Eval(string name, string[] args) {
-        if (name == "line(")      return new Line(args[0], args[1]);
-        if (name == "segment(")   return new Segment(args[0], args[1]); 
-        if (name == "ray(")       return new Ray(args[0], args[1]); 
-        if (name == "circle(")    return new Circle(args[0], args[1]); 
-        if (name == "measure(")   return new Measure(args[0], args[1]); 
-        //if (name == "intersect(") return new (args[0], args[1]); 
-        if (name == "arc(")       return new Arc(args[0], args[1], args[2], args[3]);
+    // public static Draw Eval(string name, string[] args) {
+    //     if (name == "line(")      return new Line(args[0], args[1]);
+    //     if (name == "segment(")   return new Segment(args[0], args[1]); 
+    //     if (name == "ray(")       return new Ray(args[0], args[1]); 
+    //     if (name == "circle(")    return new Circle(args[0], args[1]); 
+    //     if (name == "measure(")   return new Measure(args[0], args[1]); 
+    //     //if (name == "intersect(") return new (args[0], args[1]); 
+    //     if (name == "arc(")       return new Arc(args[0], args[1], args[2], args[3]);
 
-        return "";
-    }
+    //     return "";
+    // }
 }
