@@ -72,6 +72,7 @@ public class Arc : Draw
 
         Points point_left = Utilities.IntersectionCircle_Ray(this.Center, r1.End, this.Radio, m1, n1);
         Points point_right = Utilities.IntersectionCircle_Ray(this.Center, r2.End, this.Radio, m2, n2);
+
         Points cero = new(this.Center.X + this.Radio, this.Center.Y);
 
         float sweepAngle = Utilities.AngleBetweenVectors(this.Center, point_left, point_right);

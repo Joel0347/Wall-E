@@ -47,7 +47,6 @@ public static class Cache
     public static Dictionary<string, string> constantsType = new();
 
     public static List<string> color = new() {"black"};
-
     public static Dictionary<string, Color> colors = new()
     {
         ["black"]   = Color.Black,   ["blue"]  = Color.Blue,  ["red"]   = Color.Red,
