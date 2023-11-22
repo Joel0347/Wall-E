@@ -28,6 +28,28 @@ internal sealed class Lexer
         if (position >= Text!.Length)
             return new SyntaxToken(SyntaxKind.EndOfFileToken, position, "\0", null!);
 
+        if (Current == '"')
+        {
+            int start = position;
+            Next();
+
+            while (Current != '"')
+            {
+                if (Peek(1) == '\0') 
+                {
+                    Error.SetError($"!!SYNTAX ERROR: Undeterminated string literal");
+                    return new SyntaxToken(SyntaxKind.ErrorToken!, position++, Text![position - 1].ToString(), null!);
+                }
+                Next();
+            }
+
+            Next();    
+            int length = position - start;
+            string token = Text!.Substring(start, length);
+            string value = token[1..^1];
+            return new SyntaxToken(SyntaxKind.StringToken, start, token, value);
+        }
+
         if (char.IsDigit(Current))
         {
             int start = position;
@@ -44,11 +66,18 @@ internal sealed class Lexer
         if (char.IsLetterOrDigit(Current) || Current == '_')
         {
             int start = position;
+            int spaces = 0;
 
             while (char.IsLetterOrDigit(Current) || Current == '_')
                 Next();
 
-            int length = position - start;
+            while (Current == ' ')
+            {
+                Next();
+                spaces++;
+            }
+
+            int length = position - start - spaces;
             string token = Text!.Substring(start, length);
             var kind = SyntaxFact.GetKeywordKind(token);
 
@@ -91,6 +120,8 @@ internal sealed class Lexer
                 return new SyntaxToken(SyntaxKind.ClosedParenthesisToken, position++, ")", null!);
             case ';':
                 return new SyntaxToken(SyntaxKind.SemicolonToken, position++, ";", null!);
+            case ',':
+                return new SyntaxToken(SyntaxKind.SeparatorToken, position++, ",", null!);
             case '>':
                 if (NextCurrent == '=')
                     return new SyntaxToken(SyntaxKind.GreatherOrEqualToken, position += 2, ">=", null!);

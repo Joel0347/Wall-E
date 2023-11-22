@@ -1,3 +1,4 @@
+
 namespace G_Sharp;
 
 internal sealed class Parser
@@ -56,16 +57,60 @@ internal sealed class Parser
 
     public ExpressionSyntax ParseAssignmentExpression()
     {
-        if (Peek(0).Kind == SyntaxKind.IdentifierToken && Peek(1).Kind == SyntaxKind.AssignmentToken)
+        if (Peek(0).Kind == SyntaxKind.IdentifierToken && 
+            Tokens.Any(x => Tokens.IndexOf(x) > Position && x.Kind == SyntaxKind.AssignmentToken))
         {
-            var identifierToken = NextToken();
-            var operatorToken = NextToken();
-            var right = ParseAssignmentExpression();
+            if (Peek(1).Kind == SyntaxKind.OpenParenthesisToken)
+            {
+                var identifierToken = NextToken();
 
-            return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
+                List<ExpressionSyntax> parameters = GetFunctionParams();
+
+                NextToken();
+                
+                if (Peek(0).Kind == SyntaxKind.AssignmentToken)
+                {
+                    var operatorToken = NextToken();
+                    var body = ParseAssignmentExpression();
+
+                    return new AssignmentFunctionExpressionSyntax(identifierToken, parameters, operatorToken, body);
+                }
+            }
+
+            else if (Peek(1).Kind == SyntaxKind.AssignmentToken)
+            {
+                var identifierToken = NextToken();
+                var operatorToken = NextToken();
+                var right = ParseAssignmentExpression();
+
+                return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
+            }
         }
 
         return ParseBinaryExpression();
+    }
+
+    private List<ExpressionSyntax> GetFunctionParams()
+    {
+        NextToken();
+        List<ExpressionSyntax> parameters = new();
+
+        var parameter = ParseBinaryExpression();
+        parameters.Add(parameter);
+
+        while (Current.Kind == SyntaxKind.SeparatorToken)
+        {
+            NextToken();
+            parameter = ParseBinaryExpression();
+            parameters.Add(parameter);
+        }
+
+        if(Current.Kind != SyntaxKind.ClosedParenthesisToken) {
+            
+            Error.SetError($"!!SYNTAX ERROR: Missing closing parenthesis after ...");
+        }
+
+        return parameters;
     }
 
     private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0)
@@ -105,7 +150,7 @@ internal sealed class Parser
             case SyntaxKind.OpenParenthesisToken:
             {
                 var left = NextToken();
-                var expression = ParseExpression();
+                var expression = ParseBinaryExpression();
                 var right = MatchToken(SyntaxKind.ClosedParenthesisToken);
 
                 return new ParenthesizedExpressionSyntax(left, expression, right);
@@ -115,7 +160,22 @@ internal sealed class Parser
             {
                 var identifierToken = NextToken();
 
+                if (Current.Kind == SyntaxKind.OpenParenthesisToken)
+                {
+                    List<ExpressionSyntax> parameters = GetFunctionParams();
+
+                    NextToken();
+
+                    return new FunctionExpressionSyntax(identifierToken, parameters);
+                }
+
                 return new NameExpressionSyntax(identifierToken);
+            }
+
+            case SyntaxKind.StringToken:
+            {
+                var stringToken = MatchToken(SyntaxKind.StringToken);
+                return new LiteralExpressionSyntax(stringToken);
             }
 
             default:

@@ -23,6 +23,8 @@ public enum SyntaxKind
     LessOrEqualToken,
     AssignmentToken,
     DifferentToken, 
+    StringToken,
+    SeparatorToken,
 
     // Expressions
     LiteralExpression,
@@ -30,7 +32,9 @@ public enum SyntaxKind
     ParenthesizedExpression,
     UnaryExpression,
     NameExpression,
-    AssignmentExpression,
+    AssignmentExpression,   
+    FunctionExpression,
+    AssignmentFunctionExpression,
 
     // Keywords
     AndKeyword,
@@ -41,4 +45,40 @@ public enum SyntaxKind
     IfKeyword,
     ElseKeyword,
     ThenKeyword,
+
+    // Statement
+    BlockStatement,
+}
+
+public static class Data
+{
+    public static bool IsBalanced(string statment)
+    {
+        Stack<char> parenthesis = new();
+
+        for (int i = 0; i < statment.Length; i++)
+        {
+            if (statment[i] == '(')
+                parenthesis.Push('(');
+
+            else if (statment[i] == '{')
+                parenthesis.Push('{');    
+
+            else if (statment[i] == ')')
+            {
+                if (parenthesis.Count > 0 && parenthesis.Peek() == '(')
+                    parenthesis.Pop();
+                else return false;
+            } 
+
+            else if (statment[i] == '}')
+            {
+                if (parenthesis.Count > 0 && parenthesis.Peek() == '{')
+                    parenthesis.Pop();
+                else return false;
+            }   
+        }
+
+        return parenthesis.Count == 0;
+    }
 }
