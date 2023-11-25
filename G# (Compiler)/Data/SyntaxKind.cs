@@ -3,31 +3,32 @@ namespace G_Sharp;
 public enum SyntaxKind
 {
     // tokens
-    WhitespacesToken,
-    NumberToken,
+
     PlusToken,
     MinusToken,
     MultToken,
     DivisionToken,
     ModToken,
+    GreaterToken,
+    LessToken,
+    EqualToken,
+    GreaterOrEqualToken,
+    LessOrEqualToken,
+    DifferentToken, 
+    WhitespaceToken,
+    NumberToken,
     OpenParenthesisToken,
     ClosedParenthesisToken,
     ErrorToken,
     EndOfFileToken,
     SemicolonToken,
     IdentifierToken,
-    GreatherToken,
-    LessToken,
-    EqualToken,
-    GreatherOrEqualToken,
-    LessOrEqualToken,
     AssignmentToken,
-    DifferentToken, 
     StringToken,
     SeparatorToken,
+    CommentToken,
 
     // Expressions
-    LiteralExpression,
     BinaryExpression,
     ParenthesizedExpression,
     UnaryExpression,
@@ -48,37 +49,55 @@ public enum SyntaxKind
 
     // Statement
     BlockStatement,
+    OpenCurlyBracketToken,
+    ClosedCurlyBracketToken,
+
 }
 
 public static class Data
 {
-    public static bool IsBalanced(string statment)
+    public static bool IsBalanced(List<SyntaxToken> tokens, int start, out int position)
     {
+        position = start;
+
         Stack<char> parenthesis = new();
 
-        for (int i = 0; i < statment.Length; i++)
+        for (int i = start; i < tokens.Count; i++)
         {
-            if (statment[i] == '(')
+            if (tokens[i].Kind == SyntaxKind.OpenParenthesisToken)
                 parenthesis.Push('(');
 
-            else if (statment[i] == '{')
+            else if (tokens[i].Kind == SyntaxKind.OpenCurlyBracketToken)
                 parenthesis.Push('{');    
 
-            else if (statment[i] == ')')
+            else if (tokens[i].Kind == SyntaxKind.ClosedParenthesisToken)
             {
                 if (parenthesis.Count > 0 && parenthesis.Peek() == '(')
                     parenthesis.Pop();
-                else return false;
+
+                else {
+                    position = -1;
+                    return false;
+                }
             } 
 
-            else if (statment[i] == '}')
+            else if (tokens[i].Kind == SyntaxKind.ClosedCurlyBracketToken)
             {
                 if (parenthesis.Count > 0 && parenthesis.Peek() == '{')
                     parenthesis.Pop();
-                else return false;
+
+                else {
+                    position = -1;
+                    return false;
+                }
             }   
+
+            position++;
         }
 
-        return parenthesis.Count == 0;
+        bool balanced = parenthesis.Count == 0;
+        position = balanced? position - start : -1;
+
+        return balanced;
     }
 }

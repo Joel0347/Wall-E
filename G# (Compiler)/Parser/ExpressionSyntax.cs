@@ -2,16 +2,45 @@ namespace G_Sharp;
 
 public abstract class ExpressionSyntax : SyntaxNode { }
 
-public sealed class LiteralExpressionSyntax : ExpressionSyntax
+public abstract class LiteralExpressionSyntax : ExpressionSyntax
 {
-    public override SyntaxKind Kind => SyntaxKind.LiteralExpression;
+    public abstract SyntaxToken LiteralToken { get; }
+}
 
-    public SyntaxToken LiteralToken { get; }
+public sealed class NumberLiteralExpressionSyntax : LiteralExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.NumberToken;
+    public override SyntaxToken LiteralToken { get; }
 
-    public LiteralExpressionSyntax(SyntaxToken literalToken)
+     public NumberLiteralExpressionSyntax(SyntaxToken numberToken)
     {
-        LiteralToken = literalToken;
+        LiteralToken = numberToken;
     }
+    
+}
+
+public sealed class StringLiteralExpressionSyntax : LiteralExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.StringToken;
+    public override SyntaxToken LiteralToken { get; }
+
+     public StringLiteralExpressionSyntax(SyntaxToken stringToken)
+    {
+        LiteralToken = stringToken;
+    }
+    
+}
+
+public sealed class EndOfStatementExpressionSyntax : LiteralExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.SemicolonToken;
+    public override SyntaxToken LiteralToken { get; }
+
+     public EndOfStatementExpressionSyntax(SyntaxToken endOfFileToken)
+    {
+        LiteralToken = endOfFileToken;
+    }
+    
 }
 
 public sealed class FunctionExpressionSyntax : ExpressionSyntax
@@ -75,12 +104,46 @@ public sealed class AssignmentExpressionSyntax : ExpressionSyntax
     public SyntaxToken AssignmentToken { get; }
     public ExpressionSyntax Expression { get; }
 
-    public AssignmentExpressionSyntax(SyntaxToken identifierToken, SyntaxToken assignmentToken, ExpressionSyntax expression)
+    public AssignmentExpressionSyntax(
+        SyntaxToken identifierToken, SyntaxToken assignmentToken, ExpressionSyntax expression
+    )
     {
         IdentifierToken = identifierToken;
         AssignmentToken = assignmentToken;
         Expression = expression;
     }
+}
+
+public sealed class Constant : ExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.AssignmentExpression;
+    // public Type Type => Expression.GetType();
+    public object Expression { get; }
+
+    public Constant(object expression)
+    {
+        Expression = expression;
+    }
+
+}
+
+public sealed class Function : ExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.AssignmentFunctionExpression;
+
+    public ExpressionSyntax Body { get; }
+    public List<ExpressionSyntax> Parameters { get; }
+
+    // public Type Type => Expression.GetType();
+
+
+
+    public Function(ExpressionSyntax body, List<ExpressionSyntax> parameters)
+    {
+        Body = body;
+        Parameters = parameters;
+    }
+
 }
 
 public sealed class BinaryExpressionSyntax : ExpressionSyntax
@@ -129,4 +192,10 @@ public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
         ClosedParenthesisToken = closedParenthesisToken;
     }
 
+}
+
+public sealed class ErrorExpressionSyntax : ExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.ErrorToken;
+    public ErrorExpressionSyntax() {}
 }

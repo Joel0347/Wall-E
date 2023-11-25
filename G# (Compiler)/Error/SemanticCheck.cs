@@ -11,9 +11,9 @@ public static class SemanticCheck
         [SyntaxKind.MultToken] = NumericOperatorsCheck,
         [SyntaxKind.DivisionToken] = NumericOperatorsCheck,
         [SyntaxKind.ModToken] = NumericOperatorsCheck,
-        [SyntaxKind.GreatherToken] = NumericOperatorsCheck,
+        [SyntaxKind.GreaterToken] = NumericOperatorsCheck,
         [SyntaxKind.LessToken] = NumericOperatorsCheck,
-        [SyntaxKind.GreatherOrEqualToken] = NumericOperatorsCheck,
+        [SyntaxKind.GreaterOrEqualToken] = NumericOperatorsCheck,
         [SyntaxKind.LessOrEqualToken] = NumericOperatorsCheck,
 
         //Booleans operators
@@ -32,10 +32,12 @@ public static class SemanticCheck
 
     public static string GetType(object obj)
     {
-        if (obj is double or int or float or decimal) return "number";
-        else if (obj is string) return "string";
-
-        return "undefined";
+        return obj switch
+        {
+            double or int or decimal or float or long => "number",
+            string => "string",
+            _ => "undefined"
+        };
     }
 
     private static bool NumericOperatorsCheck(object left, object right)

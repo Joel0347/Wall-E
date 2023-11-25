@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 
 namespace G_Sharp;
 
@@ -33,23 +34,42 @@ internal sealed class Lexer
         if (Current == '"')
         {
             int start = position;
+            int backSlashCount = 0;
             Next();
 
-            while (Current != '"')
+            while (Current != '"' || (Current == '"' && int.IsOddInteger(backSlashCount)))
             {
                 if (Peek(1) == '\0') 
                 {
-                    Error.SetError($"!!SYNTAX ERROR: Undeterminated string literal");
+                    Error.SetError($"!!SYNTAX ERROR: Undetermined string literal");
                     return new SyntaxToken(SyntaxKind.ErrorToken!, position++, Text![position - 1].ToString(), null!);
                 }
+                
+                if (Current == '\\') 
+                    backSlashCount++;
+                
+                else backSlashCount = 0;
+
                 Next();
             }
 
             Next();    
             int length = position - start;
             string token = Text!.Substring(start, length);
+            token = SyntaxFact.BackSlashEvaluate(token);
             string value = token[1..^1];
             return new SyntaxToken(SyntaxKind.StringToken, start, token, value);
+        }
+
+        if (Current == '/' && NextCurrent == '/') {
+            int start = position;
+            while (Current != '\r')
+            {
+                Next();
+                if (Current == '\0') break;
+            }
+
+            return new SyntaxToken(SyntaxKind.CommentToken, start, "//", null!);
         }
 
         if (char.IsDigit(Current))
@@ -101,7 +121,7 @@ internal sealed class Lexer
 
             int length = position - start;
             string token = Text!.Substring(start, length);
-            return new SyntaxToken(SyntaxKind.WhitespacesToken, start, token, null!);
+            return new SyntaxToken(SyntaxKind.WhitespaceToken, start, token, null!);
         }
 
         switch (Current)
@@ -126,8 +146,8 @@ internal sealed class Lexer
                 return new SyntaxToken(SyntaxKind.SeparatorToken, position++, ",", null!);
             case '>':
                 if (NextCurrent == '=')
-                    return new SyntaxToken(SyntaxKind.GreatherOrEqualToken, position += 2, ">=", null!);
-                return new SyntaxToken(SyntaxKind.GreatherToken, position++, ">", null!);
+                    return new SyntaxToken(SyntaxKind.GreaterOrEqualToken, position += 2, ">=", null!);
+                return new SyntaxToken(SyntaxKind.GreaterToken, position++, ">", null!);
             case '<':
                 if (NextCurrent == '=')
                     return new SyntaxToken(SyntaxKind.LessOrEqualToken, position += 2, "<=", null!);
