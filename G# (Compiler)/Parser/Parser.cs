@@ -199,6 +199,29 @@ internal sealed class Parser
         return ParseBinaryExpression();
     }
 
+    private List<ExpressionSyntax> GetFunctionParams()
+    {
+        NextToken();
+        List<ExpressionSyntax> parameters = new();
+
+        var parameter = ParseBinaryExpression();
+        parameters.Add(parameter);
+
+        while (Current.Kind == SyntaxKind.SeparatorToken)
+        {
+            NextToken();
+            parameter = ParseBinaryExpression();
+            parameters.Add(parameter);
+        }
+
+        if(Current.Kind != SyntaxKind.ClosedParenthesisToken) {
+            
+            Error.SetError($"!!SYNTAX ERROR: Missing closing parenthesis after ...");
+        }
+
+        return parameters;
+    }
+
     private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0)
     {
         ExpressionSyntax left;

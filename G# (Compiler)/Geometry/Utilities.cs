@@ -1,4 +1,4 @@
-﻿namespace G_Sharp;
+namespace G_Sharp;
 public class Utilities
 {
     public static float PointInLine(float m, float n, float x)
