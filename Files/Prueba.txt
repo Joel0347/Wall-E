@@ -1,2 +1,0 @@
-point p;
-draw p;
