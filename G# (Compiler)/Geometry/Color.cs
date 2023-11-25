@@ -1,20 +1,13 @@
-namespace WallE;
+namespace G_Sharp;
 
-public class Colors
+public static class Colors
 {
-    public static bool IsColor(string s) {
-        s = s.Trim();
-        return s.StartsWith("color ") || s.StartsWith("reset ");
-    }
+    public static Dictionary<string, Color> _Colors = new()
+    {
+        ["blue"]  = Color.DodgerBlue,  ["red"]  = Color.Red,  ["yellow"]  = Color.Yellow,
+        ["green"] = Color.Green, ["cyan"] = Color.Cyan, ["magenta"] = Color.Magenta,
+        ["white"] = Color.White, ["gray"] = Color.Gray, ["black"]   = Color.Black
+    };
 
-    public static void Eval(string s) {
-        s = s.Trim();
-        if (s.StartsWith("color ")) {
-            s = s[5..];
-            s = s.Trim();
-            Cache.color.Add(s);
-        }
-
-        else Cache.color.RemoveAt(Cache.color.Count - 1);
-    }
+    public static List<Color> ColorDraw = new() { Color.DodgerBlue }; 
 }
