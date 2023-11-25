@@ -23,9 +23,9 @@ public static class EvaluatorFacts
         
         [SyntaxKind.EqualToken          ] = (left, right) => (left == right) ? 1 : 0,
         [SyntaxKind.DifferentToken      ] = (left, right) => (left != right) ? 1 : 0,
-        [SyntaxKind.GreaterToken       ] = (left, right) => ((double)left > (double)right) ? 1 : 0,
+        [SyntaxKind.GreaterToken        ] = (left, right) => ((double)left > (double)right) ? 1 : 0,
         [SyntaxKind.LessToken           ] = (left, right) => ((double)left < (double)right) ? 1 : 0,
-        [SyntaxKind.GreaterOrEqualToken] = (left, right) => ((double)left >= (double)right) ? 1 : 0,
+        [SyntaxKind.GreaterOrEqualToken ] = (left, right) => ((double)left >= (double)right) ? 1 : 0,
         [SyntaxKind.LessOrEqualToken    ] = (left, right) => ((double)left <= (double)right) ? 1 : 0,
     };
 
