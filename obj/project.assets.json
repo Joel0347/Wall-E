@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Claudia\\Documents\\GitHub\\Wall-E\\WallE.csproj",
+      "projectUniqueName": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\WallE.csproj",
       "projectName": "WallE",
-      "projectPath": "C:\\Users\\Claudia\\Documents\\GitHub\\Wall-E\\WallE.csproj",
+      "projectPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\WallE.csproj",
       "packagesPath": "C:\\Users\\Claudia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Claudia\\Documents\\GitHub\\Wall-E\\obj\\",
+      "outputPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Claudia\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -64,7 +64,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
