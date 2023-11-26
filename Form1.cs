@@ -30,7 +30,7 @@ namespace WallE
             //       s = $" {s} ";
 
             //string n = String.StringsToSpaces(s);
-            //string m = Regex.Replace(n, @"[^_""ñÑA-Za-z0-9]", " ");
+            //string m = Regex.Replace(n, @"[^_""ï¿½ï¿½A-Za-z0-9]", " ");
 
             //int letIndex = m.LastIndexOf(" let ");
 
@@ -68,7 +68,7 @@ namespace WallE
             //    s = s.Insert(inIndex, "I");
             //    n = n.Remove(inIndex, 1);
             //    n = n.Insert(inIndex, "I");
-            //    m = Regex.Replace(n, @"[^_""ñÑA-Za-z0-9]", " ");
+            //    m = Regex.Replace(n, @"[^_""ï¿½ï¿½A-Za-z0-9]", " ");
             //    letIndex = m[..letIndex].LastIndexOf(" let ");
             //}
 

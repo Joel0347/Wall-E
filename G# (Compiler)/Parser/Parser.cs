@@ -239,7 +239,6 @@ internal sealed class Parser
         }
 
         return ParseBinaryExpression();
-
     }
 
     private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0)
@@ -291,7 +290,7 @@ internal sealed class Parser
                 var obj = new SyntaxToken(SyntaxKind.StringToken, 0, "", "");
                 return new LiteralExpressionSyntax(obj);
             }
-
+            
             case SyntaxKind.OpenParenthesisToken:
             {
                 var left = NextToken();

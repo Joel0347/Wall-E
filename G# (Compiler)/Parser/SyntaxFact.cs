@@ -74,7 +74,7 @@ public static class SyntaxFact
         return SyntaxKind.IdentifierToken;
     }
 
-    // Método que evalúa los slash en el string
+    // Mï¿½todo que evalï¿½a los slash en el string
     public static string BackSlashEvaluate(string text)
     {
         // Secuencias de escape permitidas
@@ -88,7 +88,7 @@ public static class SyntaxFact
         {
             int count = 0;
 
-            // Se cuentan cuántos seguidos hay
+            // Se cuentan cuï¿½ntos seguidos hay
             for (int i = backSlashIndex; i < text.Length; i++)
             {
                 if (text[i] != '\\') break;

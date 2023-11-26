@@ -41,6 +41,9 @@ C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\bin\Debug\net7.0-windows\WallE.dll
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\bin\Debug\net7.0-windows\WallE.pdb
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.Form1.resources
+C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.csproj.AssemblyReference.cache
+C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.Form1.resources
+C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.Check.resources
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.Properties.Resources.resources
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.csproj.GenerateResource.cache
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.GeneratedMSBuildEditorConfig.editorconfig
