@@ -5,7 +5,6 @@ public static class SemanticCheck
     public static readonly Dictionary<SyntaxKind, Func<object, object, bool>> BinaryOperatorsCheck = new()
     {
         //Numeric operators
-
         [SyntaxKind.PlusToken] = NumericOperatorsCheck,
         [SyntaxKind.MinusToken] = NumericOperatorsCheck,
         [SyntaxKind.MultToken] = NumericOperatorsCheck,

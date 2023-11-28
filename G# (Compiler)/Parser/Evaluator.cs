@@ -1,10 +1,15 @@
 using System.Diagnostics.Tracing;
+using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace G_Sharp;
 
 public sealed class Evaluator
 {
+    private List<(GeometrySyntax, Color)> geometries = new();
+    private Dictionary<Type, Func<ExpressionSyntax, object>> evaluations { get; }
     public ExpressionSyntax Root { get; }
     public Scope Scope { get; }
 
@@ -12,6 +17,21 @@ public sealed class Evaluator
     {
         Root = root;
         Scope = scope;
+        evaluations = new()
+        {
+            [typeof(ErrorExpressionSyntax)]         = (x) => "",
+            [typeof(LiteralExpressionSyntax)]       = Scope.EvaluateLiteralExpression,
+            [typeof(FunctionExpressionSyntax)]      = Scope.EvaluateFunctionExpression,
+            [typeof(AssignmentFunctionSyntax)]      = Scope.EvaluateFunctionAssignment,
+            [typeof(ConstantExpressionSyntax)]      = Scope.EvaluateConstantExpression,
+            [typeof(ConstantAssignmentSyntax)]      = Scope.EvaluateConstantAssignment,
+            [typeof(LetInExpressionSyntax)]         = Scope.EvaluateLetInExpression,
+            [typeof(ConditionalExpressionSyntax)]   = Scope.EvaluateConditionalExpression, 
+            [typeof(Draw)]                          = EvaluateDrawExpression,
+            [typeof(UnaryExpressionSyntax)]         = Scope.EvaluateUnaryExpression,
+            [typeof(BinaryExpressionSyntax)]        = Scope.EvaluateBinaryExpression,
+            [typeof(ParenthesizedExpressionSyntax)] = Scope.EvaluateParenthesizedExpression
+        };
     }
 
     public object Evaluate()
@@ -21,129 +41,29 @@ public sealed class Evaluator
     
     private object EvaluateExpression(ExpressionSyntax node)
     {
-        if (node is ErrorExpressionSyntax) 
-            return "";
-
-        if (node is LiteralExpressionSyntax node1)
-            return node1.LiteralToken.Value;
-
-        if (node is FunctionExpressionSyntax node2)
-        {
-            string name = node2.IdentifierToken.Text;
-            return EvaluateFunctionExpression(name, node2.Values);
-        }
-
-        if (node is AssignmentFunctionExpressionSyntax node3)
-        {            
-            string name = node3.FunctionIdentifierToken.Text;
-
-            if (Scope.Functions.ContainsKey(name))
-            {
-                Error.SetError($"!!SYNTAX ERROR: Function '{name}' is already defined");
-                return "";
-            }
-
-            if (!Error.Wrong) {
-                Scope.Functions[name] = new Function(node3.Expression, node3.IdentifiersToken);
-            }
-
-            return "";
-        }
-
-        if (node is NameExpressionSyntax node6)
-        {
-            string name = node6.IdentifierToken.Text;
-
-            if (Scope.Constants.TryGetValue(name, out Constant? value))
-            {
-                return value.Expression;
-            }
-            
-            Error.SetError($"!!SYNTAX ERROR: Constant '{name}' is not defined yet");
-            return "";
-        }    
+        if (evaluations.ContainsKey(node.GetType()))
+            return evaluations[node.GetType()](node);
         
-        if (node is AssignmentExpressionSyntax node7)
-        {
-            string name = node7.IdentifierToken.Text;
-            var value = EvaluateExpression(node7.Expression);
-
-            if (!Scope.Constants.ContainsKey(name))
-            {
-                Scope.Constants[name] = new Constant(value);
-                return value;
-            }
-
-            Error.SetError($"!!SYNTAX ERROR: Constant '{name}' is already defined");
-            return "";
-        }
-
-        if (node is UnaryExpressionSyntax node8)
-        {
-            var operand = EvaluateExpression(node8.Operand);
-            if (!SemanticCheck.UnaryOperatorsCheck[node8.OperatorToken.Kind](operand)) {
-                var operandType = SemanticCheck.GetType(operand);
-                var operation = node8.OperatorToken.Text;
-                Error.SetError($"!!SEMANTIC ERROR: Operator '{operation}' can't not be used before '{operandType}'");
-                return "";
-            }
-
-            return EvaluatorFacts.UnaryOperationEvaluation[node8.OperatorToken.Kind](operand);
-        }
-
-        if (node is BinaryExpressionSyntax node9)
-        {
-            var left = EvaluateExpression(node9.Left);
-            var right = EvaluateExpression(node9.Right);
-            var operation = node9.OperatorToken;
-            var operatorKind = operation.Kind;
-            
-            
-            if (!SemanticCheck.BinaryOperatorsCheck[operatorKind](left, right)) {
-                string leftType = SemanticCheck.GetType(left);
-                string rightType = SemanticCheck.GetType(right);
-                Error.SetError($"!!SEMANTIC ERROR: Operator '{operation.Text}' can't be used between '{leftType}' and '{rightType}'");
-                return "";
-            }
-
-            return EvaluatorFacts.BinaryOperationEvaluation[operatorKind](left, right);
-        }
-
-        if (node is ParenthesizedExpressionSyntax node10)
-        {
-            return EvaluateExpression(node10.Expression);
-        }
-
-        Error.SetError("lqs");
+        Error.SetError("ns", "lqs");
         return 0;
     }
 
-    private object EvaluateFunctionExpression(string name, List<ExpressionSyntax> values)
+    private object EvaluateDrawExpression(ExpressionSyntax expression)
     {
-        if (!Scope.Functions.TryGetValue(name, out Function? function)) {
-            Error.SetError($"!!SEMANTIC ERROR: Function '{name}' is not defined yet");
-            return "";
-        }
-
-        Dictionary<string, Constant> constants = new();
-
-        for (int i = 0; i < values.Count; i++)
+        var draw = (Draw) expression;
+        foreach (var item in draw.Parameters)
         {
-            NameExpressionSyntax variable = (NameExpressionSyntax) function.Parameters[i];
-            var expression = EvaluateExpression(values[i]);
-            var identifier = variable.IdentifierToken;
-            constants[identifier.Text] = new Constant(expression);
+            var value = EvaluateExpression(item);
+            if (value is ExpressionSyntax val)
+            {
+                if ((int)val.Kind <= 27 && (int)val.Kind >= 22)
+                {
+                    var geometryValue = (GeometrySyntax)value;
+                    geometries.Add((geometryValue, draw.Color));
+                }
+            }
         }
 
-        foreach (var item in Scope.Constants.Keys)
-        {
-            if (!constants.ContainsKey(item))  
-                constants[item] = Scope.Constants[item];
-        }
-
-        Scope child = new(constants, Scope.Functions); 
-
-        var evaluator = new Evaluator(function.Body, child);
-        return evaluator.Evaluate();
+        return geometries;
     }
 }

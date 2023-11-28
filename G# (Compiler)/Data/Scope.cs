@@ -1,3 +1,6 @@
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reflection.Metadata;
+
 namespace G_Sharp;
 
 public class Scope
@@ -6,7 +9,7 @@ public class Scope
     public Dictionary<string, Function> Functions { get; }
 
     public Scope(
-        Dictionary<string, Constant> constants, 
+        Dictionary<string, Constant> constants,
         Dictionary<string, Function> functions
     )
     {

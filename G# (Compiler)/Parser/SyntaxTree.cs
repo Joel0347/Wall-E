@@ -1,5 +1,4 @@
 namespace G_Sharp;
-
 public sealed class SyntaxTree
 {
     public bool Error { get; }
@@ -18,8 +17,8 @@ public sealed class SyntaxTree
         var parser = new Parser(text);
         var endOfFileToken = new SyntaxToken(SyntaxKind.EndOfFileToken, 0, "", "");
 
-        if (parser.ContainsError) 
-            return new SyntaxTree(true, new List<ExpressionSyntax> {new ErrorExpressionSyntax()}, endOfFileToken);
+        if (parser.ContainsError)
+            return new SyntaxTree(true, new List<ExpressionSyntax> { new ErrorExpressionSyntax() }, endOfFileToken);
 
         return parser.Parse();
     }

@@ -1,46 +1,20 @@
 namespace G_Sharp;
 
-public abstract class ExpressionSyntax : SyntaxNode { }
-
-public abstract class LiteralExpressionSyntax : ExpressionSyntax
+public abstract class ExpressionSyntax 
 {
-    public abstract SyntaxToken LiteralToken { get; }
+    public abstract SyntaxKind Kind { get; }
 }
 
-public sealed class NumberLiteralExpressionSyntax : LiteralExpressionSyntax
+public sealed class LiteralExpressionSyntax : ExpressionSyntax
 {
-    public override SyntaxKind Kind => SyntaxKind.NumberToken;
-    public override SyntaxToken LiteralToken { get; }
+    public override SyntaxKind Kind => SyntaxKind.LiteralExpression;
 
-     public NumberLiteralExpressionSyntax(SyntaxToken numberToken)
+    public SyntaxToken LiteralToken { get; }
+
+    public LiteralExpressionSyntax(SyntaxToken literalToken)
     {
-        LiteralToken = numberToken;
+        LiteralToken = literalToken;
     }
-    
-}
-
-public sealed class StringLiteralExpressionSyntax : LiteralExpressionSyntax
-{
-    public override SyntaxKind Kind => SyntaxKind.StringToken;
-    public override SyntaxToken LiteralToken { get; }
-
-     public StringLiteralExpressionSyntax(SyntaxToken stringToken)
-    {
-        LiteralToken = stringToken;
-    }
-    
-}
-
-public sealed class EndOfStatementExpressionSyntax : LiteralExpressionSyntax
-{
-    public override SyntaxKind Kind => SyntaxKind.SemicolonToken;
-    public override SyntaxToken LiteralToken { get; }
-
-     public EndOfStatementExpressionSyntax(SyntaxToken endOfFileToken)
-    {
-        LiteralToken = endOfFileToken;
-    }
-    
 }
 
 public sealed class FunctionExpressionSyntax : ExpressionSyntax
@@ -57,7 +31,7 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
     }
 }
 
-public sealed class AssignmentFunctionExpressionSyntax : ExpressionSyntax
+public sealed class AssignmentFunctionSyntax : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.AssignmentFunctionExpression;
     public SyntaxToken FunctionIdentifierToken { get; }
@@ -65,7 +39,7 @@ public sealed class AssignmentFunctionExpressionSyntax : ExpressionSyntax
     public SyntaxToken AssignmentToken { get; }
     public ExpressionSyntax Expression { get; }
 
-    public AssignmentFunctionExpressionSyntax(
+    public AssignmentFunctionSyntax(
         SyntaxToken functionIdentifierToken, List<ExpressionSyntax> identifiersToken,
         SyntaxToken assignmentToken, ExpressionSyntax expression
     )
@@ -73,7 +47,7 @@ public sealed class AssignmentFunctionExpressionSyntax : ExpressionSyntax
         foreach (var item in identifiersToken)
         {
             if(item.Kind != SyntaxKind.NameExpression) {
-                Error.SetError("!!SYNTAX ERROR: Expected identifier token in function parameters");
+                Error.SetError("SYNTAX", "Expected identifier token in function parameters");
             }
         }
 
@@ -85,28 +59,26 @@ public sealed class AssignmentFunctionExpressionSyntax : ExpressionSyntax
 }
 
 
-public sealed class NameExpressionSyntax : ExpressionSyntax
+public sealed class ConstantExpressionSyntax : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.NameExpression;
 
     public SyntaxToken IdentifierToken { get; }
 
-    public NameExpressionSyntax(SyntaxToken identifierToken)
+    public ConstantExpressionSyntax(SyntaxToken identifierToken)
     {
         IdentifierToken = identifierToken;
     }
 }
 
-public sealed class AssignmentExpressionSyntax : ExpressionSyntax
+public sealed class ConstantAssignmentSyntax : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.AssignmentExpression;
     public SyntaxToken IdentifierToken { get; }
     public SyntaxToken AssignmentToken { get; }
     public ExpressionSyntax Expression { get; }
 
-    public AssignmentExpressionSyntax(
-        SyntaxToken identifierToken, SyntaxToken assignmentToken, ExpressionSyntax expression
-    )
+    public ConstantAssignmentSyntax(SyntaxToken identifierToken, SyntaxToken assignmentToken, ExpressionSyntax expression)
     {
         IdentifierToken = identifierToken;
         AssignmentToken = assignmentToken;
@@ -130,20 +102,62 @@ public sealed class Constant : ExpressionSyntax
 public sealed class Function : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.AssignmentFunctionExpression;
-
     public ExpressionSyntax Body { get; }
     public List<ExpressionSyntax> Parameters { get; }
 
     // public Type Type => Expression.GetType();
-
-
 
     public Function(ExpressionSyntax body, List<ExpressionSyntax> parameters)
     {
         Body = body;
         Parameters = parameters;
     }
+}
 
+public sealed class LetInExpressionSyntax : ExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.LetInExpression;
+
+    public SyntaxToken LetToken { get; }
+    public List<ExpressionSyntax> Instructions { get; }
+    public SyntaxToken InToken { get; }
+
+    public LetInExpressionSyntax(
+        SyntaxToken letToken, List<ExpressionSyntax> instructions, 
+        SyntaxToken inToken, ExpressionSyntax body
+    )
+    {
+        LetToken = letToken;
+        Instructions = instructions;
+        Instructions.Add(body);
+        InToken = inToken;
+    }
+}
+
+public sealed class ConditionalExpressionSyntax : ExpressionSyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.ConditionalExpression;
+
+    public SyntaxToken IfKeyword { get; }
+    public ExpressionSyntax Condition { get; }
+    public SyntaxToken ThenKeyword { get; }
+    public ExpressionSyntax BodyTrue { get; }
+    public SyntaxToken ElseKeyword { get; }
+    public ExpressionSyntax BodyFalse { get; }
+
+    public ConditionalExpressionSyntax(
+        SyntaxToken ifKeyword, ExpressionSyntax condition, SyntaxToken thenKeyword, 
+        ExpressionSyntax bodyTrue, SyntaxToken elseKeyword, ExpressionSyntax bodyFalse
+    )
+    {
+        IfKeyword = ifKeyword;
+        Condition = condition;
+        ThenKeyword = thenKeyword;
+        BodyTrue = bodyTrue;
+        ElseKeyword = elseKeyword;
+        BodyFalse = bodyFalse;
+
+    }
 }
 
 public sealed class BinaryExpressionSyntax : ExpressionSyntax
@@ -191,11 +205,10 @@ public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
         Expression = expression;
         ClosedParenthesisToken = closedParenthesisToken;
     }
-
 }
 
 public sealed class ErrorExpressionSyntax : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.ErrorToken;
-    public ErrorExpressionSyntax() {}
+    public ErrorExpressionSyntax() { }
 }
