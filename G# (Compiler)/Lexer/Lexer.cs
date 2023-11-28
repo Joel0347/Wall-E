@@ -6,7 +6,6 @@ internal sealed class Lexer
 {
     private int line = 1;
     private int position = 0;
-
     private string Text { get; }
     private Dictionary<char, Func<SyntaxToken>> LexSpecialChars { get; }
     private char Current => Peek(0);
@@ -34,7 +33,6 @@ internal sealed class Lexer
 
         return Text[index];
     }
-
     private void Next()
     {
         position++;
