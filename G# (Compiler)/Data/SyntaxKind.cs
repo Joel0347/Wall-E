@@ -45,6 +45,7 @@ public enum SyntaxKind
     FunctionExpression,
     AssignmentFunctionExpression,
     DrawExpression,
+    VoidExpression,
 
     // Keywords
     AndKeyword,
