@@ -21,7 +21,6 @@ C:\Users\Claudia\Documents\GitHub\Wall-E\bin\Debug\net7.0-windows\WallE.deps.jso
 C:\Users\Claudia\Documents\GitHub\Wall-E\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
 C:\Users\Claudia\Documents\GitHub\Wall-E\bin\Debug\net7.0-windows\WallE.dll
 C:\Users\Claudia\Documents\GitHub\Wall-E\bin\Debug\net7.0-windows\WallE.pdb
-C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.csproj.AssemblyReference.cache
 C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.Form1.resources
 C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.Properties.Resources.resources
 C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.csproj.GenerateResource.cache
@@ -34,7 +33,6 @@ C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\refint\WallE.d
 C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.pdb
 C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
 C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\ref\WallE.dll
-C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.Check.resources
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\bin\Debug\net7.0-windows\WallE.exe
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\bin\Debug\net7.0-windows\WallE.deps.json
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
@@ -73,3 +71,5 @@ C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.pdb
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\ref\WallE.dll
+C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
+C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.sourcelink.json
