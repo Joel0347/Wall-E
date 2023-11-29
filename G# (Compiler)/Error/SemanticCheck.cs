@@ -35,6 +35,7 @@ public static class SemanticCheck
         {
             double or int or decimal or float or long => "number",
             string => "string",
+            ExpressionSyntax expression => expression.ReturnType,
             _ => "undefined"
         };
     }

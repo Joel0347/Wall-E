@@ -109,17 +109,17 @@ public static class ParsingSupplies
 
     private static ExpressionSyntax CircleParsing(SyntaxToken name, SyntaxToken operatorToken)
     {   
-        var center = CreateRandomPoints(1);
-        var measure = CreateRandomsCoordinates() / 2;
-        var circle = new Circle(center[0], measure);
+        var points = CreateRandomPoints(2);
+        var measure = new Measure(points[0], points[1]);
+        var circle = new Circle(points[0], measure);
 
         return new ConstantAssignmentSyntax(name, operatorToken, circle);
     }
 
     private static ExpressionSyntax ArcParsing(SyntaxToken name, SyntaxToken operatorToken)
     {   
-        var points = CreateRandomPoints(3);
-        var measure = CreateRandomsCoordinates() / 2;
+        var points = CreateRandomPoints(4);
+        var measure = new Measure(points[0], points[3]);
         var arc = new Arc(points[0], points[1], points[2], measure);
 
         return new ConstantAssignmentSyntax(name, operatorToken, arc);

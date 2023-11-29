@@ -17,3 +17,29 @@ public class Scope
         Functions = functions;
     }
 }
+
+public sealed class Constant 
+{
+    // public Type Type => Expression.GetType();
+    public object Expression { get; }
+
+    public Constant(object expression)
+    {
+        Expression = expression;
+    }
+
+}
+
+public sealed class Function 
+{
+    public ExpressionSyntax Body { get; }
+    public List<ExpressionSyntax> Parameters { get; }
+
+    // public Type Type => Expression.GetType();
+
+    public Function(ExpressionSyntax body, List<ExpressionSyntax> parameters)
+    {
+        Body = body;
+        Parameters = parameters;
+    }
+}

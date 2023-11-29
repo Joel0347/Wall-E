@@ -98,7 +98,7 @@ public static class MethodsDrawing
 
         Ray r1 = new(arc.Center, left);
         Ray r2 = new(arc.Center, right);
-        Circle circle = new(arc.Center, arc.Radio);
+        Circle circle = new(arc.Center, arc.Measure);
 
         r1.Drawing(graphics, color);
         r2.Drawing(graphics, color);

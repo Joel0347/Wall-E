@@ -178,7 +178,7 @@ internal sealed class Parser
         if (Current.Kind == SyntaxKind.ClosedParenthesisToken)
             return parameters;
 
-        var parameter = ParseBinaryExpression();
+        var parameter = ParseExpression();
         parameters.Add(parameter);
 
         while (Current.Kind == SyntaxKind.SeparatorToken)
@@ -192,7 +192,7 @@ internal sealed class Parser
                 return parameters;
             }
 
-            parameter = ParseBinaryExpression();
+            parameter = ParseExpression();
             parameters.Add(parameter);
         }
 
@@ -204,20 +204,22 @@ internal sealed class Parser
 
         return parameters;
     }
-    private LiteralExpressionSyntax RestoreParsing()
+    private ExpressionSyntax RestoreParsing()
     {
         NextToken();
         Colors.ColorDraw.RemoveAt(Colors.ColorDraw.Count - 1);
-        var obj = new SyntaxToken(SyntaxKind.StringToken, 0, "", "");
-        return new LiteralExpressionSyntax(obj);
+        return new VoidExpressionSyntax();
     }
 
-    private LiteralExpressionSyntax ColorParsing()
+    private ExpressionSyntax ColorParsing()
     {
         NextToken();
-        Colors.ColorDraw.Add(Colors._Colors[NextToken().Value.ToString()!]);
-        var obj = new SyntaxToken(SyntaxKind.StringToken, 0, "", "");
-        return new LiteralExpressionSyntax(obj);
+        var color = MatchToken(SyntaxKind.StringToken, "string");
+        if (color.Kind == SyntaxKind.ErrorToken)
+            return new ErrorExpressionSyntax();
+
+        Colors.ColorDraw.Add(Colors._Colors[color.Value.ToString()!]);
+        return new VoidExpressionSyntax();
     }
 
     private ParenthesizedExpressionSyntax ParenthesizedExpressionParsing()
@@ -236,6 +238,12 @@ internal sealed class Parser
 
         while (Current.Kind != SyntaxKind.InKeyword)
         {
+            if (Current.Kind == SyntaxKind.EndOfFileToken)
+            {
+                MatchToken(SyntaxKind.InKeyword, "in");
+                return new ErrorExpressionSyntax();
+            }
+
             var statement = ParseExpression();
 
             var semicolonToken = MatchToken(SyntaxKind.SemicolonToken, ";");
