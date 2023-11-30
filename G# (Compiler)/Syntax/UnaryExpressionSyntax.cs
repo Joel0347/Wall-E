@@ -7,11 +7,11 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
     public ExpressionSyntax Operand { get; }
     public override string ReturnType => "number";
 
-    private static readonly Dictionary<SyntaxKind, Func<object, double>> unaryOperationEvaluation = new()
+    private static readonly Dictionary<SyntaxKind, Func<object, ExpressionSyntax>> unaryOperationEvaluation = new()
     {
-        [SyntaxKind.PlusToken] = (operand) => (double)operand,
-        [SyntaxKind.MinusToken] = (operand) => -(double)operand,
-        [SyntaxKind.NotKeyword] = (operand) => EvaluationSupplies.DefaultFalseValues.Contains(operand) ? 1 : 0,
+        [SyntaxKind.PlusToken] = (operand) => new PlusOperation(operand),
+        [SyntaxKind.MinusToken] = (operand) => new MinusOperation(operand),
+        [SyntaxKind.NotKeyword] = (operand) => new NotOperation(operand)
     };
 
     public UnaryExpressionSyntax(SyntaxToken operatorToken, ExpressionSyntax operand)
@@ -23,25 +23,19 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
     public override object Evaluate(Scope scope)
     {
         var operand = scope.EvaluateExpression(Operand);
-        return unaryOperationEvaluation[OperatorToken.Kind](operand);
+        var operation = unaryOperationEvaluation[OperatorToken.Kind](operand);
+        return operation.Evaluate(scope);
     }
 
     public override bool Checker(Scope scope)
     {
         bool operandIsFine = Operand.Checker(scope);
-
         if (operandIsFine)
         {
-            if (!SemanticCheck.UnaryOperatorsCheck[OperatorToken.Kind](Operand))
-            {
-                var operandType = SemanticCheck.GetType(Operand);
-                var operation = OperatorToken.Text;
-                Error.SetError("SEMANTIC", $"Operator '{operation}' can't not be used before '{operandType}'");
-            }
-
-            else return true;
+            var operation = unaryOperationEvaluation[OperatorToken.Kind](Operand);
+            return operation.Checker(scope);
         }
-        
+
         return false;
     }
 }

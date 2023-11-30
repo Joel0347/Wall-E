@@ -63,6 +63,7 @@ public enum SyntaxKind
     LetInExpression,
     ConditionalExpression,
     MeasureToken,
+    SequenceExpression,
 }
 
 public static class Data

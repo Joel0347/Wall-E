@@ -45,14 +45,15 @@ internal sealed class Parser
 
         tokensEvaluation = new()
         {
-            [SyntaxKind.RestoreKeyword]       = RestoreParsing,
-            [SyntaxKind.ColorKeyword]         = ColorParsing,
-            [SyntaxKind.OpenParenthesisToken] = ParenthesizedExpressionParsing,
-            [SyntaxKind.LetKeyword]           = LetInExpressionParsing,
-            [SyntaxKind.IfKeyword]            = ConditionalExpressionParsing,
-            [SyntaxKind.IdentifierToken]      = IdentifierParsing,
-            [SyntaxKind.StringToken]          = StringParsing,
-            [SyntaxKind.NumberToken]          = NumberParsing
+            [SyntaxKind.RestoreKeyword]        = RestoreParsing,
+            [SyntaxKind.ColorKeyword]          = ColorParsing,
+            [SyntaxKind.OpenParenthesisToken]  = ParenthesizedExpressionParsing,
+            [SyntaxKind.OpenCurlyBracketToken] = SequenceExpressionParsing,
+            [SyntaxKind.LetKeyword]            = LetInExpressionParsing,
+            [SyntaxKind.IfKeyword]             = ConditionalExpressionParsing,
+            [SyntaxKind.IdentifierToken]       = IdentifierParsing,
+            [SyntaxKind.StringToken]           = StringParsing,
+            [SyntaxKind.NumberToken]           = NumberParsing
         };
 
         assignmentEvaluation = new()
@@ -231,6 +232,14 @@ internal sealed class Parser
         return new ParenthesizedExpressionSyntax(left, expression, right);
     }
 
+    private Sequence SequenceExpressionParsing()
+    {
+        var expression = GetFunctionParams("sequence");
+        NextToken();
+
+        return new Sequence(expression);
+    }
+
     private ExpressionSyntax LetInExpressionParsing()
     {
         var letToken = NextToken();
@@ -348,14 +357,11 @@ internal sealed class Parser
 
         else
         {
-            List<ExpressionSyntax> expressions = GetFunctionParams("sequency");
+            var expressions = SequenceExpressionParsing().Elements;
 
             for (int i = 0; i < expressions.Count; i++)
             {
-                if (expressions[i].Kind != SyntaxKind.NameExpression )
-                {
-                    geometry.Add(expressions[i]);
-                }
+                geometry.Add(expressions[i]);
             }
         }
 

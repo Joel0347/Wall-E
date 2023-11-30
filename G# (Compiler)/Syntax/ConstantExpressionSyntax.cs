@@ -8,7 +8,8 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
 
     public SyntaxToken IdentifierToken { get; }
 
-    public override string ReturnType => throw new NotImplementedException();
+    private string returnType = "all";
+    public override string ReturnType => returnType;
 
     public ConstantExpressionSyntax(SyntaxToken identifierToken)
     {
@@ -29,6 +30,8 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
             Error.SetError("SYNTAX", $"Constant '{name}' is not defined yet");
             return false;
         }
+
+        returnType = SemanticCheck.GetType(scope.Constants[name].Expression);
 
         return true;
     }

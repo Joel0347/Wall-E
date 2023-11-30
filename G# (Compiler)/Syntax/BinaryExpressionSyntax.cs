@@ -1,32 +1,35 @@
+using System.Drawing;
+
 namespace G_Sharp;
 
-public sealed class BinaryExpressionSyntax : ExpressionSyntax
+public class BinaryExpressionSyntax : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
     public ExpressionSyntax Left { get; }
     public SyntaxToken OperatorToken { get; }
     public ExpressionSyntax Right { get; }
-    public override string ReturnType => throw new NotImplementedException();
+    public override string ReturnType {
+        get {
+            var operation = binaryOperation[OperatorToken.Kind](Left, Right);
+            return operation.ReturnType;
+        }
+    }
 
-    private static readonly Dictionary<SyntaxKind, Func<object, object, double>> binaryOperationEvaluation = new()
+    private static readonly Dictionary<SyntaxKind, Func<object, object, ExpressionSyntax>> binaryOperation = new()
     {
-        // numeric operations
-        [SyntaxKind.PlusToken] = (left, right) => (double)left + (double)right,
-        [SyntaxKind.MinusToken] = (left, right) => (double)left - (double)right,
-        [SyntaxKind.MultToken] = (left, right) => (double)left * (double)right,
-        [SyntaxKind.DivisionToken] = DivisionEval,
-        [SyntaxKind.ModToken] = ModuleEval,
-
-        // booleans operations
-        [SyntaxKind.AndKeyword] = AndEval,
-        [SyntaxKind.OrKeyword] = OrEval,
-
-        [SyntaxKind.EqualToken] = (left, right) => (left == right) ? 1 : 0,
-        [SyntaxKind.DifferentToken] = (left, right) => (left != right) ? 1 : 0,
-        [SyntaxKind.GreaterToken] = (left, right) => ((double)left > (double)right) ? 1 : 0,
-        [SyntaxKind.LessToken] = (left, right) => ((double)left < (double)right) ? 1 : 0,
-        [SyntaxKind.GreaterOrEqualToken] = (left, right) => ((double)left >= (double)right) ? 1 : 0,
-        [SyntaxKind.LessOrEqualToken] = (left, right) => ((double)left <= (double)right) ? 1 : 0,
+        [SyntaxKind.PlusToken]           = (left, right) => new SumOperation(left, right),
+        [SyntaxKind.MinusToken]          = (left, right) => new RestOperation(left, right),
+        [SyntaxKind.MultToken]           = (left, right) => new MultOperation(left, right),
+        [SyntaxKind.DivisionToken]       = (left, right) => new DivisionOperation(left, right),
+        [SyntaxKind.ModToken]            = (left, right) => new ModOperation(left, right),
+        [SyntaxKind.AndKeyword]          = (left, right) => new AndOperation(left, right),
+        [SyntaxKind.OrKeyword]           = (left, right) => new OrOperation(left, right),
+        [SyntaxKind.EqualToken]          = (left, right) => new EqualOperation(left, right),
+        [SyntaxKind.DifferentToken]      = (left, right) => new DifferentOperation(left, right),
+        [SyntaxKind.GreaterToken]        = (left, right) => new GreaterOperation(left, right),
+        [SyntaxKind.LessToken]           = (left, right) => new LessOperation(left, right),
+        [SyntaxKind.GreaterOrEqualToken] = (left, right) => new GreaterOrEqualOperation(left, right),
+        [SyntaxKind.LessOrEqualToken]    = (left, right) => new LessOrEqualOperation(left, right)
     };
 
     public BinaryExpressionSyntax(
@@ -42,10 +45,10 @@ public sealed class BinaryExpressionSyntax : ExpressionSyntax
     {
         var left = scope.EvaluateExpression(Left);
         var right = scope.EvaluateExpression(Right);
-        var operation = OperatorToken;
-        var operatorKind = operation.Kind;
+        var operatorKind = OperatorToken.Kind;
 
-        return binaryOperationEvaluation[operatorKind](left, right);
+        var operation = binaryOperation[operatorKind](left, right);
+        return operation.Evaluate(scope);
     }
 
     public override bool Checker(Scope scope)
@@ -55,54 +58,10 @@ public sealed class BinaryExpressionSyntax : ExpressionSyntax
 
         if (leftIsFine && rightIsFine)
         {
-            if (!SemanticCheck.BinaryOperatorsCheck[OperatorToken.Kind](Left, Right))
-            {
-                string leftType = SemanticCheck.GetType(Left);
-                string rightType = SemanticCheck.GetType(Right);
-                Error.SetError("SEMANTIC", $"Operator '{OperatorToken.Text}' can't be used between '{leftType}' and '{rightType}'");
-            }
-
-            else return true;
+            var operation = binaryOperation[OperatorToken.Kind](Left, Right);
+            return operation.Checker(scope);
         }
 
-        
         return false;
-    }
-
-    private static double DivisionEval(object left, object right)
-    {
-        if ((double)right == 0)
-        {
-            Error.SetError("SEMANTIC", "Division by '0' is not defined");
-            return 0;
-        }
-
-        return (double)left / (double)right;
-    }
-
-    private static double ModuleEval(object left, object right)
-    {
-        if ((double)right == 0)
-        {
-            Error.SetError("SEMANTIC", "Division by '0' is not defined");
-            return 0;
-        }
-
-        return (double)left % (double)right;
-    }
-
-    private static double AndEval(object left, object right)
-    {
-        bool leftIsFalse = EvaluationSupplies.DefaultFalseValues.Contains(left);
-        bool rightIsFalse = EvaluationSupplies.DefaultFalseValues.Contains(right);
-
-        return (leftIsFalse || rightIsFalse) ? 0 : 1;
-    }
-    private static double OrEval(object left, object right)
-    {
-        bool leftIsFalse = EvaluationSupplies.DefaultFalseValues.Contains(left);
-        bool rightIsFalse = EvaluationSupplies.DefaultFalseValues.Contains(right);
-
-        return (leftIsFalse && rightIsFalse) ? 0 : 1;
     }
 }

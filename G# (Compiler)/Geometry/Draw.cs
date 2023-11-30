@@ -34,14 +34,30 @@ public class Draw : ExpressionSyntax
         foreach (var item in Parameters)
         {
             var value = scope.EvaluateExpression(item);
-            if (value is ExpressionSyntax val)
+
+            if (value is Sequence sequence)
             {
-                if ((int)val.Kind <= 27 && (int)val.Kind >= 22)
+                foreach (var element in sequence.Values)
                 {
-                    var geometryValue = (GeometrySyntax)value;
-                    Geometries.Add((geometryValue, Color));
+                    if (element is ExpressionSyntax evalElement)
+                    {
+                        if ((int)evalElement.Kind <= 27 && (int)evalElement.Kind >= 22)
+                        {
+                            var geometryValue = (GeometrySyntax)evalElement;
+                            Geometries.Add((geometryValue, Color));
+                        }
+                    }
                 }
             }
+
+            else if (value is ExpressionSyntax val)
+            {
+                 if ((int)val.Kind <= 27 && (int)val.Kind >= 22)
+                 {
+                    var geometryValue = (GeometrySyntax)value;
+                    Geometries.Add((geometryValue, Color));
+                 }
+            }          
         }
 
         return new Draw(Geometries, Parameters, Color);

@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Linq.Expressions;
 namespace G_Sharp;
 
 public abstract class GeometrySyntax : ExpressionSyntax { }
@@ -155,22 +156,63 @@ public class Arc : GeometrySyntax
 public class Measure : GeometrySyntax
 {
     public override SyntaxKind Kind => SyntaxKind.MeasureToken;
-
-    public Points P1 { get; }
-    public Points P2 { get; }
     public float Value { get; }
     public override string ReturnType => "measure";
 
     public Measure(Points p1, Points p2)
     {
-        P1 = p1;
-        P2 = p2;
         Value = Utilities.DistanceBetweenPoints(p1, p2);
+    }
+
+    public Measure(float value)
+    {
+        Value = value;
     }
 
     public override object Evaluate(Scope scope)
     {
-        return new Measure(P1, P2);
+        return new Measure(Value);
+    }
+
+    public override bool Checker(Scope scope)
+    {
+        return true;
+    }
+}
+public class Sequence : GeometrySyntax
+{
+    public override SyntaxKind Kind => SyntaxKind.SequenceExpression;
+    public List<ExpressionSyntax> Elements { get; }
+
+    public override string ReturnType => "sequence";//cambiar
+    public List<object> Values { get; }
+
+    public object Count = "undefined";
+
+    public Sequence(List<ExpressionSyntax> elements)
+    {
+        Elements = elements;
+        Values = new();
+        Values.AddRange(Elements);
+        Count = elements.Count;
+    }
+
+    public Sequence(List<object> values)
+    {
+        Values = values;
+        Count = values.Count;
+    }
+
+    public override object Evaluate(Scope scope)
+    {
+        List<object> values = new();
+
+        foreach (var item in Elements)
+        {
+            values.Add(scope.EvaluateExpression(item));
+        }
+
+        return new Sequence(values);
     }
 
     public override bool Checker(Scope scope)
