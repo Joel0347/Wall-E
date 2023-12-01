@@ -7,11 +7,13 @@ public class DivisionOperation : ExpressionSyntax
 
     public object Left { get; }
     public object Right { get; }
+    public SyntaxToken OperationToken { get; }
 
-    public DivisionOperation(object left, object right)
+    public DivisionOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
         Right = right;
+        OperationToken = operationToken;
     }
 
     public override bool Checker(Scope scope)
@@ -25,7 +27,7 @@ public class DivisionOperation : ExpressionSyntax
 
         if (!leftIsCompatible || !rightIsCompatible || !sameType)
         {
-            Error.SetError("SEMANTIC", $"Operator '/' can't be used between '{leftType}' and '{rightType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't be used between '{leftType}' and '{rightType}'");
             return false;
         }
         

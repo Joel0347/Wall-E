@@ -4,7 +4,7 @@ namespace G_Sharp;
 
 public sealed class ConstantExpressionSyntax : ExpressionSyntax
 {
-    public override SyntaxKind Kind => SyntaxKind.NameExpression;
+    public override SyntaxKind Kind => SyntaxKind.ConstantExpression;
 
     public SyntaxToken IdentifierToken { get; }
 
@@ -25,13 +25,13 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
     {
         string name = IdentifierToken.Text;
 
-        if (!scope.Constants.ContainsKey(name))
+        if (!scope.Constants.TryGetValue(name, out Constant? value))
         {
-            Error.SetError("SYNTAX", $"Constant '{name}' is not defined yet");
+            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : Constant '{name}' is not defined yet");
             return false;
         }
 
-        returnType = SemanticCheck.GetType(scope.Constants[name].Expression);
+        returnType = SemanticCheck.GetType(value.Expression);
 
         return true;
     }

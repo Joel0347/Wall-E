@@ -7,7 +7,7 @@ public sealed class AssignmentFunctionSyntax : ExpressionSyntax
     public List<ExpressionSyntax> IdentifiersToken { get; }
     public SyntaxToken AssignmentToken { get; }
     public ExpressionSyntax Expression { get; }
-    public override string ReturnType => throw new NotImplementedException();
+    public override string ReturnType => "void expression";
 
     public AssignmentFunctionSyntax(
         SyntaxToken functionIdentifierToken, List<ExpressionSyntax> identifiersToken,
@@ -29,7 +29,7 @@ public sealed class AssignmentFunctionSyntax : ExpressionSyntax
         if (!scope.Functions.ContainsKey(name))
             scope.Functions[name] = new Function(body, parameters);
 
-        else Error.SetError("SYNTAX", $"Function '{name}' is already defined");
+        else Error.SetError("SYNTAX", $"Line '{FunctionIdentifierToken.Line}' : Function '{name}' is already defined");
 
         return "";
     }

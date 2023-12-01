@@ -36,14 +36,14 @@ public sealed class ConditionalExpressionSyntax : ExpressionSyntax
 
         //if (TypeTrue == TypeFalse) 
         //{
-        var condition = scope.EvaluateExpression(Condition);
+        var condition = Condition.Evaluate(scope);
 
-        if (EvaluationSupplies.DefaultFalseValues.Contains(condition))
+        if (Evaluator.DefaultFalseValues.Contains(condition))
         {
-            return scope.EvaluateExpression(BodyFalse);
+            return BodyFalse.Evaluate(scope);
         }
 
-        return scope.EvaluateExpression(BodyTrue);
+        return BodyTrue.Evaluate(scope);
         //}
 
         //Error.SetError("SEMANTIC", "Conditional must return the same type of value in the 'then' clause and the 'else' clause");

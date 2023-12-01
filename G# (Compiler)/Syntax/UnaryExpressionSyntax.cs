@@ -7,11 +7,11 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
     public ExpressionSyntax Operand { get; }
     public override string ReturnType => "number";
 
-    private static readonly Dictionary<SyntaxKind, Func<object, ExpressionSyntax>> unaryOperationEvaluation = new()
+    private static readonly Dictionary<SyntaxKind, Func<object, SyntaxToken, ExpressionSyntax>> unaryOperationEvaluation = new()
     {
-        [SyntaxKind.PlusToken] = (operand) => new PlusOperation(operand),
-        [SyntaxKind.MinusToken] = (operand) => new MinusOperation(operand),
-        [SyntaxKind.NotKeyword] = (operand) => new NotOperation(operand)
+        [SyntaxKind.PlusToken] = (operand, operation) => new PlusOperation(operand, operation),
+        [SyntaxKind.MinusToken] = (operand, operation) => new MinusOperation(operand, operation),
+        [SyntaxKind.NotKeyword] = (operand, operation) => new NotOperation(operand, operation)
     };
 
     public UnaryExpressionSyntax(SyntaxToken operatorToken, ExpressionSyntax operand)
@@ -22,8 +22,8 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        var operand = scope.EvaluateExpression(Operand);
-        var operation = unaryOperationEvaluation[OperatorToken.Kind](operand);
+        var operand = Operand.Evaluate(scope);
+        var operation = unaryOperationEvaluation[OperatorToken.Kind](operand, OperatorToken);
         return operation.Evaluate(scope);
     }
 
@@ -32,7 +32,7 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
         bool operandIsFine = Operand.Checker(scope);
         if (operandIsFine)
         {
-            var operation = unaryOperationEvaluation[OperatorToken.Kind](Operand);
+            var operation = unaryOperationEvaluation[OperatorToken.Kind](Operand, OperatorToken);
             return operation.Checker(scope);
         }
 

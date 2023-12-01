@@ -7,11 +7,13 @@ public class ModOperation : ExpressionSyntax
 
     public object Left { get; }
     public object Right { get; }
+    public SyntaxToken OperationToken { get; }
 
-    public ModOperation(object left, object right)
+    public ModOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
         Right = right;
+        OperationToken = operationToken;
     }
 
     public override bool Checker(Scope scope)
@@ -21,7 +23,7 @@ public class ModOperation : ExpressionSyntax
 
         if (leftType != "number" || rightType != "number")
         {
-            Error.SetError("SEMANTIC", $"Operator '%' can't be used between '{leftType}' and '{rightType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '%' can't be used between '{leftType}' and '{rightType}'");
             return false;
         }
         
@@ -32,7 +34,7 @@ public class ModOperation : ExpressionSyntax
     {
         if ((double)Right == 0)
         {
-            Error.SetError("SEMANTIC", "Division by '0' is not defined");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Division by '0' is not defined");
             return 0;
         }
 

@@ -21,21 +21,24 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
         var values = Values;
         string name = functionToken.Text;
 
-        if (!scope.Functions.TryGetValue(name, out Function? function))
+        if (!scope.Functions.TryGetValue(name, out Function? function) && 
+            !scope.DefaultFunctions.ContainsKey(name))
         {
-            if (functionToken.Kind != SyntaxKind.GeometryKeyword)
-            {
-                Error.SetError("SEMANTIC", $"Function '{name}' is not defined yet");
-                return "";
-            }
+            
+            Error.SetError("SEMANTIC", $"Line '{functionToken.Line}' : Function '{name}' is not defined yet");
+            return "";
+            
         }
+
+        if (scope.DefaultFunctions.TryGetValue(name, out Func<Scope, List<ExpressionSyntax>, object>? func))
+            return func(scope, values);
 
         Dictionary<string, Constant> constants = new();
 
         for (int i = 0; i < values.Count; i++)
         {
             ConstantExpressionSyntax parameter = (ConstantExpressionSyntax)function!.Parameters[i];
-            var value = scope.EvaluateExpression(values[i]);
+            var value = values[i].Evaluate(scope);
             var identifier = parameter.IdentifierToken;
             constants[identifier.Text] = new Constant(value);
         }
@@ -48,19 +51,17 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
 
         Scope child = new(constants, scope.Functions);
 
-        if (functionToken.Kind == SyntaxKind.GeometryKeyword)
-            return EvaluateGeometricFunctions(child, functionToken.Text, values);
-
-        var evaluator = new Evaluator(function!.Body, child);
-        return evaluator.Evaluate();
+        //if (functionToken.Kind == SyntaxKind.GeometryKeyword)
+        //    return EvaluateGeometricFunctions(child, functionToken.Text, values);
+        return child.Evaluate(function!.Body);
     }
 
-    public static object EvaluateGeometricFunctions(
-        Scope scope, string identifier, List<ExpressionSyntax> parameters
-    )
-    {
-        return EvaluationSupplies.GeometricFunctionEvaluations[identifier](identifier, scope, parameters);
-    }
+    //public static object EvaluateGeometricFunctions(
+    //    Scope scope, string identifier, List<ExpressionSyntax> parameters
+    //)
+    //{
+    //return EvaluationSupplies.GeometricFunctionEvaluations[identifier](identifier, scope, parameters);
+    //}
 
     public override bool Checker(Scope scope)
     {

@@ -10,26 +10,26 @@ public class BinaryExpressionSyntax : ExpressionSyntax
     public ExpressionSyntax Right { get; }
     public override string ReturnType {
         get {
-            var operation = binaryOperation[OperatorToken.Kind](Left, Right);
+            var operation = binaryOperation[OperatorToken.Kind](Left, Right, OperatorToken);
             return operation.ReturnType;
         }
     }
 
-    private static readonly Dictionary<SyntaxKind, Func<object, object, ExpressionSyntax>> binaryOperation = new()
+    private static readonly Dictionary<SyntaxKind, Func<object, object, SyntaxToken, ExpressionSyntax>> binaryOperation = new()
     {
-        [SyntaxKind.PlusToken]           = (left, right) => new SumOperation(left, right),
-        [SyntaxKind.MinusToken]          = (left, right) => new RestOperation(left, right),
-        [SyntaxKind.MultToken]           = (left, right) => new MultOperation(left, right),
-        [SyntaxKind.DivisionToken]       = (left, right) => new DivisionOperation(left, right),
-        [SyntaxKind.ModToken]            = (left, right) => new ModOperation(left, right),
-        [SyntaxKind.AndKeyword]          = (left, right) => new AndOperation(left, right),
-        [SyntaxKind.OrKeyword]           = (left, right) => new OrOperation(left, right),
-        [SyntaxKind.EqualToken]          = (left, right) => new EqualOperation(left, right),
-        [SyntaxKind.DifferentToken]      = (left, right) => new DifferentOperation(left, right),
-        [SyntaxKind.GreaterToken]        = (left, right) => new GreaterOperation(left, right),
-        [SyntaxKind.LessToken]           = (left, right) => new LessOperation(left, right),
-        [SyntaxKind.GreaterOrEqualToken] = (left, right) => new GreaterOrEqualOperation(left, right),
-        [SyntaxKind.LessOrEqualToken]    = (left, right) => new LessOrEqualOperation(left, right)
+        [SyntaxKind.PlusToken]           = (left, right, operation) => new SumOperation(left, right, operation),
+        [SyntaxKind.MinusToken]          = (left, right, operation) => new RestOperation(left, right, operation),
+        [SyntaxKind.MultToken]           = (left, right, operation) => new MultOperation(left, right, operation),
+        [SyntaxKind.DivisionToken]       = (left, right, operation) => new DivisionOperation(left, right, operation),
+        [SyntaxKind.ModToken]            = (left, right, operation) => new ModOperation(left, right, operation),
+        [SyntaxKind.AndKeyword]          = (left, right, operation) => new AndOperation(left, right, operation),
+        [SyntaxKind.OrKeyword]           = (left, right, operation) => new OrOperation(left, right, operation),
+        [SyntaxKind.EqualToken]          = (left, right, operation) => new EqualOperation(left, right, operation),
+        [SyntaxKind.DifferentToken]      = (left, right, operation) => new DifferentOperation(left, right, operation),
+        [SyntaxKind.GreaterToken]        = (left, right, operation) => new GreaterOperation(left, right, operation),
+        [SyntaxKind.LessToken]           = (left, right, operation) => new LessOperation(left, right, operation),
+        [SyntaxKind.GreaterOrEqualToken] = (left, right, operation) => new GreaterOrEqualOperation(left, right, operation),
+        [SyntaxKind.LessOrEqualToken]    = (left, right, operation) => new LessOrEqualOperation(left, right, operation)
     };
 
     public BinaryExpressionSyntax(
@@ -43,11 +43,11 @@ public class BinaryExpressionSyntax : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        var left = scope.EvaluateExpression(Left);
-        var right = scope.EvaluateExpression(Right);
+        var left = Left.Evaluate(scope);
+        var right = Right.Evaluate(scope);
         var operatorKind = OperatorToken.Kind;
 
-        var operation = binaryOperation[operatorKind](left, right);
+        var operation = binaryOperation[operatorKind](left, right, OperatorToken);
         return operation.Evaluate(scope);
     }
 
@@ -58,7 +58,7 @@ public class BinaryExpressionSyntax : ExpressionSyntax
 
         if (leftIsFine && rightIsFine)
         {
-            var operation = binaryOperation[OperatorToken.Kind](Left, Right);
+            var operation = binaryOperation[OperatorToken.Kind](Left, Right, OperatorToken);
             return operation.Checker(scope);
         }
 

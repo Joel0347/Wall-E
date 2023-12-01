@@ -19,7 +19,7 @@ internal sealed class Lexer
         LexSpecialChars = new()
         {
             ['\r'] = LexEndOfLine,
-            ['\n'] = () => new SyntaxToken(SyntaxKind.WhitespaceToken, position++, " ", null!),
+            ['\n'] = () => new SyntaxToken(SyntaxKind.WhitespaceToken, line, position++, " ", null!),
             ['"']  = LexStrings,
             ['/']  = LexComments,
         };
@@ -43,7 +43,7 @@ internal sealed class Lexer
     public SyntaxToken Lex()
     {
         if (position >= Text!.Length)
-            return new SyntaxToken(SyntaxKind.EndOfFileToken, position, "end of file", null!);
+            return new SyntaxToken(SyntaxKind.EndOfFileToken, line, position, "end of file", null!);
 
         else if (LexSpecialChars.TryGetValue(Current, out Func<SyntaxToken>? value))
             return value();
@@ -51,9 +51,9 @@ internal sealed class Lexer
         else if (IsGroupOfChars(out SyntaxToken outToken)) 
             return outToken; 
 
-        else if (LexingSupplies.LexMathCharacters.TryGetValue(Current, out Func<int, char, (SyntaxToken, int)>? func))
+        else if (LexingSupplies.LexMathCharacters.TryGetValue(Current, out Func<int, int, char, (SyntaxToken, int)>? func))
         {
-            (SyntaxToken token, int pos) = func(position, NextCurrent);
+            (SyntaxToken token, int pos) = func(position, line, NextCurrent);
 
             if (token.Kind != SyntaxKind.ErrorToken)
                 position = pos;
@@ -61,7 +61,7 @@ internal sealed class Lexer
         }
 
         Error.SetError("LEXICAL", $"Line '{line}': Unexpected character '{Current}'");
-        return new SyntaxToken(SyntaxKind.ErrorToken!, position++, Text![position - 1].ToString(), null!);
+        return new SyntaxToken(SyntaxKind.ErrorToken!, line, position++, Text![position - 1].ToString(), null!);
     }
 
     private SyntaxToken LexStrings()
@@ -75,7 +75,7 @@ internal sealed class Lexer
             if (Peek(1) == '\0')
             {
                 Error.SetError("SYNTAX", $"Line '{line}': Undetermined string literal");
-                return new SyntaxToken(SyntaxKind.ErrorToken!, position++, Text![position - 1].ToString(), null!);
+                return new SyntaxToken(SyntaxKind.ErrorToken!, line, position++, Text![position - 1].ToString(), null!);
             }
 
             if (Current == '\\')
@@ -91,7 +91,7 @@ internal sealed class Lexer
         string token = Text!.Substring(start, length);
         token = ParsingSupplies.BackSlashEval(token);
         string value = token[1..^1];
-        return new SyntaxToken(SyntaxKind.StringToken, start, token, value);
+        return new SyntaxToken(SyntaxKind.StringToken, line, start, token, value);
     }
 
     private SyntaxToken LexNumbers()
@@ -104,7 +104,7 @@ internal sealed class Lexer
         int length = position - start;
         string token = Text!.Substring(start, length);
         double.TryParse(token, out double value);
-        return new SyntaxToken(SyntaxKind.NumberToken, start, token, value);
+        return new SyntaxToken(SyntaxKind.NumberToken, line, start, token, value);
     }
 
     private SyntaxToken LexComments()
@@ -118,10 +118,10 @@ internal sealed class Lexer
                 if (Current == '\0') break;
             }
 
-            return new SyntaxToken(SyntaxKind.CommentToken, start, "//", null!);
+            return new SyntaxToken(SyntaxKind.CommentToken, line, start, "//", null!);
         }
         
-        (SyntaxToken token, int pos) = LexingSupplies.LexMathCharacters['/'](position, NextCurrent); 
+        (SyntaxToken token, int pos) = LexingSupplies.LexMathCharacters['/'](position, line, NextCurrent); 
         position = pos;
         return token;
     }
@@ -144,13 +144,7 @@ internal sealed class Lexer
         string token = Text!.Substring(start, length);
         var kind = LexingSupplies.GetKeywordKind(token);
 
-        if (kind == SyntaxKind.NumberToken)
-        {
-            double value = (token == "PI") ? Math.PI : Math.E;
-            return new SyntaxToken(SyntaxKind.NumberToken, start, token, value);
-        }
-
-        return new SyntaxToken(kind, start, token, null!);
+        return new SyntaxToken(kind, line, start, token, null!);
     }
 
     private SyntaxToken LexWhitesSpace()
@@ -162,13 +156,13 @@ internal sealed class Lexer
 
         int length = position - start;
         string token = Text!.Substring(start, length);
-        return new SyntaxToken(SyntaxKind.WhitespaceToken, start, token, null!);
+        return new SyntaxToken(SyntaxKind.WhitespaceToken, line, start, token, null!);
     }
 
     private SyntaxToken LexEndOfLine()
     {
         line++;
-        return new SyntaxToken(SyntaxKind.WhitespaceToken, position++, " ", null!);
+        return new SyntaxToken(SyntaxKind.WhitespaceToken, line, position++, " ", null!);
     }
 
     private bool IsGroupOfChars(out SyntaxToken token)

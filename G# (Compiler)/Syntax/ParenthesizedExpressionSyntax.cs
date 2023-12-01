@@ -19,7 +19,7 @@ public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        return scope.EvaluateExpression(Expression);
+        return Expression.Evaluate(scope);
     }
 
     public override bool Checker(Scope scope)

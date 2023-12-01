@@ -24,24 +24,24 @@ public static class LexingSupplies
         ["color"]     = SyntaxKind.ColorKeyword,
         ["draw"]      = SyntaxKind.DrawKeyword,
         ["restore"]   = SyntaxKind.RestoreKeyword,
-        ["PI"]        = SyntaxKind.NumberToken,
-        ["E"]         = SyntaxKind.NumberToken,
+        ["PI"]        = SyntaxKind.MathKeyword,
+        ["E"]         = SyntaxKind.MathKeyword,
     };
 
 
-    public static readonly Dictionary<char, Func<int, char, (SyntaxToken, int)>> LexMathCharacters = new()
+    public static readonly Dictionary<char, Func<int, int, char, (SyntaxToken, int)>> LexMathCharacters = new()
     {
-        ['+'] = (position, _) => (new SyntaxToken(SyntaxKind.PlusToken, position, "+", null!), ++position),
-        ['-'] = (position, _) => (new SyntaxToken(SyntaxKind.MinusToken, position, "-", null!), ++position),
-        ['*'] = (position, _) => (new SyntaxToken(SyntaxKind.MultToken, position, "*", null!), ++position),
-        ['/'] = (position, _) => (new SyntaxToken(SyntaxKind.DivisionToken, position, "/", null!), ++position),
-        ['%'] = (position, _) => (new SyntaxToken(SyntaxKind.ModToken, position, "%", null!), ++position),
-        ['('] = (position, _) => (new SyntaxToken(SyntaxKind.OpenParenthesisToken, position, "(", null!), ++position),
-        [')'] = (position, _) => (new SyntaxToken(SyntaxKind.ClosedParenthesisToken, position, ")", null!), ++position),
-        ['{'] = (position, _) => (new SyntaxToken(SyntaxKind.OpenCurlyBracketToken, position, "{", null!), ++position),
-        ['}'] = (position, _) => (new SyntaxToken(SyntaxKind.ClosedCurlyBracketToken, position, "}", null!), ++position),
-        [';'] = (position, _) => (new SyntaxToken(SyntaxKind.SemicolonToken, position, ";", null!), ++position),
-        [','] = (position, _) => (new SyntaxToken(SyntaxKind.SeparatorToken, position, ",", null!), ++position),
+        ['+'] = (position, line, _) => (new SyntaxToken(SyntaxKind.PlusToken, line, position, "+", null!), ++position),
+        ['-'] = (position, line, _) => (new SyntaxToken(SyntaxKind.MinusToken, line, position, "-", null!), ++position),
+        ['*'] = (position, line, _) => (new SyntaxToken(SyntaxKind.MultToken, line, position, "*", null!), ++position),
+        ['/'] = (position, line, _) => (new SyntaxToken(SyntaxKind.DivisionToken, line, position, "/", null!), ++position),
+        ['%'] = (position, line, _) => (new SyntaxToken(SyntaxKind.ModToken, line, position, "%", null!), ++position),
+        ['('] = (position, line, _) => (new SyntaxToken(SyntaxKind.OpenParenthesisToken, line, position, "(", null!), ++position),
+        [')'] = (position, line, _) => (new SyntaxToken(SyntaxKind.ClosedParenthesisToken, line, position, ")", null!), ++position),
+        ['{'] = (position, line, _) => (new SyntaxToken(SyntaxKind.OpenCurlyBracketToken, line, position, "{", null!), ++position),
+        ['}'] = (position, line, _) => (new SyntaxToken(SyntaxKind.ClosedCurlyBracketToken, line, position, "}", null!), ++position),
+        [';'] = (position, line, _) => (new SyntaxToken(SyntaxKind.SemicolonToken, line, position, ";", null!), ++position),
+        [','] = (position, line, _) => (new SyntaxToken(SyntaxKind.SeparatorToken, line, position, ",", null!), ++position),
         ['>'] = LexGreaterThanChar,
         ['<'] = LexLessThanChar,
         ['='] = LexEqualsChar,
@@ -56,30 +56,30 @@ public static class LexingSupplies
         return SyntaxKind.IdentifierToken;
     }
 
-    private static (SyntaxToken, int) LexGreaterThanChar(int pos, char NextCurrent)
+    private static (SyntaxToken, int) LexGreaterThanChar(int pos, int line, char NextCurrent)
     {
         if (NextCurrent == '=')
-                return (new SyntaxToken(SyntaxKind.GreaterOrEqualToken, pos, ">=", null!), pos + 2);
-        return (new SyntaxToken(SyntaxKind.GreaterToken, pos, ">", null!), ++pos);
+                return (new SyntaxToken(SyntaxKind.GreaterOrEqualToken, line, pos, ">=", null!), pos + 2);
+        return (new SyntaxToken(SyntaxKind.GreaterToken, line, pos, ">", null!), ++pos);
     }
 
-    private static (SyntaxToken, int) LexLessThanChar(int pos, char NextCurrent)
+    private static (SyntaxToken, int) LexLessThanChar(int pos, int line, char NextCurrent)
     {
         if (NextCurrent == '=')
-                return (new SyntaxToken(SyntaxKind.LessOrEqualToken, pos, "<=", null!), pos + 2);
-        return (new SyntaxToken(SyntaxKind.LessToken, pos, "<", null!), ++pos);
+                return (new SyntaxToken(SyntaxKind.LessOrEqualToken, line, pos, "<=", null!), pos + 2);
+        return (new SyntaxToken(SyntaxKind.LessToken,   line, pos, "<", null!), ++pos);
     }
 
-    private static (SyntaxToken, int) LexEqualsChar(int pos, char NextCurrent)
+    private static (SyntaxToken, int) LexEqualsChar(int pos, int line, char NextCurrent)
     {
         if (NextCurrent == '=')
-                return (new SyntaxToken(SyntaxKind.EqualToken, pos, "==", null!), pos + 2);
-        return (new SyntaxToken(SyntaxKind.AssignmentToken, pos, "=", null!), ++pos);
+                return (new SyntaxToken(SyntaxKind.EqualToken, line, pos, "==", null!), pos + 2);
+        return (new SyntaxToken(SyntaxKind.AssignmentToken, line, pos, "=", null!), ++pos);
     }
-    private static (SyntaxToken, int) LexDifferentChar(int pos, char NextCurrent)
+    private static (SyntaxToken, int) LexDifferentChar(int pos, int line, char NextCurrent)
     {
         if (NextCurrent == '=')
-            return (new SyntaxToken(SyntaxKind.DifferentToken, pos, "!=", null!), pos + 2);
-        return (new SyntaxToken(SyntaxKind.ErrorToken!, pos, "", null!), ++pos);
+            return (new SyntaxToken(SyntaxKind.DifferentToken, line, pos, "!=", null!), pos + 2);
+        return (new SyntaxToken(SyntaxKind.ErrorToken!, line, pos, "", null!), ++pos);
     }
 }

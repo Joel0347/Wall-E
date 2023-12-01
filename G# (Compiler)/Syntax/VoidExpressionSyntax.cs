@@ -19,6 +19,6 @@ public class VoidExpressionSyntax : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        return 0;
+        return "";
     }
 }

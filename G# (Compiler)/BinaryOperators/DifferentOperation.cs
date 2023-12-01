@@ -7,11 +7,13 @@ public class DifferentOperation : ExpressionSyntax
 
     public object Left { get; }
     public object Right { get; }
+    public SyntaxToken OperationToken { get; }
 
-    public DifferentOperation(object left, object right)
+    public DifferentOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
         Right = right;
+        OperationToken = operationToken;
     }
 
     public override bool Checker(Scope scope)
@@ -21,7 +23,7 @@ public class DifferentOperation : ExpressionSyntax
 
         if (leftType != rightType)
         {
-            Error.SetError("SEMANTIC", $"Operator '!=' can't be used between '{leftType}' and '{rightType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '!=' can't be used between '{leftType}' and '{rightType}'");
             return false;
         }
         

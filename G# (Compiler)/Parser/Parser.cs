@@ -52,6 +52,7 @@ internal sealed class Parser
             [SyntaxKind.LetKeyword]            = LetInExpressionParsing,
             [SyntaxKind.IfKeyword]             = ConditionalExpressionParsing,
             [SyntaxKind.IdentifierToken]       = IdentifierParsing,
+            [SyntaxKind.MathKeyword]           = IdentifierParsing,
             [SyntaxKind.StringToken]           = StringParsing,
             [SyntaxKind.NumberToken]           = NumberParsing
         };
@@ -61,6 +62,7 @@ internal sealed class Parser
             [SyntaxKind.DrawKeyword]     = DrawParsing,
             [SyntaxKind.GeometryKeyword] = AssignmentGeometryEval,
             [SyntaxKind.IdentifierToken] = AssignmentIdentifierEval,
+            [SyntaxKind.MathKeyword]     = MathKeywordParsing
         };
     }
 
@@ -80,7 +82,7 @@ internal sealed class Parser
     public SyntaxTree Parse()
     {
         List<ExpressionSyntax> expressions = new();
-        var semicolonToken = new SyntaxToken(SyntaxKind.SemicolonToken, 0, ";", "");
+        var semicolonToken = new SyntaxToken(SyntaxKind.SemicolonToken, 1, 0, ";", "");
 
         while (true)
         {
@@ -107,9 +109,9 @@ internal sealed class Parser
         if (Current.Kind == kind)
             return NextToken();
 
-        Error.SetError("SYNTAX", $"Unexpected token '{Current.Text}', expected '{expectedText}'");
+        Error.SetError("SYNTAX", $"Line '{Current.Line}' : Unexpected token '{Current.Text}', expected '{expectedText}'");
         kind = SyntaxKind.ErrorToken;
-        return new SyntaxToken(kind, Current.Position, "", 0.0);
+        return new SyntaxToken(kind, 1, Current.Position, "", 0.0);
     }
 
     public ExpressionSyntax ParseExpression()
@@ -188,7 +190,7 @@ internal sealed class Parser
             token = Current;
             if (Current.Kind == SyntaxKind.ClosedParenthesisToken)
             {
-                Error.SetError("SEMANTIC", $"Missing argument in '{name}'");
+                Error.SetError("SEMANTIC", $"Line '{Current.Line}' : Missing argument in '{name}'");
                 parameters.Add(new ErrorExpressionSyntax());
                 return parameters;
             }
@@ -200,7 +202,7 @@ internal sealed class Parser
         if (Current.Kind != endKind)
         {
             var text = (kind == SyntaxKind.OpenParenthesisToken) ? "parenthesis" : "curly brackets";
-            Error.SetError("SYNTAX", $"Missing closing {text} after '{token.Text}'");
+            Error.SetError("SYNTAX", $"Line '{Current.Line}' : Missing closing {text} after '{token.Text}'");
         }
 
         return parameters;
@@ -221,6 +223,11 @@ internal sealed class Parser
 
         Colors.ColorDraw.Add(Colors._Colors[color.Value.ToString()!]);
         return new VoidExpressionSyntax();
+    }
+
+    private ExpressionSyntax MathKeywordParsing()
+    {
+        return AssignmentIdentifierEval();
     }
 
     private ParenthesizedExpressionSyntax ParenthesizedExpressionParsing()
@@ -349,7 +356,7 @@ internal sealed class Parser
         if (Peek(0).Kind != SyntaxKind.OpenCurlyBracketToken)
         {
             var value = ParseAssignmentExpression();
-            if (value.Kind == SyntaxKind.NameExpression || value.Kind == SyntaxKind.FunctionExpression)
+            if (value.Kind == SyntaxKind.ConstantExpression || value.Kind == SyntaxKind.FunctionExpression)
             {
                 geometry.Add(value);
             }
@@ -382,7 +389,7 @@ internal sealed class Parser
         else
         {
             var name = NextToken();
-            var operatorToken = new SyntaxToken(SyntaxKind.AssignmentToken, 0, "=", "");
+            var operatorToken = new SyntaxToken(SyntaxKind.AssignmentToken, 1, 0, "=", "");
             return ParsingSupplies.GeometricKeywordsEvaluation[typeGeometry.Text](name, operatorToken);
         }
     }
@@ -398,21 +405,21 @@ internal sealed class Parser
 
             NextToken();
 
-            if (Peek(0).Kind == SyntaxKind.AssignmentToken)
+            if (Current.Kind == SyntaxKind.AssignmentToken)
             {
                 var operatorToken = NextToken();
                 var body = ParseAssignmentExpression();
 
                 if (body.Kind == SyntaxKind.SemicolonToken)
                 {
-                    Error.SetError("SEMANTIC", $"Missing expression in '{identifierToken.Text}' declaration");
+                    Error.SetError("SEMANTIC", $"Line '{Current.Line}' : Missing expression in '{identifierToken.Text}' declaration");
                     return new ErrorExpressionSyntax();
                 }
 
                 foreach (var item in parameters)
                 {
-                    if(item.Kind != SyntaxKind.NameExpression) {
-                        Error.SetError("SYNTAX", "Expected identifier token in function parameters");
+                    if(item.Kind != SyntaxKind.ConstantExpression) {
+                        Error.SetError("SYNTAX", $"Line '{operatorToken.Line}' : Expected identifier token in function parameters");
                     }
                 }
 
@@ -430,9 +437,11 @@ internal sealed class Parser
             var operatorToken = NextToken();
             var right = ParseAssignmentExpression();
 
-            if (right.Kind == SyntaxKind.SemicolonToken)
+            if (right is LiteralExpressionSyntax literal && 
+                literal.LiteralToken.Kind == SyntaxKind.SemicolonToken
+               )
             {
-                Error.SetError("SEMANTIC", $"Missing expression in '{identifierToken.Text}' assignment");
+                Error.SetError("SEMANTIC", $"Line '{operatorToken.Line}' : Missing expression in '{identifierToken.Text}' assignment");
                 return new ErrorExpressionSyntax();
             }
 

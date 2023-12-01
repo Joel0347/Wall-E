@@ -33,7 +33,7 @@ public class Draw : ExpressionSyntax
     {
         foreach (var item in Parameters)
         {
-            var value = scope.EvaluateExpression(item);
+            var value = item.Evaluate(scope);
 
             if (value is Sequence sequence)
             {

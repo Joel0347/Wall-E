@@ -209,7 +209,7 @@ public class Sequence : GeometrySyntax
 
         foreach (var item in Elements)
         {
-            values.Add(scope.EvaluateExpression(item));
+            values.Add(item.Evaluate(scope));
         }
 
         return new Sequence(values);

@@ -4,7 +4,7 @@ namespace G_Sharp;
 
 public sealed class ConstantAssignmentSyntax : ExpressionSyntax
 {
-    public override SyntaxKind Kind => SyntaxKind.AssignmentExpression;
+    public override SyntaxKind Kind => SyntaxKind.ConstantAssignmentExpression;
     public SyntaxToken IdentifierToken { get; }
     public SyntaxToken AssignmentToken { get; }
     public ExpressionSyntax Expression { get; }
@@ -25,13 +25,13 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
         string name = IdentifierToken.Text;
         object value = Expression;
 
-        if ((int)Expression.Kind < 22 || (int)Expression.Kind > 27)
+        if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
         {
-            value = scope.EvaluateExpression(Expression);
+            value = Expression.Evaluate(scope);
 
             if (value.Equals(""))
             {
-                Error.SetError("SEMANTIC", $"Constant '{name}' can't be assigned to statement");
+                Error.SetError("SEMANTIC", $"Line '{IdentifierToken.Line}' : Constant '{name}' can't be assigned to statement");
                 return "";
             }
         }
@@ -44,7 +44,7 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
     {
         string name = IdentifierToken.Text;
 
-        if ((int)Expression.Kind < 22 || (int)Expression.Kind > 27)
+        if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
         {
             var check = Expression.Checker(scope);
 
@@ -54,7 +54,7 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
 
         if (scope.Constants.ContainsKey(name))
         {
-            Error.SetError("SYNTAX", $"Constant '{name}' is already defined");
+            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : Constant '{name}' is already defined");
             return false;
         }
 

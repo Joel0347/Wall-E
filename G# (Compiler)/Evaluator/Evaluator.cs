@@ -6,24 +6,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace G_Sharp;
 
-public sealed class Evaluator
+public static class Evaluator
 {
-    public ExpressionSyntax Root { get; }
-    public Scope Scope { get; }
+    public static readonly List<object> DefaultFalseValues = new() {
+        "{}", "undefined", 0
+    };
 
-    public Evaluator(ExpressionSyntax root, Scope scope)
+    public static object Evaluate(this Scope scope, ExpressionSyntax node)
     {
-        Root = root;
-        Scope = scope;
-    }
-
-    public object Evaluate()
-    {
-        return EvaluateExpression(Root);
-    }
-    
-    private object EvaluateExpression(ExpressionSyntax node)
-    {
-        return node.Evaluate(Scope);
+        return  node.Evaluate(scope);
     }
 }

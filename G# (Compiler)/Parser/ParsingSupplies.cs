@@ -3,29 +3,6 @@ namespace G_Sharp;
 
 public static class ParsingSupplies
 {
-    private static readonly Dictionary<string, SyntaxKind> keywordKind = new()
-    {
-        ["and"]       = SyntaxKind.AndKeyword,
-        ["or"]        = SyntaxKind.OrKeyword,
-        ["not"]       = SyntaxKind.NotKeyword,
-        ["let"]       = SyntaxKind.LetKeyword,
-        ["in"]        = SyntaxKind.InKeyword,
-        ["if"]        = SyntaxKind.IfKeyword,
-        ["else"]      = SyntaxKind.ElseKeyword,
-        ["then"]      = SyntaxKind.ThenKeyword,
-        ["point"]     = SyntaxKind.GeometryKeyword,
-        ["segment"]   = SyntaxKind.GeometryKeyword,
-        ["ray"]       = SyntaxKind.GeometryKeyword,
-        ["line"]      = SyntaxKind.GeometryKeyword,
-        ["circle"]    = SyntaxKind.GeometryKeyword,
-        ["arc"]       = SyntaxKind.GeometryKeyword,
-        ["measure"]   = SyntaxKind.GeometryKeyword,
-        ["color"]     = SyntaxKind.ColorKeyword,
-        ["draw"]      = SyntaxKind.DrawKeyword,
-        ["restore"]   = SyntaxKind.RestoreKeyword,
-        ["PI"]        = SyntaxKind.NumberToken,
-        ["E"]         = SyntaxKind.NumberToken,
-    };
 
     private static readonly Dictionary<SyntaxKind, int> binaryOperatorPrecedence = new()
     {
@@ -58,6 +35,7 @@ public static class ParsingSupplies
         ["line"]    = LineParsing,
         ["segment"] = SegmentParsing,
         ["ray"]     = RayParsing,
+        ["measure"] = MeasureParsing,
         ["circle"]  = CircleParsing,
         ["arc"]     = ArcParsing
     };
@@ -107,6 +85,13 @@ public static class ParsingSupplies
         return new ConstantAssignmentSyntax(name, operatorToken, segment);
     }
 
+    private static ExpressionSyntax MeasureParsing(SyntaxToken name, SyntaxToken operatorToken)
+    {
+        var points = CreateRandomPoints(2);
+        var measure = new Measure(points[0], points[1]);
+        return new ConstantAssignmentSyntax(name, operatorToken, measure);
+    }
+
     private static ExpressionSyntax CircleParsing(SyntaxToken name, SyntaxToken operatorToken)
     {   
         var points = CreateRandomPoints(2);
@@ -139,14 +124,6 @@ public static class ParsingSupplies
             return value;
 
         return 0;
-    }
-
-    public static SyntaxKind GetKeywordKind(string token)
-    {
-        if (keywordKind.TryGetValue(token, out SyntaxKind value))
-            return value;
-
-        return SyntaxKind.IdentifierToken;
     }
 
     // Metodo que evalua los slash en el string

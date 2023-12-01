@@ -7,11 +7,13 @@ public class AndOperation : ExpressionSyntax
 
     public object Left { get; }
     public object Right { get; }
+    public SyntaxToken OperationToken { get; }
 
-    public AndOperation(object left, object right)
+    public AndOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
         Right = right;
+        OperationToken = operationToken;
     }
 
     public override bool Checker(Scope scope)
@@ -21,8 +23,8 @@ public class AndOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        bool leftIsFalse = EvaluationSupplies.DefaultFalseValues.Contains(Left);
-        bool rightIsFalse = EvaluationSupplies.DefaultFalseValues.Contains(Right);
+        bool leftIsFalse = Evaluator.DefaultFalseValues.Contains(Left);
+        bool rightIsFalse = Evaluator.DefaultFalseValues.Contains(Right);
 
         return (leftIsFalse || rightIsFalse) ? 0 : 1;
     }

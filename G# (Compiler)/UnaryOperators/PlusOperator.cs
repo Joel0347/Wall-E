@@ -7,10 +7,12 @@ public class PlusOperation : ExpressionSyntax
     public override string ReturnType => SemanticCheck.GetType(Operand);
 
     public object Operand { get; }
+    public SyntaxToken OperationToken { get; }
 
-    public PlusOperation(object operand)
+    public PlusOperation(object operand, SyntaxToken operationToken)
     {
         Operand = operand;
+        OperationToken = operationToken;
     }
 
     public override bool Checker(Scope scope)
@@ -19,7 +21,7 @@ public class PlusOperation : ExpressionSyntax
 
         if (operandType != "number")
         {
-            Error.SetError("SEMANTIC", $"Operator '+' can't not be used before '{operandType}'");
+            Error.SetError("SEMANTIC", $"Line ' {OperationToken.Line} ' : Operator '+' can't not be used before '{operandType}'");
             return false;
         }
         

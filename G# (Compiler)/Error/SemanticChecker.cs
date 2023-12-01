@@ -1,29 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace G_Sharp;
-public class SemanticChecker
+public static class SemanticChecker
 {
-    public ExpressionSyntax Root { get; }
-    public Scope Scope { get; }
-
-    public SemanticChecker(ExpressionSyntax root, Scope scope)
+    public static bool Check(this Scope scope, ExpressionSyntax node)
     {
-        Root = root;
-        Scope = scope;
+        return scope.CheckExpression(node);
     }
 
-    public bool Check()
+    private static bool CheckExpression(this Scope scope, ExpressionSyntax node)
     {
-        return CheckExpression(Root);
-    }
-
-    private bool CheckExpression(ExpressionSyntax node)
-    {
-        return node.Checker(Scope);
+        return node.Checker(scope);
     }
 }
 

@@ -7,10 +7,12 @@ public class NotOperation : ExpressionSyntax
     public override string ReturnType => SemanticCheck.GetType(Operand);
 
     public object Operand { get; }
+    public SyntaxToken OperationToken { get; }
 
-    public NotOperation(object operand)
+    public NotOperation(object operand, SyntaxToken operationToken)
     {
         Operand = operand;
+        OperationToken = operationToken;
     }
 
     public override bool Checker(Scope scope)
@@ -19,7 +21,7 @@ public class NotOperation : ExpressionSyntax
 
         if (operandType != "number")
         {
-            Error.SetError("SEMANTIC", $"Operator 'not' can't not be used before '{operandType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator 'not' can't not be used before '{operandType}'");
             return false;
         }
         
@@ -28,6 +30,6 @@ public class NotOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        return EvaluationSupplies.DefaultFalseValues.Contains(Operand) ? 1 : 0;
+        return Evaluator.DefaultFalseValues.Contains(Operand) ? 1 : 0;
     }
 }

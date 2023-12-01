@@ -40,8 +40,7 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
 
         foreach (var statement in Instructions)
         {
-            var evaluation = new Evaluator(statement, internalScope);
-            result = evaluation.Evaluate();
+            result = internalScope.Evaluate(statement);
         }
 
         return result;
@@ -51,8 +50,8 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
     {
         foreach (var statement in Instructions)
         {
-            var check = new SemanticChecker(statement, scope);
-            if (!check.Check()) return false;
+            var check = scope.Check(statement);
+            if (!check) return false;
         }
 
         return true;

@@ -15,7 +15,7 @@ public sealed class SyntaxTree
     public static SyntaxTree Parse(string text)
     {
         var parser = new Parser(text);
-        var endOfFileToken = new SyntaxToken(SyntaxKind.EndOfFileToken, 0, "", "");
+        var endOfFileToken = new SyntaxToken(SyntaxKind.EndOfFileToken, 0, 0, "", "");
 
         if (parser.ContainsError)
             return new SyntaxTree(true, new List<ExpressionSyntax> { new ErrorExpressionSyntax() }, endOfFileToken);
