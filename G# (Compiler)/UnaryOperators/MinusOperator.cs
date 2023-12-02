@@ -21,7 +21,8 @@ public class MinusOperation : ExpressionSyntax
 
         if (operandType != "number")
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't not be used before '{operandType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' " +
+                            $"can't not be used before '{operandType}'");
             return false;
         }
         

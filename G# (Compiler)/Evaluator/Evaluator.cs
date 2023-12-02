@@ -12,6 +12,7 @@ public static class Evaluator
         "{}", "undefined", 0
     };
 
+
     public static object Evaluate(this Scope scope, ExpressionSyntax node)
     {
         return  node.Evaluate(scope);

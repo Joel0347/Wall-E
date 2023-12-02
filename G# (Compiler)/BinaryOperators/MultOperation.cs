@@ -51,14 +51,14 @@ public class MultOperation : ExpressionSyntax
         if (SemanticCheck.GetType(Left) == "measure") 
         {
             var leftValue = ((Measure)Left).Value;
-            var rightValue = Math.Abs((int) Right);
+            var rightValue = Math.Abs(Convert.ToInt32((double) Right));
             return new Measure((float) (leftValue * rightValue));
         }
 
-        else if (Right is Measure measure2)
+        else if (SemanticCheck.GetType(Right) == "measure")
         {
-            var rightValue = measure2.Value;
-            var leftValue = Math.Abs((int) Right);
+            var rightValue = ((Measure)Right).Value;
+            var leftValue = Math.Abs(Convert.ToInt32((double) Left));
             return new Measure((float) (leftValue * rightValue));
         }
 

@@ -52,17 +52,17 @@ internal sealed class Parser
             [SyntaxKind.LetKeyword]            = LetInExpressionParsing,
             [SyntaxKind.IfKeyword]             = ConditionalExpressionParsing,
             [SyntaxKind.IdentifierToken]       = IdentifierParsing,
-            [SyntaxKind.MathKeyword]           = IdentifierParsing,
+            [SyntaxKind.MathToken]           = IdentifierParsing,
             [SyntaxKind.StringToken]           = StringParsing,
             [SyntaxKind.NumberToken]           = NumberParsing
         };
 
         assignmentEvaluation = new()
         {
-            [SyntaxKind.DrawKeyword]     = DrawParsing,
+            [SyntaxKind.DrawKeyword] = DrawParsing,
             [SyntaxKind.GeometryKeyword] = AssignmentGeometryEval,
             [SyntaxKind.IdentifierToken] = AssignmentIdentifierEval,
-            [SyntaxKind.MathKeyword]     = MathKeywordParsing
+            [SyntaxKind.MathToken] = MathKeywordParsing
         };
     }
 
@@ -109,7 +109,7 @@ internal sealed class Parser
         if (Current.Kind == kind)
             return NextToken();
 
-        Error.SetError("SYNTAX", $"Line '{Current.Line}' : Unexpected token '{Current.Text}', expected '{expectedText}'");
+        Error.SetError("SYNTAX", $"Line '{Current.Line}' : Unexpected token ' {Current.Text} ', expected ' {expectedText} '");
         kind = SyntaxKind.ErrorToken;
         return new SyntaxToken(kind, 1, Current.Position, "", 0.0);
     }
@@ -429,6 +429,44 @@ internal sealed class Parser
             functionParams = parameters;
             positionAfterFuncParams = position;
             position = actualPos;
+        }
+
+        else if (Peek(1).Kind == SyntaxKind.SeparatorToken)
+        {
+            List<SyntaxToken> identifiers = new()
+            {
+                NextToken()
+            };
+
+            var separatorToken = NextToken();
+
+            while (true)
+            {
+                if (Current.Kind != SyntaxKind.IdentifierToken &&
+                    Current.Kind != SyntaxKind.SeparatorToken
+                   )
+                {
+                    Error.SetError("SEMANTIC", $"Line: '{Current.Line}' : Expected '=', not '{Current.Text}'");
+                    return new ErrorExpressionSyntax();
+                }
+
+                var identifierToken = MatchToken(SyntaxKind.IdentifierToken, "constant");
+                if (identifierToken.Kind == SyntaxKind.ErrorToken)
+                    return new ErrorExpressionSyntax();
+
+                identifiers.Add(identifierToken);
+
+                if (Current.Kind == SyntaxKind.AssignmentToken) break;
+                separatorToken = MatchToken(SyntaxKind.SeparatorToken, ",");
+
+                if (separatorToken.Kind == SyntaxKind.ErrorToken)
+                    return new ErrorExpressionSyntax();
+            }
+
+            var assigmentToken = NextToken();
+            var expression = ParseExpression();
+
+            return new MultipleAssignmentSyntax(identifiers, assigmentToken, expression);
         }
 
         else if (Peek(1).Kind == SyntaxKind.AssignmentToken)

@@ -25,23 +25,17 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
         Dictionary<string, Function> internalFunctions = new();
 
         foreach (string key in scope.Constants.Keys)
-        {
             internalConstants[key] = scope.Constants[key];
-        }
 
         foreach (string key in scope.Functions.Keys)
-        {
             internalFunctions[key] = scope.Functions[key];
-        }
 
         Scope internalScope = new(internalConstants, internalFunctions);
 
         object result = null!;
 
         foreach (var statement in Instructions)
-        {
             result = internalScope.Evaluate(statement);
-        }
 
         return result;
     }

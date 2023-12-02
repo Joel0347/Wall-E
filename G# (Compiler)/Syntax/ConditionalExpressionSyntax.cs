@@ -39,10 +39,8 @@ public sealed class ConditionalExpressionSyntax : ExpressionSyntax
         var condition = Condition.Evaluate(scope);
 
         if (Evaluator.DefaultFalseValues.Contains(condition))
-        {
             return BodyFalse.Evaluate(scope);
-        }
-
+        
         return BodyTrue.Evaluate(scope);
         //}
 

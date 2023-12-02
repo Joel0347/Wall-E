@@ -29,7 +29,8 @@ public sealed class AssignmentFunctionSyntax : ExpressionSyntax
         if (!scope.Functions.ContainsKey(name))
             scope.Functions[name] = new Function(body, parameters);
 
-        else Error.SetError("SYNTAX", $"Line '{FunctionIdentifierToken.Line}' : Function '{name}' is already defined");
+        else Error.SetError("SYNTAX", $"Line '{FunctionIdentifierToken.Line}' : Function '{name}' " +
+                            $"is already defined");
 
         return "";
     }

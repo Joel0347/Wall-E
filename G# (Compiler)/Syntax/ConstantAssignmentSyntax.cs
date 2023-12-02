@@ -26,15 +26,7 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
         object value = Expression;
 
         if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
-        {
             value = Expression.Evaluate(scope);
-
-            if (value.Equals(""))
-            {
-                Error.SetError("SEMANTIC", $"Line '{IdentifierToken.Line}' : Constant '{name}' can't be assigned to statement");
-                return "";
-            }
-        }
  
         scope.Constants[name] = new Constant(value);
         return value;
@@ -46,15 +38,21 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
 
         if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
         {
-            var check = Expression.Checker(scope);
-
-            if (!check)
+            if (!Expression.Checker(scope))
                 return false;
+
+            if (Expression.ReturnType == "void expression")
+            {
+                Error.SetError("SEMANTIC", $"Line '{IdentifierToken.Line}' : Constant '{name}' " +
+                                $"can't be assigned to statement");
+                return false;
+            }
         }
 
         if (scope.Constants.ContainsKey(name))
         {
-            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : Constant '{name}' is already defined");
+            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : Constant '{name}' is " +
+                            $"already defined");
             return false;
         }
 

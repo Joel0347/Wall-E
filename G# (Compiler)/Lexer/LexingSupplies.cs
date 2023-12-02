@@ -24,8 +24,8 @@ public static class LexingSupplies
         ["color"]     = SyntaxKind.ColorKeyword,
         ["draw"]      = SyntaxKind.DrawKeyword,
         ["restore"]   = SyntaxKind.RestoreKeyword,
-        ["PI"]        = SyntaxKind.MathKeyword,
-        ["E"]         = SyntaxKind.MathKeyword,
+        ["PI"]        = SyntaxKind.MathToken,
+        ["E"]         = SyntaxKind.MathToken,
     };
 
 

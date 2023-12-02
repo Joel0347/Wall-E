@@ -9,8 +9,8 @@ internal sealed class Lexer
 
     private string Text { get; }
     private Dictionary<char, Func<SyntaxToken>> LexSpecialChars { get; }
-    private char Current => Peek(0);
-    private char NextCurrent => Peek(1);
+    private char Current => LookAhead(0);
+    private char NextCurrent => LookAhead(1);
 
     public Lexer(string text)
     {
@@ -26,7 +26,7 @@ internal sealed class Lexer
     }
 
 
-    private char Peek(int offset)
+    private char LookAhead(int offset)
     {
         var index = position + offset;
         if (index >= Text!.Length)
@@ -72,7 +72,7 @@ internal sealed class Lexer
 
         while (Current != '"' || (Current == '"' && int.IsOddInteger(backSlashCount)))
         {
-            if (Peek(1) == '\0')
+            if (LookAhead(1) == '\0')
             {
                 Error.SetError("SYNTAX", $"Line '{line}': Undetermined string literal");
                 return new SyntaxToken(SyntaxKind.ErrorToken!, line, position++, Text![position - 1].ToString(), null!);
@@ -82,6 +82,8 @@ internal sealed class Lexer
                 backSlashCount++;
 
             else backSlashCount = 0;
+
+            if (Current == '\n') line++;
 
             Next();
         }

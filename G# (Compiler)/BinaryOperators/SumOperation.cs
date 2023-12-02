@@ -4,7 +4,12 @@ public class SumOperation : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
 
-    public override string ReturnType => SemanticCheck.GetType(Left);  
+    public override string ReturnType => SemanticCheck.GetType(Left);
+
+    private readonly static List<string> compatibility = new()
+    {
+        "number", "sequence", "measure"
+    };
 
     public object Left { get; }
     public object Right { get; }
@@ -22,8 +27,8 @@ public class SumOperation : ExpressionSyntax
         string leftType = SemanticCheck.GetType(Left);
         string rightType = SemanticCheck.GetType(Right);
 
-        bool leftIsCompatible =  leftType == "number" || leftType == "measure" || leftType == "sequence";
-        bool rightIsCompatible = rightType == "number" || rightType == "measure" || rightType == "sequence";
+        bool leftIsCompatible =  compatibility.Contains(leftType);
+        bool rightIsCompatible = compatibility.Contains(rightType);
         bool sameType = leftType == rightType;
 
         if (!sameType || !leftIsCompatible || !rightIsCompatible)

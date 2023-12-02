@@ -9,7 +9,8 @@ public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
     public override string ReturnType => Expression.ReturnType;
 
     public ParenthesizedExpressionSyntax(
-        SyntaxToken openParenthesisToken, ExpressionSyntax expression, SyntaxToken closedParenthesisToken
+        SyntaxToken openParenthesisToken, ExpressionSyntax expression, 
+        SyntaxToken closedParenthesisToken
     )
     {
         OpenParenthesisToken = openParenthesisToken;

@@ -35,6 +35,7 @@ public enum SyntaxKind
     ClosedCurlyBracketToken,
     OpenCurlyBracketToken,
     CommentToken,
+    MathToken,
 
     // Expressions
     LiteralExpression,
@@ -64,7 +65,6 @@ public enum SyntaxKind
     GeometryKeyword,
     DrawKeyword,
     RestoreKeyword,
-    MathKeyword,
 }
 
 public static class Data

@@ -21,7 +21,8 @@ public class NotOperation : ExpressionSyntax
 
         if (operandType != "number")
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator 'not' can't not be used before '{operandType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator 'not' " +
+                            $"can't not be used before '{operandType}'");
             return false;
         }
         

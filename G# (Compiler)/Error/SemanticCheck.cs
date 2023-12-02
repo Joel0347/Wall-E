@@ -8,8 +8,9 @@ public static class SemanticCheck
         {
             double or int or decimal or float or long => "number",
             string => "string",
+            null => "undefined",
             ExpressionSyntax expression => expression.ReturnType,
-            _ => "undefined"
-        };
+            _ => "undefined expression"
+        }; 
     }
 }

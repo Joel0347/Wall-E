@@ -27,7 +27,8 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
 
         if (!scope.Constants.TryGetValue(name, out Constant? value))
         {
-            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : Constant '{name}' is not defined yet");
+            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : " +
+                            $"Constant '{name}' is not defined yet");
             return false;
         }
 
