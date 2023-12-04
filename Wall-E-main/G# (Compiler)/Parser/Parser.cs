@@ -419,14 +419,14 @@ internal sealed class Parser
 
         else if (Current.Kind == SyntaxKind.SequenceKeyword)
         {
-            Random generateRandomsEelements = new();
+            Random generateRandomsElements = new();
             NextToken();
             var id = MatchToken(SyntaxKind.IdentifierToken, "constant");
 
             if (id.Kind == SyntaxKind.ErrorToken)
                 return new ErrorExpressionSyntax();
 
-            int count = generateRandomsEelements.Next(2, 11);
+            int count = generateRandomsElements.Next(2, 11);
             var operatorToken = new SyntaxToken(SyntaxKind.AssignmentToken, id.Line, id.Position + 1, "=", "");
             List<ExpressionSyntax> elements = new();
 
