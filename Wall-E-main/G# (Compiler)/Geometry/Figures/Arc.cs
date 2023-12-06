@@ -43,8 +43,8 @@ public sealed class Arc : Figure, IEquatable<Arc>
 
     public bool Equals(Arc? other)
     {
-        var samePoints = Center.Equals(other!.Center) && Left.Equals(other!.Left) && Right.Equals(other!.Right);
-        return samePoints && Measure.Equals(other.Measure);
+        var sameAngle = SweepAngle == other!.SweepAngle;
+        return sameAngle && Measure.Equals(other.Measure);
     }
 
     public override bool Equals(object? obj) => Equals(obj as Arc);

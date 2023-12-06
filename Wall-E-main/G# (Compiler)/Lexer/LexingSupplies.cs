@@ -37,7 +37,8 @@ public static class LexingSupplies
         ["sequence"]  = SyntaxKind.SequenceKeyword,
         ["import"]    = SyntaxKind.ImportKeyword,
         ["PI"]        = SyntaxKind.MathToken,
-        ["E"]         = SyntaxKind.MathToken
+        ["E"]         = SyntaxKind.MathToken,
+        ["undefined"] = SyntaxKind.UndefinedToken,
     };
 
 
@@ -92,6 +93,8 @@ public static class LexingSupplies
     {
         if (NextCurrent == '=')
             return (new SyntaxToken(SyntaxKind.DifferentToken, line, pos, "!=", null!), pos + 2);
+
+        Error.SetError("LEXICAL", $"Line '{line}' : Unexpected character '!'");
         return (new SyntaxToken(SyntaxKind.ErrorToken!, line, pos, "", null!), ++pos);
     }
 }

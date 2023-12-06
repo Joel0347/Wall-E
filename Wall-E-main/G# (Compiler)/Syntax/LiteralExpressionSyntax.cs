@@ -22,4 +22,6 @@ public sealed class LiteralExpressionSyntax : ExpressionSyntax
     {
         return true;
     }
+
+    public override string ToString() => LiteralToken.Value.ToString()!;
 }

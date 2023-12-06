@@ -19,7 +19,7 @@ public class PlusOperation : ExpressionSyntax
     {
         string operandType = SemanticCheck.GetType(Operand);
 
-        if (operandType != "number")
+        if (operandType != "number" && operandType != "undefined")
         {
             Error.SetError("SEMANTIC", $"Line ' {OperationToken.Line} ' : Operator '+' " +
                             $"can't not be used before '{operandType}'");
@@ -31,6 +31,7 @@ public class PlusOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
+        if (Operand is null) return null!;
         return + double.Parse(Operand.ToString()!); 
     }
 }

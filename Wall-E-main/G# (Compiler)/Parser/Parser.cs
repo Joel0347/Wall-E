@@ -55,6 +55,7 @@ internal sealed class Parser
             [SyntaxKind.IfKeyword]             = ConditionalExpressionParsing,
             [SyntaxKind.IdentifierToken]       = IdentifierParsing,
             [SyntaxKind.MathToken]             = IdentifierParsing,
+            [SyntaxKind.UndefinedToken]        = IdentifierParsing,
             [SyntaxKind.StringToken]           = StringParsing,
             [SyntaxKind.NumberToken]           = NumberParsing,
             [SyntaxKind.GeometryKeyword]       = AssignmentGeometryParsing,
@@ -65,7 +66,8 @@ internal sealed class Parser
         {
             [SyntaxKind.DrawKeyword] = DrawParsing,
             [SyntaxKind.IdentifierToken] = AssignmentIdentifierEval,
-            [SyntaxKind.MathToken] = MathKeywordParsing
+            [SyntaxKind.MathToken] = MathKeywordParsing,
+            [SyntaxKind.UndefinedToken] = MathKeywordParsing
         };
     }
 
@@ -253,7 +255,7 @@ internal sealed class Parser
             if (hasEnd && !Error.Wrong)
             {
                 if (last <= first)
-                    return new FiniteSequence(new List<ExpressionSyntax>());
+                    return new FiniteSequence<ExpressionSyntax>(new List<ExpressionSyntax>());
             }
             
             return new InfiniteIntegerSequence(first, last);
@@ -262,7 +264,7 @@ internal sealed class Parser
         var elements = GetFunctionParams("sequence");
         NextToken();
 
-        return new FiniteSequence(elements);
+        return new FiniteSequence<ExpressionSyntax>(elements);
     }
 
     private ExpressionSyntax LetInExpressionParsing()
@@ -390,7 +392,7 @@ internal sealed class Parser
         {
             var expressions = SequenceExpressionParsing();
             
-            if (expressions is FiniteSequence finiteSequence)
+            if (expressions is FiniteSequence<ExpressionSyntax> finiteSequence)
             {
                 for (int i = 0; i < finiteSequence.Elements.Count; i++)
                 {
@@ -419,14 +421,14 @@ internal sealed class Parser
 
         else if (Current.Kind == SyntaxKind.SequenceKeyword)
         {
-            Random generateRandomsElements = new();
+            Random generateRandomsEelements = new();
             NextToken();
             var id = MatchToken(SyntaxKind.IdentifierToken, "constant");
 
             if (id.Kind == SyntaxKind.ErrorToken)
                 return new ErrorExpressionSyntax();
 
-            int count = generateRandomsElements.Next(2, 11);
+            int count = generateRandomsEelements.Next(2, 11);
             var operatorToken = new SyntaxToken(SyntaxKind.AssignmentToken, id.Line, id.Position + 1, "=", "");
             List<ExpressionSyntax> elements = new();
 
@@ -437,7 +439,7 @@ internal sealed class Parser
                 elements.Add(element);
             }
 
-            var sequence = new FiniteSequence(elements);
+            var sequence = new FiniteSequence<ExpressionSyntax>(elements);
             return new ConstantAssignmentSyntax(id, operatorToken, sequence);
         }
 
@@ -503,10 +505,11 @@ internal sealed class Parser
                     Current.Kind != SyntaxKind.SeparatorToken
                    )
                 {
-                    Error.SetError("SEMANTIC", $"Line: '{Current.Line}' : Expected '=', not '{Current.Text}'");
+                    Error.SetError("SYNTAX", $"Line: '{Current.Line}' : Unexpected '{Current.Text}'");
                     return new ErrorExpressionSyntax();
                 }
 
+                
                 var identifierToken = MatchToken(SyntaxKind.IdentifierToken, "constant");
                 if (identifierToken.Kind == SyntaxKind.ErrorToken)
                     return new ErrorExpressionSyntax();

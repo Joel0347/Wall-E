@@ -28,6 +28,13 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
         if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
             value = Expression.Evaluate(scope);
  
+        if (value is null)
+        {
+            Error.SetError("SEMANTIC", $"Line '{IdentifierToken.Line}' : Constant '{name}' can't " +
+                        $"be assigned to 'undefined' expression");
+            return "";
+        }
+
         scope.Constants[name] = new Constant(value);
         return "";
     }
@@ -51,7 +58,8 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
 
         if (scope.Constants.ContainsKey(name))
         {
-            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : Constant '{name}' is " +
+            string constant = name == "undefined" ?  "" : "Constant";
+            Error.SetError("SYNTAX", $"Line '{IdentifierToken.Line}' : {constant}'{name}' is " +
                             $"already defined");
             return false;
         }

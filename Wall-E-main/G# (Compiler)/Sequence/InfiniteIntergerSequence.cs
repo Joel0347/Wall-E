@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace G_Sharp;
 
@@ -20,6 +21,8 @@ public sealed class InfiniteIntegerSequence : SequenceExpressionSyntax
     private long Last { get; }
 
     public override object Count => Last == long.MaxValue ? null! : Last;
+
+    public override string ValuesType => "number";
 
     public InfiniteIntegerSequence(long first, long last)
     {

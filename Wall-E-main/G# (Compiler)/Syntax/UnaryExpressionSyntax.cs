@@ -23,7 +23,6 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
     public override object Evaluate(Scope scope)
     {
         var operand = Operand.Evaluate(scope);
-        if (operand == null) return null!;
 
         var operation = unaryOperationEvaluation[OperatorToken.Kind](operand, OperatorToken);
         return operation.Evaluate(scope);

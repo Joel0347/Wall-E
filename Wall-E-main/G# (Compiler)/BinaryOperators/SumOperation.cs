@@ -8,7 +8,7 @@ public class SumOperation : ExpressionSyntax
 
     private readonly static List<string> compatibility = new()
     {
-        "number", "sequence", "measure"
+        "number", "sequence", "measure", "undefined"
     };
 
     public object Left { get; }
@@ -31,11 +31,35 @@ public class SumOperation : ExpressionSyntax
         bool rightIsCompatible = compatibility.Contains(rightType);
         bool sameType = leftType == rightType;
 
-        if (!sameType || !leftIsCompatible || !rightIsCompatible)
+        if (!leftIsCompatible || !rightIsCompatible)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
+        }
+
+        if (!sameType && leftType != "undefined" && rightType != "undefined")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return false;
+        }
+
+        if (leftType == "sequence")
+        {
+            var seq1 = (SequenceExpressionSyntax)Left;
+
+            if (rightType == "undefined")
+                return true;
+
+            var seq2 = (SequenceExpressionSyntax)Right;
+
+            if (seq1.ValuesType != seq2.ValuesType)
+            {
+                Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+                            $"be used between 'sequence of {seq1.ValuesType}' and 'sequence of {seq2.ValuesType}'");
+                return false;
+            }
         }
         
         return true;
@@ -43,23 +67,47 @@ public class SumOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        if (SemanticCheck.GetType(Left) == "measure") 
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
+
+        if (leftType == "measure")
         {
             var leftValue = ((Measure)Left).Value;
             var rightValue = ((Measure)Right).Value;
-            return new Measure((float) (leftValue + rightValue));
+            return new Measure((float)(leftValue + rightValue));
         }
 
-        else if (SemanticCheck.GetType(Left) == "sequence")
+        else if (leftType == "sequence")
         {
-            var sequence1 = (FiniteSequence) Left;
-            var sequence2 = (FiniteSequence) Right;
+            var sequence1 = (FiniteSequence<object>)Left;
             List<object> parameters = new();
-            parameters.AddRange(sequence1.ElementsEvaluation);
-            parameters.AddRange(sequence2.ElementsEvaluation);
-            return new FiniteSequence(parameters);
+            parameters.AddRange(sequence1.Elements);
+
+            if (SemanticCheck.GetType(Right) == "undefined")
+                parameters.Add(null!);
+
+            else
+            {
+                var sequence2 = (FiniteSequence<object>)Right;
+                parameters.AddRange(sequence2.Elements);
+            }
+
+            return new FiniteSequence<object>(parameters);
         }
 
-        return double.Parse(Left.ToString()!) + double.Parse(Right.ToString()!);
+        else if (leftType == "undefined")
+            return null!;
+
+        try
+        {
+            return double.Parse(Left.ToString()!) + double.Parse(Right.ToString()!);
+        }
+
+        catch 
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return null!;
+        }
     }
 }

@@ -124,7 +124,7 @@ internal sealed class Lexer
         if (LookAhead(1) == '.' && LookAhead(2) == '.')
             return new SyntaxToken(SyntaxKind.SuspenseToken, line, position += 3, "...", null!);
 
-        Error.SetError("LEXCIAL", $"Line '{line}' : Invalid token '.'");
+        Error.SetError("LEXCIAL", $"Line '{line}' : Unexpected character '.'");
         return new SyntaxToken(SyntaxKind.ErrorToken, line, position++, "", null!);
     }
 

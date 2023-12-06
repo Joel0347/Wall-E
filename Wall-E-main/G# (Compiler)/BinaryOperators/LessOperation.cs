@@ -16,6 +16,11 @@ public class LessOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
+    private readonly static List<string> compatibility = new()
+    {
+        "number", "measure"
+    };
+
     public override bool Checker(Scope scope)
     {
         string leftType = SemanticCheck.GetType(Left);
@@ -37,13 +42,26 @@ public class LessOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        if (SemanticCheck.GetType(Left) == "measure")
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
+
+        if (leftType == "measure")
         {
             var measure1 = (Measure) Left;
             var measure2 = (Measure) Right;
             return (measure1.Value < measure2.Value) ? 1 : 0;
         }
 
-        return double.Parse(Left.ToString()!) < double.Parse(Right.ToString()!) ? 1 : 0;
+        try
+        {
+            return double.Parse(Left.ToString()!) < double.Parse(Right.ToString()!) ? 1 : 0;
+        }
+
+        catch
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '<' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return null!;
+        }
     }
 }

@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 namespace G_Sharp;
 
 public sealed class AssignmentFunctionSyntax : ExpressionSyntax
@@ -22,6 +24,11 @@ public sealed class AssignmentFunctionSyntax : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
+        return "";
+    }
+
+    public override bool Checker(Scope scope)
+    {
         string name = FunctionIdentifierToken.Text;
         var body = Expression;
         var parameters = IdentifiersToken;
@@ -29,14 +36,13 @@ public sealed class AssignmentFunctionSyntax : ExpressionSyntax
         if (!scope.Functions.ContainsKey(name))
             scope.Functions[name] = new Function(body, parameters);
 
-        else Error.SetError("SYNTAX", $"Line '{FunctionIdentifierToken.Line}' : Function '{name}' " +
+        else
+        {
+            Error.SetError("SYNTAX", $"Line '{FunctionIdentifierToken.Line}' : Function '{name}' " +
                             $"is already defined");
+            return false;
+        }
 
-        return "";
-    }
-
-    public override bool Checker(Scope scope)
-    {
-        return true;//cambiar
+        return true;
     }
 }

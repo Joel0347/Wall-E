@@ -17,34 +17,62 @@ public class RestOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
+    private readonly static List<string> compatibility = new()
+    {
+        "number", "measure", "undefined"
+    };
+
     public override bool Checker(Scope scope)
     {
         string leftType = SemanticCheck.GetType(Left);
         string rightType = SemanticCheck.GetType(Right);
 
-        bool leftIsCompatible =  leftType == "number" || leftType == "measure";
-        bool rightIsCompatible = rightType == "number" || rightType == "measure";
+        bool leftIsCompatible =  compatibility.Contains(leftType);
+        bool rightIsCompatible = compatibility.Contains(rightType);
         bool sameType = leftType == rightType;
 
-        if (!sameType || !leftIsCompatible || !rightIsCompatible)
+        if (!leftIsCompatible || !rightIsCompatible)
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
-        
+
+        if (!sameType && leftType != "undefined" && rightType != "undefined")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return false;
+        }
+
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        if (SemanticCheck.GetType(Left) == "measure") 
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
+
+        if (leftType == "undefined")
+            return null!;
+
+        if (leftType == "measure") 
         {
             var leftValue = ((Measure)Left).Value;
             var rightValue = ((Measure)Right).Value;
             return new Measure((float) Math.Abs(leftValue - rightValue));
         }
 
-        return double.Parse(Left.ToString()!) - double.Parse(Right.ToString()!);
+        try
+        {
+            return double.Parse(Left.ToString()!) - double.Parse(Right.ToString()!);
+        }
+
+        catch
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return null!;
+        }
     }
 }

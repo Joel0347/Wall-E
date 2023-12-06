@@ -52,7 +52,7 @@ public sealed class ConditionalExpressionSyntax : ExpressionSyntax
         var bodyTrueType = BodyTrue.ReturnType;
         var sameType = bodyTrueType.Equals(bodyFalseType);
 
-        if (!sameType)
+        if (!sameType && bodyFalseType != "undefined" && bodyTrueType != "undefined")
         {
             Error.SetError("SEMANTIC", "Conditional must return the same type of value in " +
                             "the 'then' clause and the 'else' clause");

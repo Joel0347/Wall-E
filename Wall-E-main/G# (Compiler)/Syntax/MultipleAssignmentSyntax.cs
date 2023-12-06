@@ -60,7 +60,7 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
     {
         SequenceExpressionSyntax sequence = (SequenceExpressionSyntax) Expression.Evaluate(scope);
 
-        long count = Identifiers.Count;
+        long count = Identifiers.Count - 1;
         if (sequence.Count is not null)
             count = long.Parse(sequence.Count.ToString()!);
 
@@ -68,11 +68,8 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         {
             string name = Identifiers[i].Text;
 
-            if (i < count - 1)
-            {
-                if (name != "_")
-                    scope.Constants[name] = new Constant(sequence[i]);
-            }
+            if (i < count && name != "_")
+                scope.Constants[name] = new Constant(sequence[i]);
 
             else
             {
@@ -83,7 +80,7 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         var lastId = Identifiers.Last().Text;
         if (lastId != "_")
         {
-            int startIndex = (int)Math.Min(count, Identifiers.Count);
+            int startIndex = (int)Math.Min(count, Identifiers.Count) - 1;
             var rest = sequence.RestOfSequence(startIndex);
             scope.Constants[lastId] = new Constant(rest);
         }

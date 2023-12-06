@@ -19,7 +19,7 @@ public class NotOperation : ExpressionSyntax
     {
         string operandType = SemanticCheck.GetType(Operand);
 
-        if (operandType != "number")
+        if (operandType != "number" && operandType != "undefined")
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator 'not' " +
                             $"can't not be used before '{operandType}'");

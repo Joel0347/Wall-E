@@ -26,30 +26,48 @@ public class MultOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
+    private readonly static List<string> compatibility = new()
+    {
+        "number", "measure", "undefined"
+    };
+
     public override bool Checker(Scope scope)
     {
         string leftType = SemanticCheck.GetType(Left);
         string rightType = SemanticCheck.GetType(Right);
 
-        bool leftIsCompatible =  leftType == "number" || leftType == "measure";
-        bool rightIsCompatible = rightType == "number" || rightType == "measure";
+        bool leftIsCompatible =  compatibility.Contains(leftType);
+        bool rightIsCompatible = compatibility.Contains(rightType);
 
         bool correctMembers = (leftType == "number" && rightType == "measure") ||
         (leftType == "measure" && rightType == "number") || (leftType == "number" && rightType == "number");
 
-        if (!leftIsCompatible || !rightIsCompatible || !correctMembers)
+        if (!leftIsCompatible || !rightIsCompatible)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '*' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
-        
+
+        if (!correctMembers && leftType != "undefined" && rightType != "undefined")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '*' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return false;
+        }
+
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        if (SemanticCheck.GetType(Left) == "measure") 
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
+
+        if (leftType == "undefined" || rightType == "undefined")
+            return null!;
+
+        if (leftType == "measure") 
         {
             var leftValue = ((Measure)Left).Value;
             var rightValue = Math.Abs(Convert.ToInt32((double) Right));
@@ -63,6 +81,16 @@ public class MultOperation : ExpressionSyntax
             return new Measure((float) (leftValue * rightValue));
         }
 
-        return double.Parse(Left.ToString()!) * double.Parse(Right.ToString()!);
+        try
+        {
+            return double.Parse(Left.ToString()!) * double.Parse(Right.ToString()!);
+        }
+
+        catch
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '*' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return null!;
+        }
     }
 }

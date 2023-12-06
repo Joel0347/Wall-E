@@ -9,6 +9,11 @@ public class ModOperation : ExpressionSyntax
     public object Right { get; }
     public SyntaxToken OperationToken { get; }
 
+    private readonly static List<string> compatibility = new()
+    {
+        "number", "undefined"
+    };
+
     public ModOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
@@ -21,7 +26,7 @@ public class ModOperation : ExpressionSyntax
         string leftType = SemanticCheck.GetType(Left);
         string rightType = SemanticCheck.GetType(Right);
 
-        if (leftType != "number" || rightType != "number")
+        if (!compatibility.Contains(leftType) || !compatibility.Contains(rightType))
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '%' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
@@ -33,12 +38,26 @@ public class ModOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
+
+        if (leftType == "undefined" || rightType == "undefined")
+            return null!;
+
         if ((double)Right == 0)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Division by '0' is not defined");
             return 0;
         }
 
-        return double.Parse(Left.ToString()!) % double.Parse(Right.ToString()!);
-    }
+        try
+        {
+            return double.Parse(Left.ToString()!) % double.Parse(Right.ToString()!);
+        }
+        catch 
+        { 
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '%' can't " + 
+                                $"be used between '{leftType}' and '{rightType}'"); 
+            return null!; }
+        }
 }

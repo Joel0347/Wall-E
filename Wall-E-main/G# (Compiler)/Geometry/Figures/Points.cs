@@ -40,7 +40,7 @@ public sealed class Points : Figure, IEquatable<Points>
 
     public override SequenceExpressionSyntax PointsInFigure()
     {
-        List<ExpressionSyntax> point = new() { new Points(X, Y) };
-        return new FiniteSequence(point);
+        List<Points> point = new() { new Points(X, Y) };
+        return new FiniteSequence<Points>(point);
     }
 }

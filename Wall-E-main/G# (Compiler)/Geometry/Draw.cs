@@ -38,9 +38,9 @@ public class Draw : ExpressionSyntax
         {
             var value = item.Evaluate(scope);
 
-            if (value is FiniteSequence sequence)
+            if (value is FiniteSequence<object> sequence)
             {
-                foreach (var element in sequence.ElementsEvaluation)
+                foreach (var element in sequence.Elements)
                 {
                     if (element is ExpressionSyntax evalElement)
                     {
