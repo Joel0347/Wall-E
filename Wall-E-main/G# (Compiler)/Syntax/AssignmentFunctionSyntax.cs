@@ -27,7 +27,7 @@ public sealed class AssignmentFunctionSyntax : ExpressionSyntax
         return "";
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         string name = FunctionIdentifierToken.Text;
         var body = Expression;

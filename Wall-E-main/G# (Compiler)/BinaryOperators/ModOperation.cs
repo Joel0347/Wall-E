@@ -9,11 +9,6 @@ public class ModOperation : ExpressionSyntax
     public object Right { get; }
     public SyntaxToken OperationToken { get; }
 
-    private readonly static List<string> compatibility = new()
-    {
-        "number", "undefined"
-    };
-
     public ModOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
@@ -21,12 +16,12 @@ public class ModOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
-        string leftType = SemanticChecker.GetType(Left);
-        string rightType = SemanticChecker.GetType(Right);
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
 
-        if (!compatibility.Contains(leftType) || !compatibility.Contains(rightType))
+        if (leftType != "number" || rightType != "number")
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '%' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
@@ -38,26 +33,12 @@ public class ModOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticChecker.GetType(Left);
-        string rightType = SemanticChecker.GetType(Right);
-
-        if (leftType == "undefined" || rightType == "undefined")
-            return null!;
-
         if ((double)Right == 0)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Division by '0' is not defined");
             return 0;
         }
 
-        try
-        {
-            return double.Parse(Left.ToString()!) % double.Parse(Right.ToString()!);
-        }
-        catch 
-        { 
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '%' can't " + 
-                                $"be used between '{leftType}' and '{rightType}'"); 
-            return null!; }
-        }
+        return double.Parse(Left.ToString()!) % double.Parse(Right.ToString()!);
+    }
 }

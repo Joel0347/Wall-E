@@ -22,6 +22,7 @@ public static class LexingSupplies
         ["arc"]       = SyntaxKind.GeometryKeyword,
         ["measure"]   = SyntaxKind.GeometryKeyword,
         ["count"]     = SyntaxKind.GeometryKeyword,
+        ["intersect"] = SyntaxKind.GeometryKeyword,
         ["color"]     = SyntaxKind.ColorKeyword,
         ["blue"]      = SyntaxKind.ColorToken,
         ["red"]       = SyntaxKind.ColorToken,
@@ -37,8 +38,7 @@ public static class LexingSupplies
         ["sequence"]  = SyntaxKind.SequenceKeyword,
         ["import"]    = SyntaxKind.ImportKeyword,
         ["PI"]        = SyntaxKind.MathToken,
-        ["E"]         = SyntaxKind.MathToken,
-        ["undefined"] = SyntaxKind.UndefinedToken,
+        ["E"]         = SyntaxKind.MathToken
     };
 
 
@@ -93,8 +93,6 @@ public static class LexingSupplies
     {
         if (NextCurrent == '=')
             return (new SyntaxToken(SyntaxKind.DifferentToken, line, pos, "!=", null!), pos + 2);
-
-        Error.SetError("LEXICAL", $"Line '{line}' : Unexpected character '!'");
         return (new SyntaxToken(SyntaxKind.ErrorToken!, line, pos, "", null!), ++pos);
     }
 }

@@ -27,13 +27,13 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         Expression = expression;
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         foreach (var item in Identifiers)
         {
             string name = item.Text;
 
-            if (!Expression.Check(scope))
+            if (!Expression.Checker(scope))
                 return false;
 
             if (Expression.ReturnType != "sequence" && Expression.ReturnType != "undefined")
@@ -60,16 +60,19 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
     {
         SequenceExpressionSyntax sequence = (SequenceExpressionSyntax) Expression.Evaluate(scope);
 
-        long count = Identifiers.Count - 1;
-        if (sequence.Count != -1)
+        long count = Identifiers.Count;
+        if (sequence.Count is not null)
             count = long.Parse(sequence.Count.ToString()!);
 
         for (int i = 0; i < Identifiers.Count - 1; i++)
         {
             string name = Identifiers[i].Text;
 
-            if (i < count && name != "_")
-                scope.Constants[name] = new Constant(sequence[i]);
+            if (i < count)
+            {
+                if (name != "_")
+                    scope.Constants[name] = new Constant(sequence[i]);
+            }
 
             else
             {
@@ -80,7 +83,7 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         var lastId = Identifiers.Last().Text;
         if (lastId != "_")
         {
-            int startIndex = (int)Math.Min(count, Identifiers.Count) - 1;
+            int startIndex = (int)Math.Min(count, Identifiers.Count);
             var rest = sequence.RestOfSequence(startIndex);
             scope.Constants[lastId] = new Constant(rest);
         }

@@ -27,7 +27,7 @@ public sealed class Measure : ExpressionSyntax
         return new Measure(Value);
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         return true;
     }

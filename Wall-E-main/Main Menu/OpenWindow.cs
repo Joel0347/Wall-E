@@ -31,27 +31,6 @@ namespace WallE
         }
         #endregion
 
-        #region Muestra los posibles comandos que puedes utilizar
-        private void AllCommands_Click(object sender, EventArgs e)
-        {
-            List<string> commands = new()
-            {
-                "point <id>", "line <id>", "segment <id>", "ray <id>", "circle <id>", "point sequency",
-                "line sequency <id>", "segment sequency <id>", "ray sequency <id>", "circle sequency <id>",
-                "color <string>", "restore", "import <string>", "draw <exp> <string>", "line(p1, p2)",
-                "segment(p1, p2)", "ray(p1, p2)", "arc(p1, p2, p3, m)", "circle(p, m)", "measure(p1, p2)",
-                "intersect(f1, f2)", "count(s)", "randoms()", "points(f)", "samples()"
-            };
-
-            MessageBoxButtons messageBoxButtons = MessageBoxButtons.OK;
-
-            string files = string.Join("\n", commands);
-
-            MessageBox.Show(files, "All commands and functions you can use",
-                                                   messageBoxButtons, MessageBoxIcon.Information);
-        }
-        #endregion
-
         #region Abre el informe del proyecto
         private void MoreAbout_Click(object sender, EventArgs e)
         {

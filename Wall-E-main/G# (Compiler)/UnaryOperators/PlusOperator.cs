@@ -4,7 +4,7 @@ public class PlusOperation : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.UnaryExpression;
 
-    public override string ReturnType => SemanticChecker.GetType(Operand);
+    public override string ReturnType => SemanticCheck.GetType(Operand);
 
     public object Operand { get; }
     public SyntaxToken OperationToken { get; }
@@ -15,11 +15,11 @@ public class PlusOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
-        string operandType = SemanticChecker.GetType(Operand);
+        string operandType = SemanticCheck.GetType(Operand);
 
-        if (operandType != "number" && operandType != "undefined")
+        if (operandType != "number")
         {
             Error.SetError("SEMANTIC", $"Line ' {OperationToken.Line} ' : Operator '+' " +
                             $"can't not be used before '{operandType}'");
@@ -31,7 +31,6 @@ public class PlusOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        if (Operand is null) return null!;
         return + double.Parse(Operand.ToString()!); 
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WallE;
@@ -19,6 +20,10 @@ public sealed class Arc : Figure, IEquatable<Arc>
     public Measure Measure { get; }
     public float StartAngle { get; }
     public float SweepAngle { get; }
+    public float AngleLeft { get; }
+    public float AngleRight { get; }
+    public Points PointLeft { get; }
+    public Points PointRight { get; }
     public override string ReturnType => "arc";
 
     public Arc(Points center, Points left, Points right, Measure measure)
@@ -28,7 +33,7 @@ public sealed class Arc : Figure, IEquatable<Arc>
         Right = right;
         Measure = measure;
 
-        (StartAngle, SweepAngle) = Components();
+        (StartAngle, SweepAngle, PointLeft, PointRight, AngleLeft, AngleRight) = Components();
     }
 
     public override object Evaluate(Scope scope)
@@ -36,21 +41,21 @@ public sealed class Arc : Figure, IEquatable<Arc>
         return new Arc(Center, Left, Right, Measure);
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         return true;
     }
 
     public bool Equals(Arc? other)
     {
-        var sameAngle = SweepAngle == other!.SweepAngle;
-        return sameAngle && Measure.Equals(other.Measure);
+        var samePoints = Center.Equals(other!.Center) && Left.Equals(other!.Left) && Right.Equals(other!.Right);
+        return samePoints && Measure.Equals(other.Measure);
     }
 
     public override bool Equals(object? obj) => Equals(obj as Arc);
     public override int GetHashCode() => Center.GetHashCode();
 
-    private (float, float) Components()
+    private (float, float, Points, Points, float, float) Components()
     {
         Ray r1 = new(Center, Left);
         Ray r2 = new(Center, Right);
@@ -109,30 +114,87 @@ public sealed class Arc : Figure, IEquatable<Arc>
             }
         }
 
-        return (startAngle, sweepAngle);
+        return (startAngle, sweepAngle, point_left, point_right, angleLeftCero, angleRightCero);
     }
 
     public override SequenceExpressionSyntax PointsInFigure()
     {
         Dictionary<int, object> elements = new();
+        
         object PointsInArc()
         {
-            float x;
-            float y;
+            var min = Center.X - Radio - 1;
+            var max = Center.X + Radio + 1;
+
             do
             {
-                x = ParsingSupplies.CreateRandomsCoordinates();
-                y = ParsingSupplies.CreateRandomsCoordinates();
-            }
-            while (((Math.Pow(x, 2) + Math.Pow(y, 2)) <= Radio));
+                float x = ParsingSupplies.CreateRandomsCoordinates((int)min, (int)max);
+                
+                (float y1, float y2) = IsInCircle(x);
+                var point1 = new Points(x, y1);
+                var point2 = new Points(x, y2);
+                var intersect1 = Intersect.IntersectPointArc(point1, this);
+                var intersect2 = Intersect.IntersectPointArc(point2, this);
 
-            return new Points(x, y);
+                if ((int)(intersect1.Count) > 0)
+                    return point1;
+
+                else if ((int)(intersect2.Count) > 0)
+                    return point2;
+            }
+            while (true);
         }
 
-        var result = new InfiniteSequence(PointsInArc, elements);
-        result.valuesType = "point";
+        return new InfiniteSequence(PointsInArc, elements);
+    }
 
-        return result;
+    //private Points IsInArc(float x)
+    //{
+    //    (float y1, float y2) = IsInCircle(x);
+    //    Points point = new(x, y1);
+
+    //    var startPoint = (Math.Abs(StartAngle) == AngleLeft) ? PointLeft : PointRight;
+    //    var endPoint = (Math.Abs(StartAngle) != AngleLeft) ? PointLeft : PointRight;
+
+    //    var startAngle = Math.Atan2(startPoint.Y - Center.Y, startPoint.X - Center.X);
+    //    var endAngle = Math.Atan2(endPoint.Y - Center.Y, endPoint.X - Center.X);
+    //    var pointAngle = Math.Atan2(point.Y - Center.Y, point.X - Center.X);
+
+    //    if (pointAngle >= startAngle && pointAngle <= endAngle)
+    //        return point;
+
+    //    return new Points(x, y2);
+    //}
+
+    //private (float, float) IsInCircle(float x)
+    //{
+    //    float distance1 = (float)(Math.Sqrt(Math.Pow(Radio, 2) - Math.Pow(x - Center.X, 2))) + Center.Y;
+    //    float distance2 = (float)(-Math.Sqrt(Math.Pow(Radio, 2) - Math.Pow(x - Center.X, 2))) + Center.Y;
+
+    //    return (distance1, distance2);
+    //}
+    //
+    private bool IsInArc(Points point)
+    {
+        var startPoint = (Math.Abs(StartAngle) == AngleLeft) ? PointLeft : PointRight;
+        var endPoint = (Math.Abs(StartAngle) != AngleLeft) ? PointLeft : PointRight;
+
+        var startAngle = Math.Atan2(startPoint.Y - Center.Y, startPoint.X - Center.X);
+        var endAngle = Math.Atan2(endPoint.Y - Center.Y, endPoint.X - Center.X);
+        var pointAngle = Math.Atan2(point.Y - Center.Y, point.X - Center.X);
+
+        if (pointAngle >= startAngle && pointAngle <= endAngle)
+            return true;
+
+        return false;
+    }
+
+    private (float, float) IsInCircle(float x)
+    {
+        float distance1 = (float)(Math.Sqrt(Math.Pow(Radio, 2) - Math.Pow(x - Center.X, 2))) + Center.Y;
+        float distance2 = (float)(-Math.Sqrt(Math.Pow(Radio, 2) - Math.Pow(x - Center.X, 2))) + Center.Y;
+
+        return (distance1, distance2);
     }
 }
 

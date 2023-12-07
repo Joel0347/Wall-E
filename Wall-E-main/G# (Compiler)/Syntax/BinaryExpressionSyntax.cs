@@ -51,16 +51,16 @@ public class BinaryExpressionSyntax : ExpressionSyntax
         return operation.Evaluate(scope);
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
-        bool leftIsFine = Left.Check(scope);
-        bool rightIsFine = Right.Check(scope);
+        bool leftIsFine = Left.Checker(scope);
+        bool rightIsFine = Right.Checker(scope);
 
         
         if (leftIsFine && rightIsFine)
         {
             var operation = binaryOperation[OperatorToken.Kind](Left, Right, OperatorToken);
-            return operation.Check(scope);
+            return operation.Checker(scope);
         }
 
         return false;

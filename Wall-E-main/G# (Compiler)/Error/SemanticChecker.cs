@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 namespace G_Sharp;
 public static class SemanticChecker
 {
-    public static bool canImport = true;
-
     public static bool Check(this Scope scope, ExpressionSyntax node)
     {
         return scope.CheckExpression(node);
@@ -17,22 +15,7 @@ public static class SemanticChecker
 
     private static bool CheckExpression(this Scope scope, ExpressionSyntax node)
     {
-        if (node is not ImportExpressionSyntax)
-            canImport = false;
-
-        return node.Check(scope);
-    }
-
-    public static string GetType(object obj)
-    {
-        return obj switch
-        {
-            double or int or decimal or float or long => "number",
-            string => "string",
-            null => "undefined",
-            ExpressionSyntax expression => expression.ReturnType,
-            _ => "undefined expression"
-        };
+        return node.Checker(scope);
     }
 }
 

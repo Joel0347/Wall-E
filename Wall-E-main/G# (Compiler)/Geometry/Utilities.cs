@@ -1,5 +1,5 @@
 ﻿namespace G_Sharp;
-public class Utilities
+public static class Utilities
 {
     public static float PointInLine(float m, float n, float x)
     {
@@ -43,8 +43,12 @@ public class Utilities
 
     public static bool IsInSegment(double x1, double x2, double x_point)
     {
+        var errorRange = 0.5;
+        if (Math.Abs(x_point - x2) <= errorRange || Math.Abs(x_point - x1) <= errorRange)
+            return true;
+
         double razon = (x_point - x1) / (x2 - x_point);
-        return razon > 0;
+        return razon >= 0;
     }
 
     public static float DistanceBetweenPoints(Points p1, Points p2)
@@ -89,5 +93,13 @@ public class Utilities
 
         else
             return (point.Y > right.Y) ? 2 : 3;
+    }
+
+    public static float DistancePointLine(Points point, Line line)
+    {
+        var enumerador = (float)Math.Abs(line.M * point.X - point.Y + line.N);
+        var denominador = (float)Math.Sqrt(Math.Pow(line.M, 2) + 1);
+
+        return enumerador / denominador;
     }
 }

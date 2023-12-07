@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using G_Sharp;
@@ -10,80 +12,92 @@ using Microsoft.VisualBasic.Devices;
 namespace WallE;
 public static class MethodsDrawing
 {
-    #region Pintar puntos 
-    public static void Drawing(this Points point, Graphics graphics, Color color)
+    private static List<(ExpressionSyntax, Color, string)> Sequences = new();
+
+    private static Dictionary<SyntaxKind, Action<ExpressionSyntax, Graphics, Color, string>> drawings = new()
     {
-        Brush brush = new SolidBrush(color);
-        graphics.FillEllipse(brush, point.X - 5, point.Y - 5, 10, 10);
+        [SyntaxKind.PointToken] = DrawingPoint,
+        [SyntaxKind.SegmentToken] = DrawingSegment,
+        [SyntaxKind.RayToken] = DrawingRay,
+        [SyntaxKind.LineToken] = DrawingLine,
+        [SyntaxKind.CircleToken] = DrawingCircle,
+        [SyntaxKind.ArcToken] = DrawingArc,
+        [SyntaxKind.SequenceExpression] = DrawingSequence,
+    };
+
+    public static List<(ExpressionSyntax, Color, string)> DrawFigure(List<(ExpressionSyntax, Color, string)> geometries, Graphics graphic)
+    {
+        Sequences = new();
+        for (int i = 0; i < geometries.Count; i++)
+        {
+            (ExpressionSyntax expression, Color color, string msg) = geometries[i];
+
+            if (drawings.TryGetValue(expression.Kind, out Action<ExpressionSyntax, Graphics, Color, string>? value))
+            {
+                value(expression, graphic, color, msg);
+            }
+        }
+
+        return Sequences;
     }
 
-    public static void DrawingString(this Points point, Graphics graphics, Color color, string msg)
+    #region Pintar puntos 
+    public static void DrawingPoint(ExpressionSyntax figure, Graphics graphics, Color color, string msg)
     {
+        var point = (Points)figure;
         Brush brush = new SolidBrush(color);
         Font font = new("Consolas", 10);
+
         graphics.DrawString(msg, font, brush, point.X, point.Y);
+        graphics.FillEllipse(brush, point.X - 5, point.Y - 5, 10, 10);
     }
     #endregion
 
     #region Pintar segmentos
-    public static void Drawing(this Segment segment, Graphics graphics, Color color)
+    public static void DrawingSegment(ExpressionSyntax figure, Graphics graphics, Color color, string msg)
     {
+        var segment = (Segment)figure;
         Pen pen = new(color)
         {
             Width = 2
         };
-        graphics.DrawLine(pen, segment.P1.X, segment.P1.Y, segment.P2.X, segment.P2.Y);
-    }
-
-    public static void DrawingString(this Segment segment, Graphics graphics, Color color, string msg)
-    {
         Brush brush = new SolidBrush(color);
         Font font = new("Consolas", 10);
         graphics.DrawString(msg, font, brush, segment.P1.X, segment.P1.Y);
+        graphics.DrawLine(pen, segment.P1.X, segment.P1.Y, segment.P2.X, segment.P2.Y);
     }
     #endregion
 
     #region Pintar rayos
-    public static void Drawing(this Ray ray, Graphics graphics, Color color)
+    public static void DrawingRay(ExpressionSyntax figure, Graphics graphics, Color color, string msg)
     {
+        var ray = (Ray)figure;
         Segment s1 = new(ray.P1, ray.P2);
         Segment s2 = new(ray.P2, ray.End);
 
-        s1.Drawing(graphics, color);
-        s2.Drawing(graphics, color);
-    }
-
-    public static void DrawingString(this Ray ray, Graphics graphics, Color color, string msg)
-    {
-        Brush brush = new SolidBrush(color);
-        Font font = new("Consolas", 10);
-        graphics.DrawString(msg, font, brush, ray.P1.X, ray.P1.Y);
+        DrawingSegment(s1, graphics, color, msg);
+        DrawingSegment(s2, graphics, color, msg);
     }
     #endregion
 
     #region Pintar lineas
-    public static void Drawing(this Line line, Graphics graphics, Color color)
+    public static void DrawingLine(ExpressionSyntax figure, Graphics graphics, Color color, string msg)
     {
+        var line = (Line)figure;
         Segment s1 = new(line.Start, line.P1);
         Segment s2 = new(line.P1, line.P2);
         Segment s3 = new(line.P2, line.End) ;
 
-        s1.Drawing(graphics, color);
-        s2.Drawing(graphics, color);
-        s3.Drawing(graphics, color);
-    }
-
-    public static void DrawingString(this Line line, Graphics graphics, Color color, string msg)
-    {
-        Brush brush = new SolidBrush(color);
-        Font font = new("Consolas", 10);
-        graphics.DrawString(msg, font, brush, line.P1.X, line.P1.Y);
-    }
+        DrawingSegment(s1, graphics, color, msg);
+        DrawingSegment(s2, graphics, color, msg);
+        DrawingSegment(s3, graphics, color, msg);
+    }   
     #endregion
 
     #region Pintar circunsferncias
-    public static void Drawing(this Circle circle, Graphics graphics, Color color)
+    public static void DrawingCircle(ExpressionSyntax figure, Graphics graphics, Color color, string msg)
     {
+        var circle = (Circle)figure;
         Pen pen = new(color)
         {
             Width = 2
@@ -91,20 +105,14 @@ public static class MethodsDrawing
 
         Points extrem = new(circle.Center.X - circle.Radio, circle.Center.Y - circle.Radio);
         graphics.DrawEllipse(pen, extrem.X, extrem.Y, circle.Diameter, circle.Diameter);
-        circle.Center.Drawing(graphics, color);
-    }
-
-    public static void DrawingString(this Circle circle, Graphics graphics, Color color, string msg)
-    {
-        Brush brush = new SolidBrush(color);
-        Font font = new("Consolas", 10);
-        graphics.DrawString(msg, font, brush, circle.Center.X, circle.Center.Y);
+        DrawingPoint(circle.Center, graphics, color, msg);
     }
     #endregion
 
     #region Pintar arcos
-    public static void Drawing(this Arc arc, Graphics graphics, Color color)
+    public static void DrawingArc(ExpressionSyntax figure, Graphics graphics, Color color, string msg)
     {
+        var arc = (Arc)figure;
         Color componentsColor = Color.DodgerBlue;
         if (color == Color.DodgerBlue)
         {
@@ -128,68 +136,51 @@ public static class MethodsDrawing
 
         Points extrem = new(arc.Center.X - arc.Radio, arc.Center.Y - arc.Radio);
 
-        circle.Drawing(graphics, componentsColor);
-        segment1.Drawing(graphics, componentsColor);
-        segment2.Drawing(graphics, componentsColor);
+        DrawingCircle(circle, graphics, componentsColor, msg);
+        DrawingSegment(segment1, graphics, componentsColor, "");
+        DrawingSegment(segment2, graphics, componentsColor, "");
         graphics.DrawArc(pen, extrem.X, extrem.Y, arc.Diameter, arc.Diameter, arc.StartAngle, arc.SweepAngle);
     }
-
-    public static void DrawingString(this Arc arc, Graphics graphics, Color color, string msg)
-    {
-        Brush brush = new SolidBrush(color);
-        Font font = new("Consolas", 10);
-        graphics.DrawString(msg, font, brush, arc.Center.X, arc.Center.Y);
-    }
     #endregion
-    public static void DrawFigure(List<(Figure, Color, string)> geometries, Graphics graphic)
+
+    #region Pintar secunecias
+    public static void DrawingSequence(ExpressionSyntax expression, Graphics graphics, Color color, string msg)
     {
-        foreach (var geom in geometries)
+        if (expression is FiniteSequence finite)
+            DrawingFiniteSequence(finite, graphics, color, msg);
+
+        else if(expression is InfiniteSequence infinite)
+            DrawingInfiniteSequence(infinite, graphics, color, msg);
+    }
+
+    public static void DrawingFiniteSequence(ExpressionSyntax expression, Graphics graphics, Color color, string msg)
+    {
+        var sequence = (SequenceExpressionSyntax)expression;
+
+        if (sequence is FiniteSequence finite)
         {
-            switch (geom.Item1.Kind)
+            foreach (var item in finite.ElementsEvaluation)
             {
-                case SyntaxKind.PointToken:
-                    {
-                        Points point = (Points)geom.Item1;
-                        point.Drawing(graphic, geom.Item2);
-                        point.DrawingString(graphic, geom.Item2, geom.Item3);
-                        break;
-                    }
-                case SyntaxKind.SegmentToken:
-                    {
-                        Segment segment = (Segment)geom.Item1;
-                        segment.Drawing(graphic, geom.Item2);
-                        segment.DrawingString(graphic, geom.Item2, geom.Item3);
-                        break;
-                    }
-                case SyntaxKind.RayToken:
-                    {
-                        Ray ray = (Ray)geom.Item1;
-                        ray.Drawing(graphic, geom.Item2);
-                        ray.DrawingString(graphic, geom.Item2, geom.Item3);
-                        break;
-                    }
-                case SyntaxKind.LineToken:
-                    {
-                        Line line = (Line)geom.Item1;
-                        line.Drawing(graphic, geom.Item2);
-                        line.DrawingString(graphic, geom.Item2, geom.Item3);
-                        break;
-                    }
-                case SyntaxKind.CircleToken:
-                    {
-                        Circle circle = (Circle)geom.Item1;
-                        circle.Drawing(graphic, geom.Item2);
-                        circle.DrawingString(graphic, geom.Item2, geom.Item3);
-                        break;
-                    }
-                case SyntaxKind.ArcToken:
-                    {
-                        Arc arc = (Arc)geom.Item1;
-                        arc.Drawing(graphic, geom.Item2);
-                        arc.DrawingString(graphic, geom.Item2, geom.Item3);
-                        break;
-                    }
+                var figure = (ExpressionSyntax)item;
+                if (drawings.TryGetValue(figure.Kind, out Action<ExpressionSyntax, Graphics, Color, string>? value))
+                {
+                    value(figure, graphics, color, msg);
+                }
             }
         }
     }
+
+    public static void DrawingInfiniteSequence(ExpressionSyntax expression, Graphics graphics, Color color, string msg)
+    {
+        var sequence = (InfiniteSequence)expression;
+
+        var figure = (ExpressionSyntax)sequence[0];
+        Sequences.Add((sequence.RestOfSequence(1), color, msg));
+
+        if (drawings.TryGetValue(figure.Kind, out Action<ExpressionSyntax, Graphics, Color, string>? value))
+        {
+            value(figure, graphics, color, msg);
+        }
+    }
+    #endregion
 }

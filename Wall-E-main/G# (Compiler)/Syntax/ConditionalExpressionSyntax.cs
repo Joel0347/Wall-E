@@ -29,25 +29,19 @@ public sealed class ConditionalExpressionSyntax : ExpressionSyntax
     public override object Evaluate(Scope scope)
     {
         var condition = Condition.Evaluate(scope);
-        string conditionType = SemanticChecker.GetType(condition);
-        
-        if (conditionType == "sequence")
-        {   
-            var seq = (SequenceExpressionSyntax)condition;
-            condition = seq.Count <= 0 ? null : seq.Count;
-        }
+        condition = (SemanticCheck.GetType(condition) == "sequence") ? ((SequenceExpressionSyntax)condition).Count : condition;
 
-        if (Evaluator.DefaultFalseValues.Contains(condition!))
+        if (Evaluator.DefaultFalseValues.Contains(condition))
             return BodyFalse.Evaluate(scope);
         
         return BodyTrue.Evaluate(scope);
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
-        var conditionIsFine = Condition.Check(scope);
-        var bodyTrueIsFine = BodyTrue.Check(scope);
-        var bodyFalseIsFine = BodyFalse.Check(scope);
+        var conditionIsFine = Condition.Checker(scope);
+        var bodyTrueIsFine = BodyTrue.Checker(scope);
+        var bodyFalseIsFine = BodyFalse.Checker(scope);
 
         if (!conditionIsFine || !bodyTrueIsFine || !bodyFalseIsFine)
         {
@@ -58,7 +52,7 @@ public sealed class ConditionalExpressionSyntax : ExpressionSyntax
         var bodyTrueType = BodyTrue.ReturnType;
         var sameType = bodyTrueType.Equals(bodyFalseType);
 
-        if (!sameType && bodyFalseType != "undefined" && bodyTrueType != "undefined")
+        if (!sameType)
         {
             Error.SetError("SEMANTIC", "Conditional must return the same type of value in " +
                             "the 'then' clause and the 'else' clause");

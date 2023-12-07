@@ -38,7 +38,6 @@ public enum SyntaxKind
     MathToken,
     ColorToken,
     SuspenseToken,
-    UndefinedToken,
 
     // Expressions
     LiteralExpression,

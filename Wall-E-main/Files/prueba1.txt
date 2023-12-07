@@ -1,5 +1,0 @@
-point p1 + 1;
-point p2;
-
-color "red";
-draw line(p1, p2);

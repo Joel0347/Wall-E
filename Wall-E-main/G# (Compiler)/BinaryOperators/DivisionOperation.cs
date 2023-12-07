@@ -9,11 +9,6 @@ public class DivisionOperation : ExpressionSyntax
     public object Right { get; }
     public SyntaxToken OperationToken { get; }
 
-    private readonly static List<string> compatibility = new()
-    {
-        "number", "measure"
-    };
-
     public DivisionOperation(object left, object right, SyntaxToken operationToken)
     {
         Left = left;
@@ -21,43 +16,32 @@ public class DivisionOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
-        string leftType = SemanticChecker.GetType(Left);
-        string rightType = SemanticChecker.GetType(Right);
+        string leftType = SemanticCheck.GetType(Left);
+        string rightType = SemanticCheck.GetType(Right);
 
         bool leftIsCompatible =  leftType == "number" || leftType == "measure";
         bool rightIsCompatible = rightType == "number" || rightType == "measure";
         bool sameType = leftType == rightType;
 
-        if (!leftIsCompatible || !rightIsCompatible)
+        if (!leftIsCompatible || !rightIsCompatible || !sameType)
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't " +
-                            $"be used between '{leftType}' and '{rightType}'");
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't be used between '{leftType}' and '{rightType}'");
             return false;
         }
-
-        if (!sameType && leftType != "undefined" && rightType != "undefined")
-        {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't " +
-                            $"be used between '{leftType}' and '{rightType}'");
-            return false;
-        }
-
+        
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticChecker.GetType(Left);
-        string rightType = SemanticChecker.GetType(Right);
-
-        if (leftType == "measure")
+        if (SemanticCheck.GetType(Left) == "measure")
         {
             var leftValue = ((Measure)Left).Value;
             var rightValue = ((Measure)Right).Value;
 
-            return (int)(leftValue / rightValue);
+            return (int) (leftValue / rightValue);
         }
 
         else if ((double)Right == 0)
@@ -66,19 +50,6 @@ public class DivisionOperation : ExpressionSyntax
             return 0;
         }
 
-        else if (Left is null || Right is null)
-            return null!;
-
-        try
-        {
-            return double.Parse(Left.ToString()!) / double.Parse(Right.ToString()!);
-        }
-
-        catch
-        {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't " +
-                            $"be used between '{leftType}' and '{rightType}'");
-            return null!;
-        }
+        return double.Parse(Left.ToString()!) / double.Parse(Right.ToString()!);
     }
 }

@@ -8,9 +8,6 @@ namespace G_Sharp;
 
 internal sealed class Parser
 {
-    private static List<string> AllImportedDocs = new();
-    private List<string> LocalImportedDocs = new();
-
     private List<ExpressionSyntax> functionParams = new();
     private int positionAfterFuncParams;
     private readonly List<SyntaxToken> tokens;
@@ -40,9 +37,8 @@ internal sealed class Parser
 
             else if (token.Kind != SyntaxKind.WhitespaceToken &&
                 token.Kind != SyntaxKind.CommentToken)
-            { 
-                tokens.Add(token); 
-            }  
+
+                tokens.Add(token);
         }
 
         while (token.Kind != SyntaxKind.EndOfFileToken);
@@ -59,7 +55,6 @@ internal sealed class Parser
             [SyntaxKind.IfKeyword]             = ConditionalExpressionParsing,
             [SyntaxKind.IdentifierToken]       = IdentifierParsing,
             [SyntaxKind.MathToken]             = IdentifierParsing,
-            [SyntaxKind.UndefinedToken]        = IdentifierParsing,
             [SyntaxKind.StringToken]           = StringParsing,
             [SyntaxKind.NumberToken]           = NumberParsing,
             [SyntaxKind.GeometryKeyword]       = AssignmentGeometryParsing,
@@ -70,8 +65,7 @@ internal sealed class Parser
         {
             [SyntaxKind.DrawKeyword] = DrawParsing,
             [SyntaxKind.IdentifierToken] = AssignmentIdentifierEval,
-            [SyntaxKind.MathToken] = MathKeywordParsing,
-            [SyntaxKind.UndefinedToken] = MathKeywordParsing
+            [SyntaxKind.MathToken] = MathKeywordParsing
         };
     }
 
@@ -186,43 +180,18 @@ internal sealed class Parser
             return new ErrorExpressionSyntax();
 
         string path = direction.Text;
-        //var fileName = path[(path.LastIndexOf("\\") + 1)..^1];
-        path = path[1..^1];
+        var fileName = path[(path.LastIndexOf("\\") + 1)..^1];
+        path = path[1..path.LastIndexOf("\\")];
 
-        //if (!Directory.Exists(path))
-        //{
-        //    Error.SetError("COMPILE", $"Line '{import.Line}' : The given path doesn't exist");
-        //    return new ErrorExpressionSyntax();
-        //}
-        if (AllImportedDocs.Contains(path))
+        if (!Directory.Exists(path))
         {
-            Error.SetError("COMPILE", $"Line '{import.Line}' : Files only can be imported once");
+            Error.SetError("COMPILE", $"Line '{import.Line}' : The given path doesn't exist");
             return new ErrorExpressionSyntax();
         }
 
-        else
-        {
-            if (LocalImportedDocs.Contains(path))
-                return new VoidExpressionSyntax();
-
-            AllImportedDocs.Add(path);
-            LocalImportedDocs.Add(path);
-        }
-
-        try
-        {
-            string text = File.ReadAllText(path);
-            var syntaxTree = SyntaxTree.Parse(text);
-            AllImportedDocs.Remove(path);
-            return new ImportExpressionSyntax(import, syntaxTree);
-        }
-
-        catch
-        {
-            Error.SetError("COMPILE", $"Line '{import.Line}' : The given path doesn't contain a valid file");
-            return new ErrorExpressionSyntax();
-        }
-        
+        string text = File.ReadAllText(path + $"\\{fileName}");
+        var syntaxTree = SyntaxTree.Parse(text);
+        return new ImportExpressionSyntax(import, syntaxTree);
     }
 
     private ExpressionSyntax RestoreParsing()
@@ -284,7 +253,7 @@ internal sealed class Parser
             if (hasEnd && !Error.Wrong)
             {
                 if (last <= first)
-                    return new FiniteSequence<ExpressionSyntax>(new List<ExpressionSyntax>());
+                    return new FiniteSequence(new List<ExpressionSyntax>());
             }
             
             return new InfiniteIntegerSequence(first, last);
@@ -293,7 +262,7 @@ internal sealed class Parser
         var elements = GetFunctionParams("sequence");
         NextToken();
 
-        return new FiniteSequence<ExpressionSyntax>(elements);
+        return new FiniteSequence(elements);
     }
 
     private ExpressionSyntax LetInExpressionParsing()
@@ -404,37 +373,42 @@ internal sealed class Parser
 
     private ExpressionSyntax DrawParsing()
     {
-        NextToken();
+        var drawToken = NextToken();
         List<ExpressionSyntax> geometry = new();
         string msg = "";
+        ExpressionSyntax value;
 
-        if (LookAhead(0).Kind != SyntaxKind.OpenCurlyBracketToken)
+        if (Current.Kind == SyntaxKind.SemicolonToken)
         {
-            var value = ParseAssignmentExpression();
-            if (value.Kind == SyntaxKind.ConstantExpression || value.Kind == SyntaxKind.FunctionExpression)
-            {
-                geometry.Add(value);
-            }
+            Error.SetError("SYNTAX", $"Line '{Current.Line}': Empty argument in 'draw' statement");
+            return new ErrorExpressionSyntax();
+        }
+
+        if (Current.Kind != SyntaxKind.OpenCurlyBracketToken)
+        {
+            value = ParseAssignmentExpression();
         }
 
         else
         {
             var expressions = SequenceExpressionParsing();
-            
-            if (expressions is FiniteSequence<ExpressionSyntax> finiteSequence)
+
+            if (expressions is FiniteSequence finiteSequence)
             {
                 for (int i = 0; i < finiteSequence.Elements.Count; i++)
                 {
                     geometry.Add(finiteSequence.Elements[i]);
                 }
             }
+
+            value = new FiniteSequence(geometry);
         }
 
         if (Current.Kind == SyntaxKind.StringToken)
             msg = NextToken().Value.ToString()!;
         
 
-        return new Draw(geometry, Colors.ColorDraw!.Peek(), msg);  
+        return new Draw(drawToken, value, Colors.ColorDraw!.Peek(), msg);  
     }
 
     private ExpressionSyntax AssignmentGeometryParsing()
@@ -468,7 +442,7 @@ internal sealed class Parser
                 elements.Add(element);
             }
 
-            var sequence = new FiniteSequence<ExpressionSyntax>(elements);
+            var sequence = new FiniteSequence(elements);
             return new ConstantAssignmentSyntax(id, operatorToken, sequence);
         }
 
@@ -534,11 +508,10 @@ internal sealed class Parser
                     Current.Kind != SyntaxKind.SeparatorToken
                    )
                 {
-                    Error.SetError("SYNTAX", $"Line: '{Current.Line}' : Unexpected '{Current.Text}'");
+                    Error.SetError("SEMANTIC", $"Line: '{Current.Line}' : Expected '=', not '{Current.Text}'");
                     return new ErrorExpressionSyntax();
                 }
 
-                
                 var identifierToken = MatchToken(SyntaxKind.IdentifierToken, "constant");
                 if (identifierToken.Kind == SyntaxKind.ErrorToken)
                     return new ErrorExpressionSyntax();

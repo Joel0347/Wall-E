@@ -37,6 +37,11 @@ public sealed class Ray : Figure, IEquatable<Ray>
 
         float y_end = Utilities.PointInLine(M, N, x_end);
 
+        if (M is float.NaN)
+        {
+            y_end = x_end;
+        }
+
         End = new Points(x_end, y_end);
     }
 
@@ -45,7 +50,7 @@ public sealed class Ray : Figure, IEquatable<Ray>
         return new Ray(P1, P2);
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         return true;
     }
@@ -76,9 +81,6 @@ public sealed class Ray : Figure, IEquatable<Ray>
             return new Points(x, y);
         }
 
-        var result = new InfiniteSequence(PointsInRay, elements);
-        result.valuesType = "point";
-
-        return result;
+        return new InfiniteSequence(PointsInRay, elements);
     }
 }

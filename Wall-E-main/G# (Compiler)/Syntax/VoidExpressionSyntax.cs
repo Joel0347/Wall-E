@@ -12,7 +12,7 @@ public class VoidExpressionSyntax : ExpressionSyntax
 
     public override string ReturnType => "void expression";
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         return true; ;
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace G_Sharp;
 
@@ -64,9 +65,7 @@ public static class ScopeSupplies
     {
         var sequence = parameters[0].Evaluate(scope);
         // ver si es infinita
-        var result = ((SequenceExpressionSyntax)sequence).Count;
-
-        return result == -1 ? null! : result;
+        return ((SequenceExpressionSyntax)sequence).Count;
     }
 
     public static object RandomsFunction(Scope scope, List<ExpressionSyntax> list)
@@ -77,10 +76,7 @@ public static class ScopeSupplies
             return random.NextDouble();
         }
 
-        var result = new InfiniteSequence(Randoms, RandomElements);
-        result.valuesType = "number";
-
-        return result;
+        return new InfiniteSequence(Randoms, RandomElements);
     }
 
     internal static object SamplesFunction(Scope scope, List<ExpressionSyntax> list)
@@ -90,15 +86,19 @@ public static class ScopeSupplies
             return ParsingSupplies.CreateRandomPoint();
         }
 
-        var result = new InfiniteSequence(Samples, RandomPoints);
-        result.valuesType = "point";
-
-        return result;
+        return new InfiniteSequence(Samples, RandomPoints);
     }
 
     internal static object PointsFunction(Scope scope, List<ExpressionSyntax> list)
     {
         var figure = (Figure)scope.Evaluate(list[0]);
         return figure.PointsInFigure();
+    }
+
+    internal static object IntersectFunction(Scope scope, List<ExpressionSyntax> list)
+    {
+        var line = (Arc)scope.Evaluate(list[0]);
+        var circle = (Arc)scope.Evaluate(list[1]);
+        return Intersect.IntersectArcArc(line, circle);
     }
 }

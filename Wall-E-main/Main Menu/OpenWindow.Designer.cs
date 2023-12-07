@@ -29,38 +29,22 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OpenWindow));
-            AllCommands = new Button();
             GraphicWindow = new Button();
             Exit = new Button();
             MoreAbout = new Button();
             label1 = new Label();
             SuspendLayout();
             // 
-            // AllCommands
-            // 
-            AllCommands.BackColor = Color.Transparent;
-            AllCommands.BackgroundImageLayout = ImageLayout.None;
-            AllCommands.FlatStyle = FlatStyle.Flat;
-            AllCommands.Font = new Font("OCR A Extended", 13.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
-            AllCommands.ForeColor = SystemColors.ControlLightLight;
-            AllCommands.Location = new Point(53, 221);
-            AllCommands.Name = "AllCommands";
-            AllCommands.Size = new Size(151, 77);
-            AllCommands.TabIndex = 1;
-            AllCommands.Text = "All Commands";
-            AllCommands.UseVisualStyleBackColor = false;
-            AllCommands.Click += AllCommands_Click;
-            // 
             // GraphicWindow
             // 
             GraphicWindow.BackColor = Color.Transparent;
             GraphicWindow.BackgroundImageLayout = ImageLayout.None;
             GraphicWindow.FlatStyle = FlatStyle.Flat;
-            GraphicWindow.Font = new Font("OCR A Extended", 13.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            GraphicWindow.Font = new Font("OCR A Extended", 18F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             GraphicWindow.ForeColor = SystemColors.ControlLightLight;
-            GraphicWindow.Location = new Point(53, 124);
+            GraphicWindow.Location = new Point(53, 196);
             GraphicWindow.Name = "GraphicWindow";
-            GraphicWindow.Size = new Size(151, 77);
+            GraphicWindow.Size = new Size(231, 93);
             GraphicWindow.TabIndex = 0;
             GraphicWindow.Text = "Start Drawing";
             GraphicWindow.UseVisualStyleBackColor = false;
@@ -70,11 +54,11 @@
             // 
             Exit.BackColor = Color.Transparent;
             Exit.FlatStyle = FlatStyle.Flat;
-            Exit.Font = new Font("OCR A Extended", 18F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            Exit.Font = new Font("OCR A Extended", 19.8000011F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             Exit.ForeColor = SystemColors.ControlLightLight;
-            Exit.Location = new Point(53, 422);
+            Exit.Location = new Point(53, 438);
             Exit.Name = "Exit";
-            Exit.Size = new Size(151, 77);
+            Exit.Size = new Size(231, 93);
             Exit.TabIndex = 2;
             Exit.Text = "Exit";
             Exit.UseVisualStyleBackColor = false;
@@ -84,11 +68,11 @@
             // 
             MoreAbout.BackColor = Color.Transparent;
             MoreAbout.FlatStyle = FlatStyle.Flat;
-            MoreAbout.Font = new Font("OCR A Extended", 13.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            MoreAbout.Font = new Font("OCR A Extended", 18F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             MoreAbout.ForeColor = SystemColors.ControlLightLight;
-            MoreAbout.Location = new Point(53, 320);
+            MoreAbout.Location = new Point(53, 316);
             MoreAbout.Name = "MoreAbout";
-            MoreAbout.Size = new Size(151, 77);
+            MoreAbout.Size = new Size(231, 93);
             MoreAbout.TabIndex = 3;
             MoreAbout.Text = "More About";
             MoreAbout.UseVisualStyleBackColor = false;
@@ -98,11 +82,11 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("OCR A Extended", 48F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new Font("OCR A Extended", 72F, FontStyle.Bold, GraphicsUnit.Point);
             label1.ForeColor = SystemColors.ControlLightLight;
             label1.Location = new Point(12, 19);
             label1.Name = "label1";
-            label1.Size = new Size(476, 83);
+            label1.Size = new Size(709, 123);
             label1.TabIndex = 4;
             label1.Text = "GeoWall-E";
             // 
@@ -117,7 +101,6 @@
             Controls.Add(label1);
             Controls.Add(MoreAbout);
             Controls.Add(Exit);
-            Controls.Add(AllCommands);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "OpenWindow";
             Text = "GeoWall-E";
@@ -127,8 +110,6 @@
         }
 
         #endregion
-
-        private Button AllCommands;
         private Button GraphicWindow;
         private Button Exit;
         private Button MoreAbout;

@@ -6,92 +6,51 @@ using System.Threading.Tasks;
 
 namespace G_Sharp;
 
-public sealed class FiniteSequence<T> : SequenceExpressionSyntax
+public sealed class FiniteSequence : SequenceExpressionSyntax
 {
-    public List<T> Elements { get; }
-    //public List<object> ElementsEvaluation { get; }
+    public List<ExpressionSyntax> Elements { get; }
+    public List<object> ElementsEvaluation { get; }
 
-    public override long Count
+    public override object Count
     {
         get
         {
-            //return ElementsEvaluation.Count;
-            return Elements.Count;
-        }
-    }
-    public override string ValuesType
-    {
-        get
-        {
-            if (Elements.Count == 0) return "undefined";
-            return SemanticChecker.GetType(Elements[0]!);
+            return ElementsEvaluation.Count;
         }
     }
 
     public override object this[int index]
     {
-        //get { return ElementsEvaluation[index]; }
-        get { return Elements[index]!; }
+        get { return ElementsEvaluation[index]; }
     }
 
-    public FiniteSequence(List<T> elements)
+    public FiniteSequence(List<ExpressionSyntax> elements)
     {
         Elements = elements;
-        //ElementsEvaluation = new();
-        //ElementsEvaluation.AddRange(Elements);
+        ElementsEvaluation = new();
+        ElementsEvaluation.AddRange(Elements);
     }
 
-    //public FiniteSequence(List<object> elementsEvaluation)
-    //{
-    //    ElementsEvaluation = elementsEvaluation;
-    //    Elements = new();
-    //}
+    public FiniteSequence(List<object> elementsEvaluation)
+    {
+        ElementsEvaluation = elementsEvaluation;
+        Elements = new();
+    }
 
     public override object Evaluate(Scope scope)
     {
         List<object> values = new();
 
-        foreach (var item in Elements as List<ExpressionSyntax>)
+        foreach (var item in Elements)
         {
             values.Add(item.Evaluate(scope));
         }
 
-        return new FiniteSequence<object>(values);
+        return new FiniteSequence(values);
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
-        var elements = Elements as List<ExpressionSyntax>;
-        if (Count.Equals(0)) return true;
-
-        if (!elements![0].Check(scope)) return false;
-        string type = "";
-
-        if (SemanticChecker.GetType(elements[0]) == "sequence")
-            type = "sequence of " + GetInternalTypeOfSequence((SequenceExpressionSyntax)elements[0]);
-
-        else
-            type = SemanticChecker.GetType(Elements[0]!);
-
-        foreach (var element in elements)
-        {
-            if (!element.Check(scope)) return false;
-
-            var elementType = "";
-            if (SemanticChecker.GetType(element) == "sequence")
-                elementType = "sequence of " + GetInternalTypeOfSequence((SequenceExpressionSyntax)element);
-
-            else
-                elementType = SemanticChecker.GetType(Elements[0]!);
-
-            if (elementType != type)
-            {
-                Error.SetError("SEMANTIC", $"Elements in sequence must have the same type");
-                return false;
-            }
-                
-        }
-
         return true;
     }
 
@@ -99,9 +58,9 @@ public sealed class FiniteSequence<T> : SequenceExpressionSyntax
     {
         List<object> elements = new();
 
-        for (int i = startIndex; i < Elements.Count; i++)
-            elements.Add(Elements[i]!);
+        for (int i = startIndex; i < ElementsEvaluation.Count; i++)
+            elements.Add(ElementsEvaluation[i]);
 
-        return new FiniteSequence<object>(elements);
+        return new FiniteSequence(elements);
     }
 }

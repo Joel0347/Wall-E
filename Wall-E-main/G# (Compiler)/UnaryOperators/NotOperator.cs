@@ -4,7 +4,7 @@ public class NotOperation : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.UnaryExpression;
 
-    public override string ReturnType => SemanticChecker.GetType(Operand);
+    public override string ReturnType => SemanticCheck.GetType(Operand);
 
     public object Operand { get; }
     public SyntaxToken OperationToken { get; }
@@ -15,22 +15,23 @@ public class NotOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Check(Scope scope)
-    {   
+    public override bool Checker(Scope scope)
+    {
+        string operandType = SemanticCheck.GetType(Operand);
+
+        if (operandType != "number")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator 'not' " +
+                            $"can't not be used before '{operandType}'");
+            return false;
+        }
+        
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        var operandType = SemanticChecker.GetType(Operand);
-        object operand = Operand;
-
-        if (operandType == "sequence")
-        {
-            var seq = (SequenceExpressionSyntax)Operand;
-            operand = seq.Count <= 0 ? null! : seq.Count;
-        }
-
+        var operand = (SemanticCheck.GetType(Operand) == "sequence") ? ((SequenceExpressionSyntax)Operand).Count : Operand;
         return Evaluator.DefaultFalseValues.Contains(operand) ? 1 : 0;
     }
 }

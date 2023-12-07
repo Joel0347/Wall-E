@@ -8,8 +8,6 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
     public SyntaxToken InToken { get; }
     public override string ReturnType => Instructions.Last().ReturnType;
 
-    private Scope internalScope = null!;
-
     public LetInExpressionSyntax(
         SyntaxToken letToken, List<ExpressionSyntax> instructions, 
         SyntaxToken inToken, ExpressionSyntax body
@@ -23,38 +21,26 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        Scope child;
-        if (internalScope is not null)
-            child = GetInternalScope(internalScope);
+        Dictionary<string, Constant> internalConstants = new();
+        Dictionary<string, Function> internalFunctions = new();
 
-        else
-        {
-            internalScope = null!;
-            child = GetInternalScope(scope);
-        }
+        foreach (string key in scope.Constants.Keys)
+            internalConstants[key] = scope.Constants[key];
+
+        foreach (string key in scope.Functions.Keys)
+            internalFunctions[key] = scope.Functions[key];
+
+        Scope internalScope = new(internalConstants, internalFunctions);
 
         object result = null!;
 
         foreach (var statement in Instructions)
-            result = child.Evaluate(statement);
+            result = internalScope.Evaluate(statement);
 
         return result;
     }
 
-    public override bool Check(Scope scope)
-    {
-        internalScope = GetInternalScope(scope);
-
-        foreach (var statement in Instructions)
-        {
-            var check = internalScope.Check(statement);
-            if (!check) return false;
-        }
-
-        return true;
-    }
-
-    private Scope GetInternalScope(Scope scope)
+    public override bool Checker(Scope scope)
     {
         Dictionary<string, Constant> internalConstants = new();
         Dictionary<string, Function> internalFunctions = new();
@@ -65,6 +51,14 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
         foreach (string key in scope.Functions.Keys)
             internalFunctions[key] = scope.Functions[key];
 
-        return new(internalConstants, internalFunctions);
+        Scope internalScope = new(internalConstants, internalFunctions);
+
+        foreach (var statement in Instructions)
+        {
+            var check = internalScope.Check(statement);
+            if (!check) return false;
+        }
+
+        return true;
     }
 }

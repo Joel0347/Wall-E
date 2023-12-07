@@ -9,7 +9,7 @@ public abstract class ExpressionSyntax
     public abstract SyntaxKind Kind { get; }
     public abstract string ReturnType { get; }
     public abstract object Evaluate(Scope scope);
-    public abstract bool Check(Scope scope);
+    public abstract bool Checker(Scope scope);
 }
 
 public sealed class ErrorExpressionSyntax : ExpressionSyntax
@@ -25,7 +25,7 @@ public sealed class ErrorExpressionSyntax : ExpressionSyntax
         return "";
     }
 
-    public override bool Check(Scope scope)
+    public override bool Checker(Scope scope)
     {
         return false;
     }
