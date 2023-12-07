@@ -61,7 +61,8 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         SequenceExpressionSyntax sequence = (SequenceExpressionSyntax) Expression.Evaluate(scope);
 
         long count = Identifiers.Count - 1;
-        if (sequence.Count != -1)
+
+        if (sequence.Count >= 0)
             count = long.Parse(sequence.Count.ToString()!);
 
         for (int i = 0; i < Identifiers.Count - 1; i++)

@@ -404,37 +404,28 @@ internal sealed class Parser
 
     private ExpressionSyntax DrawParsing()
     {
-        NextToken();
-        List<ExpressionSyntax> geometry = new();
+        var drawToken = NextToken();
         string msg = "";
+        ExpressionSyntax value;
 
-        if (LookAhead(0).Kind != SyntaxKind.OpenCurlyBracketToken)
+        if (Current.Kind == SyntaxKind.SemicolonToken)
         {
-            var value = ParseAssignmentExpression();
-            if (value.Kind == SyntaxKind.ConstantExpression || value.Kind == SyntaxKind.FunctionExpression)
-            {
-                geometry.Add(value);
-            }
+            Error.SetError("SYNTAX", $"Line '{Current.Line}': Empty argument " +
+                            $"in 'draw' statement");
+            return new ErrorExpressionSyntax();
         }
+
+        if (Current.Kind != SyntaxKind.OpenCurlyBracketToken)
+            value = ParseAssignmentExpression();
 
         else
-        {
-            var expressions = SequenceExpressionParsing();
-            
-            if (expressions is FiniteSequence<ExpressionSyntax> finiteSequence)
-            {
-                for (int i = 0; i < finiteSequence.Elements.Count; i++)
-                {
-                    geometry.Add(finiteSequence.Elements[i]);
-                }
-            }
-        }
+            value = SequenceExpressionParsing();
 
         if (Current.Kind == SyntaxKind.StringToken)
             msg = NextToken().Value.ToString()!;
         
 
-        return new Draw(geometry, Colors.ColorDraw!.Peek(), msg);  
+        return new Draw(drawToken, value, Colors.ColorDraw!.Peek(), msg);  
     }
 
     private ExpressionSyntax AssignmentGeometryParsing()

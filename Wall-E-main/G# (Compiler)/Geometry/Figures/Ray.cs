@@ -11,11 +11,11 @@ namespace G_Sharp;
 public sealed class Ray : Figure, IEquatable<Ray>
 {
     public override SyntaxKind Kind => SyntaxKind.RayToken;
-    public Points P1 { get; private set; }
-    public Points P2 { get; private set; }
-    public Points End { get; private set; }
-    public float M { get; private set; }
-    public float N { get; private set; }
+    public Points P1 { get; }
+    public Points P2 { get; }
+    public Points End { get; }
+    public float M { get; }
+    public float N { get; }
     public override string ReturnType => "ray";
 
     public Ray(Points p1, Points p2)
@@ -37,12 +37,17 @@ public sealed class Ray : Figure, IEquatable<Ray>
 
         float y_end = Utilities.PointInLine(M, N, x_end);
 
+        if (M is float.NaN)
+        {
+            y_end = x_end;
+        }
+
         End = new Points(x_end, y_end);
     }
 
     public override object Evaluate(Scope scope)
     {
-        return new Ray(P1, P2);
+        return this;
     }
 
     public override bool Check(Scope scope)
@@ -76,8 +81,10 @@ public sealed class Ray : Figure, IEquatable<Ray>
             return new Points(x, y);
         }
 
-        var result = new InfiniteSequence(PointsInRay, elements);
-        result.valuesType = "point";
+        var result = new InfiniteSequence(PointsInRay, elements)
+        {
+            valuesType = "point"
+        };
 
         return result;
     }

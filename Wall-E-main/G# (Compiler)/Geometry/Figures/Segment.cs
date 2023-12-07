@@ -9,8 +9,8 @@ namespace G_Sharp;
 public sealed class Segment : Figure, IEquatable<Segment>
 {
     public override SyntaxKind Kind => SyntaxKind.SegmentToken;
-    public Points P1 { get; private set; }
-    public Points P2 { get; private set; }
+    public Points P1 { get; }
+    public Points P2 { get; }
     public float M { get; }
     public float N { get; }
     public override string ReturnType => "segment";
@@ -25,7 +25,7 @@ public sealed class Segment : Figure, IEquatable<Segment>
 
     public override object Evaluate(Scope scope)
     {
-        return new Segment(P1, P2);
+        return this;
     }
 
     public override bool Check(Scope scope)
@@ -60,8 +60,10 @@ public sealed class Segment : Figure, IEquatable<Segment>
             return new Points(x, y);
         }
 
-        var result = new InfiniteSequence(PointsInSegment, elements); 
-        result.valuesType = "point";
+        var result = new InfiniteSequence(PointsInSegment, elements)
+        {
+            valuesType = "point"
+        };
 
         return result;
     }

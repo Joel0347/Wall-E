@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\WallE.csproj": {}
+    "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E-main\\WallE.csproj": {}
   },
   "projects": {
-    "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\WallE.csproj": {
+    "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E-main\\WallE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\WallE.csproj",
+        "projectUniqueName": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E-main\\WallE.csproj",
         "projectName": "WallE",
-        "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\WallE.csproj",
+        "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E-main\\WallE.csproj",
         "packagesPath": "C:\\Users\\joela\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\obj\\",
+        "outputPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E-main\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

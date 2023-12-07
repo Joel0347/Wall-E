@@ -101,4 +101,11 @@ public static class ScopeSupplies
         var figure = (Figure)scope.Evaluate(list[0]);
         return figure.PointsInFigure();
     }
+
+    internal static object IntersectFunction(Scope scope, List<ExpressionSyntax> list)
+    {
+        var line = (Arc)scope.Evaluate(list[0]);
+        var circle = (Arc)scope.Evaluate(list[1]);
+        return Intersect.IntersectArcArc(line, circle);
+    }
 }

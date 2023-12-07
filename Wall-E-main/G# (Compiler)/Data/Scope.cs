@@ -28,6 +28,7 @@ public class Scope
         ["randoms"] = ScopeSupplies.RandomsFunction,
         ["samples"] = ScopeSupplies.SamplesFunction,
         ["points"]  = ScopeSupplies.PointsFunction,
+        ["intersect"] = ScopeSupplies.IntersectFunction
     };
 
     public static readonly Dictionary<string, List<List<string>>> TypeOfParams = new()
@@ -41,7 +42,8 @@ public class Scope
         ["count"] = new() { new() { "sequence" } },
         ["randoms"] = new() {  },
         ["samples"] = new() {  },
-        ["points"] = new() { new() { "point", "circle", "arc", "segment", "ray", "line" } }
+        ["points"] = new() { new() { "point", "circle", "arc", "segment", "ray", "line" } },
+        ["intersect"] = new() { new() { "point", "circle", "arc", "segment", "ray", "line" } }
     };
 
     public Scope(

@@ -10,12 +10,12 @@ namespace G_Sharp;
 public sealed class Line : Figure, IEquatable<Line>
 {
     public override SyntaxKind Kind => SyntaxKind.LineToken;
-    public Points P1 { get; private set; }
-    public Points P2 { get; private set; }
-    public Points Start { get; private set; }
-    public Points End { get; private set; }
-    public float M { get; private set; }
-    public float N { get; private set; }
+    public Points P1 { get; }
+    public Points P2 { get; }
+    public Points Start { get; }
+    public Points End { get; }
+    public float M { get; }
+    public float N { get; }
     public override string ReturnType => "line";
 
     public Line(Points p1, Points p2)
@@ -30,13 +30,19 @@ public sealed class Line : Figure, IEquatable<Line>
         float y_start = Utilities.PointInLine(M, N, x_start);
         float y_end = Utilities.PointInLine(M, N, x_end);
 
+        if (M is float.NaN)
+        {
+            y_start = x_start;
+            y_end = x_end;
+        }
+
         Start = new Points(x_start, y_start);
         End = new Points(x_end, y_end); 
     }
 
     public override object Evaluate(Scope scope)
     {
-        return new Line(P1, P2);
+        return this;
     }
 
     public override bool Check(Scope scope)
@@ -69,8 +75,10 @@ public sealed class Line : Figure, IEquatable<Line>
             return new Points(x, y);
         }
 
-        var result = new InfiniteSequence(PointsInLine, elements);
-        result.valuesType = "point";
+        var result = new InfiniteSequence(PointsInLine, elements)
+        {
+            valuesType = "point"
+        };
 
         return result;
     }

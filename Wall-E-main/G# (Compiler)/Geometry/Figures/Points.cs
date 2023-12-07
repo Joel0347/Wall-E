@@ -9,8 +9,8 @@ namespace G_Sharp;
 public sealed class Points : Figure, IEquatable<Points>
 {
     public override SyntaxKind Kind => SyntaxKind.PointToken;
-    public float X { get; private set; }
-    public float Y { get; private set; }
+    public float X { get; }
+    public float Y { get; }
     public override string ReturnType => "point";
 
     public Points(float x, float y)
@@ -21,7 +21,7 @@ public sealed class Points : Figure, IEquatable<Points>
 
     public override object Evaluate(Scope scope)
     {
-        return new Points(X, Y);
+        return this;
     }
 
     public override bool Check(Scope scope)
@@ -40,7 +40,7 @@ public sealed class Points : Figure, IEquatable<Points>
 
     public override SequenceExpressionSyntax PointsInFigure()
     {
-        List<Points> point = new() { new Points(X, Y) };
+        List<Points> point = new() { this };
         return new FiniteSequence<Points>(point);
     }
 }

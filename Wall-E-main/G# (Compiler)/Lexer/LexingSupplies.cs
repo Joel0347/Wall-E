@@ -22,6 +22,7 @@ public static class LexingSupplies
         ["arc"]       = SyntaxKind.GeometryKeyword,
         ["measure"]   = SyntaxKind.GeometryKeyword,
         ["count"]     = SyntaxKind.GeometryKeyword,
+        ["intersect"] = SyntaxKind.GeometryKeyword,
         ["color"]     = SyntaxKind.ColorKeyword,
         ["blue"]      = SyntaxKind.ColorToken,
         ["red"]       = SyntaxKind.ColorToken,
