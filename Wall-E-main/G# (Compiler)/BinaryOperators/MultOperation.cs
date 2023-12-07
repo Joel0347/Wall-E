@@ -6,8 +6,8 @@ public class MultOperation : ExpressionSyntax
 
     public override string ReturnType {
         get {
-            if (SemanticCheck.GetType(Left) == "measure" || 
-                SemanticCheck.GetType(Right) == "measure") {
+            if (SemanticChecker.GetType(Left) == "measure" || 
+                SemanticChecker.GetType(Right) == "measure") {
                 return "measure";
             }
 
@@ -31,10 +31,10 @@ public class MultOperation : ExpressionSyntax
         "number", "measure", "undefined"
     };
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         bool leftIsCompatible =  compatibility.Contains(leftType);
         bool rightIsCompatible = compatibility.Contains(rightType);
@@ -61,8 +61,8 @@ public class MultOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         if (leftType == "undefined" || rightType == "undefined")
             return null!;
@@ -74,7 +74,7 @@ public class MultOperation : ExpressionSyntax
             return new Measure((float) (leftValue * rightValue));
         }
 
-        else if (SemanticCheck.GetType(Right) == "measure")
+        else if (SemanticChecker.GetType(Right) == "measure")
         {
             var rightValue = ((Measure)Right).Value;
             var leftValue = Math.Abs(Convert.ToInt32((double) Left));

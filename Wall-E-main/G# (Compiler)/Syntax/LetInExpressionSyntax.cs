@@ -41,7 +41,7 @@ public sealed class LetInExpressionSyntax : ExpressionSyntax
         return result;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         internalScope = GetInternalScope(scope);
 

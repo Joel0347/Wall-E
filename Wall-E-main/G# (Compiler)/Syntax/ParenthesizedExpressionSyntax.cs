@@ -23,8 +23,8 @@ public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
         return Expression.Evaluate(scope);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        return Expression.Checker(scope);
+        return Expression.Check(scope);
     }
 }

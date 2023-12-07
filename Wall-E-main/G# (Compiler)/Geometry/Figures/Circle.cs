@@ -26,7 +26,7 @@ public sealed class Circle : Figure, IEquatable<Circle>
         return new Circle(Center, Measure);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -59,6 +59,9 @@ public sealed class Circle : Figure, IEquatable<Circle>
             return point;
         }
 
-        return new InfiniteSequence(PointsInCircle, elements);
+        var result = new InfiniteSequence(PointsInCircle, elements);
+        result.valuesType = "point";
+
+        return result;
     }
 }

@@ -4,7 +4,7 @@ public class RestOperation : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
 
-    public override string ReturnType => SemanticCheck.GetType(Left);
+    public override string ReturnType => SemanticChecker.GetType(Left);
 
     public object Left { get; }
     public object Right { get; }
@@ -22,10 +22,10 @@ public class RestOperation : ExpressionSyntax
         "number", "measure", "undefined"
     };
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         bool leftIsCompatible =  compatibility.Contains(leftType);
         bool rightIsCompatible = compatibility.Contains(rightType);
@@ -33,14 +33,14 @@ public class RestOperation : ExpressionSyntax
 
         if (!leftIsCompatible || !rightIsCompatible)
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
 
         if (!sameType && leftType != "undefined" && rightType != "undefined")
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
@@ -50,10 +50,10 @@ public class RestOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
-        if (leftType == "undefined")
+        if (leftType == "undefined" || rightType == "undefined")
             return null!;
 
         if (leftType == "measure") 

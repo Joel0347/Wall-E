@@ -11,7 +11,7 @@ public sealed class FiniteSequence<T> : SequenceExpressionSyntax
     public List<T> Elements { get; }
     //public List<object> ElementsEvaluation { get; }
 
-    public override object Count
+    public override long Count
     {
         get
         {
@@ -24,7 +24,7 @@ public sealed class FiniteSequence<T> : SequenceExpressionSyntax
         get
         {
             if (Elements.Count == 0) return "undefined";
-            return SemanticCheck.GetType(Elements[0]!);
+            return SemanticChecker.GetType(Elements[0]!);
         }
     }
 
@@ -59,18 +59,37 @@ public sealed class FiniteSequence<T> : SequenceExpressionSyntax
         return new FiniteSequence<object>(values);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         var elements = Elements as List<ExpressionSyntax>;
         if (Count.Equals(0)) return true;
 
-        if (!elements![0].Checker(scope)) return false;
-        string type = SemanticCheck.GetType(Elements[0]!);
+        if (!elements![0].Check(scope)) return false;
+        string type = "";
+
+        if (SemanticChecker.GetType(elements[0]) == "sequence")
+            type = "sequence of " + GetInternalTypeOfSequence((SequenceExpressionSyntax)elements[0]);
+
+        else
+            type = SemanticChecker.GetType(Elements[0]!);
 
         foreach (var element in elements)
         {
-            if (!element!.Checker(scope) || SemanticCheck.GetType(element) != type)
+            if (!element.Check(scope)) return false;
+
+            var elementType = "";
+            if (SemanticChecker.GetType(element) == "sequence")
+                elementType = "sequence of " + GetInternalTypeOfSequence((SequenceExpressionSyntax)element);
+
+            else
+                elementType = SemanticChecker.GetType(Elements[0]!);
+
+            if (elementType != type)
+            {
+                Error.SetError("SEMANTIC", $"Elements in sequence must have the same type");
                 return false;
+            }
+                
         }
 
         return true;

@@ -24,7 +24,7 @@ public sealed class Points : Figure, IEquatable<Points>
         return new Points(X, Y);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }

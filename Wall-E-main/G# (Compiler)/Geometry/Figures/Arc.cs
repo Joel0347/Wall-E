@@ -36,7 +36,7 @@ public sealed class Arc : Figure, IEquatable<Arc>
         return new Arc(Center, Left, Right, Measure);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -129,7 +129,10 @@ public sealed class Arc : Figure, IEquatable<Arc>
             return new Points(x, y);
         }
 
-        return new InfiniteSequence(PointsInArc, elements);
+        var result = new InfiniteSequence(PointsInArc, elements);
+        result.valuesType = "point";
+
+        return result;
     }
 }
 

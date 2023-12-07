@@ -21,10 +21,10 @@ public class ModOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         if (!compatibility.Contains(leftType) || !compatibility.Contains(rightType))
         {
@@ -38,8 +38,8 @@ public class ModOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         if (leftType == "undefined" || rightType == "undefined")
             return null!;

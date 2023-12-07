@@ -21,13 +21,21 @@ public sealed class ImportExpressionSyntax : ExpressionSyntax
         SyntaxTree = syntaxTree;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
+        if (!SemanticChecker.canImport) 
+        {
+            Error.SetError("SEMANTIC", $"Line '{ImportToken.Line}' : All 'import' commands must appear before other commands");
+            return false;
+        }
+
         foreach (var root in SyntaxTree.Root)
         {
             var checking = scope.Check(root);
             if (!checking) return false;
         }
+
+        SemanticChecker.canImport = true;
 
         return true;
     }

@@ -27,13 +27,13 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         Expression = expression;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         foreach (var item in Identifiers)
         {
             string name = item.Text;
 
-            if (!Expression.Checker(scope))
+            if (!Expression.Check(scope))
                 return false;
 
             if (Expression.ReturnType != "sequence" && Expression.ReturnType != "undefined")
@@ -61,7 +61,7 @@ public sealed class MultipleAssignmentSyntax : ExpressionSyntax
         SequenceExpressionSyntax sequence = (SequenceExpressionSyntax) Expression.Evaluate(scope);
 
         long count = Identifiers.Count - 1;
-        if (sequence.Count is not null)
+        if (sequence.Count != -1)
             count = long.Parse(sequence.Count.ToString()!);
 
         for (int i = 0; i < Identifiers.Count - 1; i++)

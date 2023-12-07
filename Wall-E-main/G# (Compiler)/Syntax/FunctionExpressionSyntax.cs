@@ -52,7 +52,7 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
         return evaluation;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         var functionToken = IdentifierToken;
         string name = functionToken.Text;
@@ -80,8 +80,8 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
         {
             for (int i = 0; i < Values.Count; i++)
             {
-                if (!Values[i].Checker(scope)) return false;
-                string type = SemanticCheck.GetType(Values[i]);
+                if (!Values[i].Check(scope)) return false;
+                string type = SemanticChecker.GetType(Values[i]);
 
                 if (!function!.TypeOfParams[i].Contains(type))
                 {
@@ -93,7 +93,7 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
                 }
             }
 
-            returnType = SemanticCheck.GetType(func(scope, Values));
+            returnType = SemanticChecker.GetType(func(scope, Values));
             return true;
         }
 
@@ -103,7 +103,7 @@ public sealed class FunctionExpressionSyntax : ExpressionSyntax
 
         for (int i = 0; i < Values.Count; i++)
         {
-            if (!Values[i].Checker(scope)) 
+            if (!Values[i].Check(scope)) 
                 return false;
 
             ConstantExpressionSyntax parameter = (ConstantExpressionSyntax)function!.Parameters[i];

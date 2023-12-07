@@ -28,13 +28,13 @@ public sealed class UnaryExpressionSyntax : ExpressionSyntax
         return operation.Evaluate(scope);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        bool operandIsFine = Operand.Checker(scope);
+        bool operandIsFine = Operand.Check(scope);
         if (operandIsFine)
         {
             var operation = unaryOperationEvaluation[OperatorToken.Kind](Operand, OperatorToken);
-            return operation.Checker(scope);
+            return operation.Check(scope);
         }
 
         return false;

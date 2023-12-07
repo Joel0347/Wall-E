@@ -73,7 +73,7 @@ public class Scope
 public sealed class Constant 
 {
     public object Expression { get; }
-    public string Type => SemanticCheck.GetType(Expression);
+    public string Type => SemanticChecker.GetType(Expression);
 
     public Constant(object expression)
     {

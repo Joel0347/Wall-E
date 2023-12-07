@@ -21,36 +21,43 @@ public class DivisionOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         bool leftIsCompatible =  leftType == "number" || leftType == "measure";
         bool rightIsCompatible = rightType == "number" || rightType == "measure";
         bool sameType = leftType == rightType;
 
-        if (!leftIsCompatible || !rightIsCompatible || !sameType)
+        if (!leftIsCompatible || !rightIsCompatible)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
-        
+
+        if (!sameType && leftType != "undefined" && rightType != "undefined")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '/' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return false;
+        }
+
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         if (leftType == "measure")
         {
             var leftValue = ((Measure)Left).Value;
             var rightValue = ((Measure)Right).Value;
 
-            return (int) (leftValue / rightValue);
+            return (int)(leftValue / rightValue);
         }
 
         else if ((double)Right == 0)
@@ -58,6 +65,9 @@ public class DivisionOperation : ExpressionSyntax
             Error.SetError("SEMANTIC", "Division by '0' is not defined");
             return 0;
         }
+
+        else if (Left is null || Right is null)
+            return null!;
 
         try
         {

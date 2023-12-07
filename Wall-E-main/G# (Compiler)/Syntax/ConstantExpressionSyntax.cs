@@ -21,7 +21,7 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
         return scope.Constants[IdentifierToken.Text].Expression;   
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         string name = IdentifierToken.Text;
 

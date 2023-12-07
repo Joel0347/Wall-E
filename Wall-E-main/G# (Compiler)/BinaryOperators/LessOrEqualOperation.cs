@@ -18,13 +18,13 @@ public class LessOrEqualOperation : ExpressionSyntax
 
     private readonly static List<string> compatibility = new()
     {
-        "number", "measure"
+        "number", "measure", "undefined"
     };
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         bool leftIsCompatible =  compatibility.Contains(leftType);
         bool rightIsCompatible = compatibility.Contains(rightType);
@@ -39,7 +39,7 @@ public class LessOrEqualOperation : ExpressionSyntax
 
         if (!sameType && leftType != "undefined" && rightType != "undefined")
         {
-            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '+' can't " +
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '<=' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
@@ -49,8 +49,8 @@ public class LessOrEqualOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         if (leftType == "measure")
         {
@@ -58,6 +58,7 @@ public class LessOrEqualOperation : ExpressionSyntax
             var measure2 = (Measure)Right;
             return (measure1.Value <= measure2.Value) ? 1 : 0;
         }
+
 
         try
         {

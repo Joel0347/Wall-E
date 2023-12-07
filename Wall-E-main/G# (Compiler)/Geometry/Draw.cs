@@ -66,7 +66,7 @@ public class Draw : ExpressionSyntax
         return new Draw(Geometries, Parameters, Color);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }

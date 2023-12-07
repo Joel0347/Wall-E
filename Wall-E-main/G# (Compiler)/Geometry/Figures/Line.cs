@@ -39,7 +39,7 @@ public sealed class Line : Figure, IEquatable<Line>
         return new Line(P1, P2);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -69,6 +69,9 @@ public sealed class Line : Figure, IEquatable<Line>
             return new Points(x, y);
         }
 
-        return new InfiniteSequence(PointsInLine, elements);
+        var result = new InfiniteSequence(PointsInLine, elements);
+        result.valuesType = "point";
+
+        return result;
     }
 }

@@ -18,32 +18,39 @@ public class LessOperation : ExpressionSyntax
 
     private readonly static List<string> compatibility = new()
     {
-        "number", "measure"
+        "number", "measure", "undefined"
     };
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         bool leftIsCompatible =  leftType == "number" || leftType == "measure";
         bool rightIsCompatible = rightType == "number" || rightType == "measure";
         bool sameType = leftType == rightType;
 
-        if (!leftIsCompatible || !rightIsCompatible || !sameType)
+        if (!leftIsCompatible || !rightIsCompatible)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '<' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
-        
+
+        if (!sameType && leftType != "undefined" && rightType != "undefined")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '<' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return false;
+        }
+
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
         if (leftType == "measure")
         {

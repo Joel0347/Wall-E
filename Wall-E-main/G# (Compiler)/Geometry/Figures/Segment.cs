@@ -28,7 +28,7 @@ public sealed class Segment : Figure, IEquatable<Segment>
         return new Segment(P1, P2);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -60,6 +60,9 @@ public sealed class Segment : Figure, IEquatable<Segment>
             return new Points(x, y);
         }
 
-        return new InfiniteSequence(PointsInSegment, elements);
+        var result = new InfiniteSequence(PointsInSegment, elements); 
+        result.valuesType = "point";
+
+        return result;
     }
 }

@@ -64,7 +64,9 @@ public static class ScopeSupplies
     {
         var sequence = parameters[0].Evaluate(scope);
         // ver si es infinita
-        return ((SequenceExpressionSyntax)sequence).Count;
+        var result = ((SequenceExpressionSyntax)sequence).Count;
+
+        return result == -1 ? null! : result;
     }
 
     public static object RandomsFunction(Scope scope, List<ExpressionSyntax> list)
@@ -75,7 +77,10 @@ public static class ScopeSupplies
             return random.NextDouble();
         }
 
-        return new InfiniteSequence(Randoms, RandomElements);
+        var result = new InfiniteSequence(Randoms, RandomElements);
+        result.valuesType = "number";
+
+        return result;
     }
 
     internal static object SamplesFunction(Scope scope, List<ExpressionSyntax> list)
@@ -85,7 +90,10 @@ public static class ScopeSupplies
             return ParsingSupplies.CreateRandomPoint();
         }
 
-        return new InfiniteSequence(Samples, RandomPoints);
+        var result = new InfiniteSequence(Samples, RandomPoints);
+        result.valuesType = "point";
+
+        return result;
     }
 
     internal static object PointsFunction(Scope scope, List<ExpressionSyntax> list)

@@ -39,13 +39,13 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
         return "";
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         string name = IdentifierToken.Text;
 
         if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
         {
-            if (!Expression.Checker(scope))
+            if (!Expression.Check(scope))
                 return false;
 
             if (Expression.ReturnType == "void expression")

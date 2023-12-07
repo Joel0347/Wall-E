@@ -8,6 +8,9 @@ namespace G_Sharp;
 
 internal sealed class Parser
 {
+    private static List<string> AllImportedDocs = new();
+    private List<string> LocalImportedDocs = new();
+
     private List<ExpressionSyntax> functionParams = new();
     private int positionAfterFuncParams;
     private readonly List<SyntaxToken> tokens;
@@ -37,8 +40,9 @@ internal sealed class Parser
 
             else if (token.Kind != SyntaxKind.WhitespaceToken &&
                 token.Kind != SyntaxKind.CommentToken)
-
-                tokens.Add(token);
+            { 
+                tokens.Add(token); 
+            }  
         }
 
         while (token.Kind != SyntaxKind.EndOfFileToken);
@@ -182,18 +186,43 @@ internal sealed class Parser
             return new ErrorExpressionSyntax();
 
         string path = direction.Text;
-        var fileName = path[(path.LastIndexOf("\\") + 1)..^1];
-        path = path[1..path.LastIndexOf("\\")];
+        //var fileName = path[(path.LastIndexOf("\\") + 1)..^1];
+        path = path[1..^1];
 
-        if (!Directory.Exists(path))
+        //if (!Directory.Exists(path))
+        //{
+        //    Error.SetError("COMPILE", $"Line '{import.Line}' : The given path doesn't exist");
+        //    return new ErrorExpressionSyntax();
+        //}
+        if (AllImportedDocs.Contains(path))
         {
-            Error.SetError("COMPILE", $"Line '{import.Line}' : The given path doesn't exist");
+            Error.SetError("COMPILE", $"Line '{import.Line}' : Files only can be imported once");
             return new ErrorExpressionSyntax();
         }
 
-        string text = File.ReadAllText(path + $"\\{fileName}");
-        var syntaxTree = SyntaxTree.Parse(text);
-        return new ImportExpressionSyntax(import, syntaxTree);
+        else
+        {
+            if (LocalImportedDocs.Contains(path))
+                return new VoidExpressionSyntax();
+
+            AllImportedDocs.Add(path);
+            LocalImportedDocs.Add(path);
+        }
+
+        try
+        {
+            string text = File.ReadAllText(path);
+            var syntaxTree = SyntaxTree.Parse(text);
+            AllImportedDocs.Remove(path);
+            return new ImportExpressionSyntax(import, syntaxTree);
+        }
+
+        catch
+        {
+            Error.SetError("COMPILE", $"Line '{import.Line}' : The given path doesn't contain a valid file");
+            return new ErrorExpressionSyntax();
+        }
+        
     }
 
     private ExpressionSyntax RestoreParsing()

@@ -6,7 +6,7 @@ public sealed class LiteralExpressionSyntax : ExpressionSyntax
 
     public SyntaxToken LiteralToken { get; }
 
-    public override string ReturnType => SemanticCheck.GetType(LiteralToken.Value);
+    public override string ReturnType => SemanticChecker.GetType(LiteralToken.Value);
 
     public LiteralExpressionSyntax(SyntaxToken literalToken)
     {
@@ -18,7 +18,7 @@ public sealed class LiteralExpressionSyntax : ExpressionSyntax
         return LiteralToken.Value;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }

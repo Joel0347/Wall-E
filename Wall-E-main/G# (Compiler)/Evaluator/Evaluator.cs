@@ -9,9 +9,8 @@ namespace G_Sharp;
 public static class Evaluator
 {
     public static readonly List<object> DefaultFalseValues = new() {
-        "{}", null!, 0
+        null!, 0.0
     };
-
 
     public static object Evaluate(this Scope scope, ExpressionSyntax node)
     {
