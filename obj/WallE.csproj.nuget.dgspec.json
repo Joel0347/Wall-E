@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\WallE.csproj": {}
+    "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\WallE.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\WallE.csproj": {
+    "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\WallE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\WallE.csproj",
+        "projectUniqueName": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\WallE.csproj",
         "projectName": "WallE",
-        "projectPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\WallE.csproj",
+        "projectPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\WallE.csproj",
         "packagesPath": "C:\\Users\\Claudia\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Clau\\obj\\",
+        "outputPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Claudia\\AppData\\Roaming\\NuGet\\NuGet.Config",

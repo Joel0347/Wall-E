@@ -45,6 +45,11 @@
             GoBack = new Button();
             Run = new Button();
             label1 = new Label();
+            Reset = new Button();
+            ZoomPlus = new Button();
+            ZoomMinus = new Button();
+            Zoom = new Label();
+            StopDrawing = new Button();
             ((System.ComponentModel.ISupportInitialize)Grapher).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -76,7 +81,7 @@
             Compile.BackgroundImageLayout = ImageLayout.Stretch;
             Compile.FlatAppearance.BorderColor = Color.Black;
             Compile.FlatStyle = FlatStyle.Flat;
-            Compile.Font = new Font("Monotype Corsiva", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            Compile.Font = new Font("Bradley Hand ITC", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             Compile.ForeColor = SystemColors.ControlText;
             Compile.Location = new Point(395, 939);
             Compile.Name = "Compile";
@@ -91,7 +96,7 @@
             Save.BackgroundImageLayout = ImageLayout.Stretch;
             Save.FlatAppearance.BorderColor = Color.Black;
             Save.FlatStyle = FlatStyle.Flat;
-            Save.Font = new Font("Monotype Corsiva", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            Save.Font = new Font("Bradley Hand ITC", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             Save.ForeColor = SystemColors.ControlText;
             Save.Location = new Point(221, 939);
             Save.Name = "Save";
@@ -106,7 +111,7 @@
             Clear.BackgroundImageLayout = ImageLayout.Stretch;
             Clear.FlatAppearance.BorderColor = Color.Black;
             Clear.FlatStyle = FlatStyle.Flat;
-            Clear.Font = new Font("Monotype Corsiva", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            Clear.Font = new Font("Bradley Hand ITC", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             Clear.ForeColor = SystemColors.ControlText;
             Clear.Location = new Point(119, 939);
             Clear.Name = "Clear";
@@ -130,12 +135,12 @@
             // label2
             // 
             label2.BackColor = Color.White;
-            label2.Font = new Font("Monotype Corsiva", 16.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            label2.Font = new Font("Bradley Hand ITC", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
             label2.ForeColor = SystemColors.ControlText;
             label2.ImageAlign = ContentAlignment.BottomLeft;
-            label2.Location = new Point(237, 257);
+            label2.Location = new Point(159, 251);
             label2.Name = "label2";
-            label2.Size = new Size(136, 35);
+            label2.Size = new Size(250, 38);
             label2.TabIndex = 8;
             label2.Text = "Code Here:";
             label2.TextAlign = ContentAlignment.BottomCenter;
@@ -145,7 +150,7 @@
             View_Files.BackgroundImageLayout = ImageLayout.Stretch;
             View_Files.FlatAppearance.BorderColor = Color.Black;
             View_Files.FlatStyle = FlatStyle.Flat;
-            View_Files.Font = new Font("Monotype Corsiva", 10.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            View_Files.Font = new Font("Bradley Hand ITC", 10.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             View_Files.ForeColor = SystemColors.ControlText;
             View_Files.Location = new Point(5, 939);
             View_Files.Name = "View_Files";
@@ -164,7 +169,7 @@
             MoveUp.FlatStyle = FlatStyle.Flat;
             MoveUp.Font = new Font("Century Schoolbook", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             MoveUp.ForeColor = SystemColors.ControlText;
-            MoveUp.Location = new Point(514, 215);
+            MoveUp.Location = new Point(487, 215);
             MoveUp.Name = "MoveUp";
             MoveUp.Size = new Size(52, 37);
             MoveUp.TabIndex = 10;
@@ -178,7 +183,7 @@
             MoveDown.FlatStyle = FlatStyle.Flat;
             MoveDown.Font = new Font("Century Schoolbook", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             MoveDown.ForeColor = SystemColors.ControlText;
-            MoveDown.Location = new Point(514, 255);
+            MoveDown.Location = new Point(487, 255);
             MoveDown.Name = "MoveDown";
             MoveDown.Size = new Size(52, 34);
             MoveDown.TabIndex = 11;
@@ -192,7 +197,7 @@
             MoveRight.FlatStyle = FlatStyle.Flat;
             MoveRight.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
             MoveRight.ForeColor = SystemColors.ControlText;
-            MoveRight.Location = new Point(572, 215);
+            MoveRight.Location = new Point(545, 215);
             MoveRight.Name = "MoveRight";
             MoveRight.Size = new Size(49, 74);
             MoveRight.TabIndex = 12;
@@ -206,7 +211,7 @@
             MoveLeft.FlatStyle = FlatStyle.Flat;
             MoveLeft.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             MoveLeft.ForeColor = SystemColors.ControlText;
-            MoveLeft.Location = new Point(459, 215);
+            MoveLeft.Location = new Point(432, 215);
             MoveLeft.Name = "MoveLeft";
             MoveLeft.Size = new Size(49, 74);
             MoveLeft.TabIndex = 13;
@@ -218,7 +223,7 @@
             // 
             pictureBox2.BackgroundImage = Properties.Resources.eva_removebg_preview;
             pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox2.Location = new Point(237, 36);
+            pictureBox2.Location = new Point(221, 30);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(201, 218);
             pictureBox2.TabIndex = 14;
@@ -227,7 +232,7 @@
             // GoBack
             // 
             GoBack.FlatStyle = FlatStyle.Flat;
-            GoBack.Font = new Font("Monotype Corsiva", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            GoBack.Font = new Font("Bradley Hand ITC", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
             GoBack.Location = new Point(3, 4);
             GoBack.Name = "GoBack";
             GoBack.Size = new Size(167, 51);
@@ -239,7 +244,7 @@
             // Run
             // 
             Run.FlatStyle = FlatStyle.Flat;
-            Run.Font = new Font("Monotype Corsiva", 13.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            Run.Font = new Font("Bradley Hand ITC", 13.8F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             Run.Location = new Point(511, 939);
             Run.Name = "Run";
             Run.Size = new Size(110, 37);
@@ -250,13 +255,72 @@
             // 
             // label1
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Monotype Corsiva", 16.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
-            label1.Location = new Point(488, 169);
+            label1.Font = new Font("Bradley Hand ITC", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Location = new Point(454, 182);
             label1.Name = "label1";
-            label1.Size = new Size(101, 34);
+            label1.Size = new Size(118, 43);
             label1.TabIndex = 17;
             label1.Text = "Move it";
+            // 
+            // Reset
+            // 
+            Reset.FlatStyle = FlatStyle.Popup;
+            Reset.Font = new Font("Bradley Hand ITC", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
+            Reset.Location = new Point(497, 12);
+            Reset.Name = "Reset";
+            Reset.Size = new Size(124, 62);
+            Reset.TabIndex = 18;
+            Reset.Text = "Reset coordinates";
+            Reset.UseVisualStyleBackColor = true;
+            Reset.Click += Reset_Click;
+            // 
+            // ZoomPlus
+            // 
+            ZoomPlus.FlatStyle = FlatStyle.Flat;
+            ZoomPlus.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
+            ZoomPlus.Location = new Point(453, 123);
+            ZoomPlus.Name = "ZoomPlus";
+            ZoomPlus.Size = new Size(52, 56);
+            ZoomPlus.TabIndex = 19;
+            ZoomPlus.Text = "+";
+            ZoomPlus.UseVisualStyleBackColor = true;
+            ZoomPlus.Click += ZoomPlus_Click;
+            // 
+            // ZoomMinus
+            // 
+            ZoomMinus.FlatStyle = FlatStyle.Flat;
+            ZoomMinus.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
+            ZoomMinus.Location = new Point(511, 123);
+            ZoomMinus.Name = "ZoomMinus";
+            ZoomMinus.Size = new Size(51, 56);
+            ZoomMinus.TabIndex = 20;
+            ZoomMinus.Text = "-";
+            ZoomMinus.TextAlign = ContentAlignment.TopCenter;
+            ZoomMinus.UseVisualStyleBackColor = true;
+            ZoomMinus.Click += ZoomMinus_Click;
+            // 
+            // Zoom
+            // 
+            Zoom.Font = new Font("Bradley Hand ITC", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            Zoom.Location = new Point(454, 87);
+            Zoom.Name = "Zoom";
+            Zoom.Size = new Size(110, 33);
+            Zoom.TabIndex = 21;
+            Zoom.Text = "Zoom";
+            Zoom.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // StopDrawing
+            // 
+            StopDrawing.AutoSize = true;
+            StopDrawing.FlatStyle = FlatStyle.Flat;
+            StopDrawing.Font = new Font("Bradley Hand ITC", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
+            StopDrawing.Location = new Point(368, 12);
+            StopDrawing.Name = "StopDrawing";
+            StopDrawing.Size = new Size(123, 62);
+            StopDrawing.TabIndex = 22;
+            StopDrawing.Text = "Stop \r\nDrawing";
+            StopDrawing.UseVisualStyleBackColor = true;
+            StopDrawing.Click += StopDrawing_Click;
             // 
             // Form1
             // 
@@ -264,12 +328,17 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(1924, 1043);
+            Controls.Add(StopDrawing);
+            Controls.Add(MoveRight);
+            Controls.Add(MoveLeft);
+            Controls.Add(MoveUp);
+            Controls.Add(Zoom);
+            Controls.Add(ZoomMinus);
+            Controls.Add(ZoomPlus);
+            Controls.Add(Reset);
             Controls.Add(label1);
             Controls.Add(Run);
             Controls.Add(GoBack);
-            Controls.Add(MoveRight);
-            Controls.Add(MoveUp);
-            Controls.Add(MoveLeft);
             Controls.Add(pictureBox2);
             Controls.Add(label2);
             Controls.Add(MoveDown);
@@ -282,8 +351,6 @@
             Controls.Add(pictureBox1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
             Name = "Form1";
             Text = "GeoWall-E";
             WindowState = FormWindowState.Maximized;
@@ -312,5 +379,10 @@
         private Button GoBack;
         private Button Run;
         private Label label1;
+        private Button Reset;
+        private Button ZoomPlus;
+        private Button ZoomMinus;
+        private Label Zoom;
+        private Button StopDrawing;
     }
 }

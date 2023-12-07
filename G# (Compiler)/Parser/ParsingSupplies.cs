@@ -3,52 +3,29 @@ namespace G_Sharp;
 
 public static class ParsingSupplies
 {
-    private static readonly Dictionary<string, SyntaxKind> keywordKind = new()
-    {
-        ["and"]       = SyntaxKind.AndKeyword,
-        ["or"]        = SyntaxKind.OrKeyword,
-        ["not"]       = SyntaxKind.NotKeyword,
-        ["let"]       = SyntaxKind.LetKeyword,
-        ["in"]        = SyntaxKind.InKeyword,
-        ["if"]        = SyntaxKind.IfKeyword,
-        ["else"]      = SyntaxKind.ElseKeyword,
-        ["then"]      = SyntaxKind.ThenKeyword,
-        ["point"]     = SyntaxKind.GeometryKeyword,
-        ["segment"]   = SyntaxKind.GeometryKeyword,
-        ["ray"]       = SyntaxKind.GeometryKeyword,
-        ["line"]      = SyntaxKind.GeometryKeyword,
-        ["circle"]    = SyntaxKind.GeometryKeyword,
-        ["arc"]       = SyntaxKind.GeometryKeyword,
-        ["measure"]   = SyntaxKind.GeometryKeyword,
-        ["color"]     = SyntaxKind.ColorKeyword,
-        ["draw"]      = SyntaxKind.DrawKeyword,
-        ["restore"]   = SyntaxKind.RestoreKeyword,
-        ["PI"]        = SyntaxKind.NumberToken,
-        ["E"]         = SyntaxKind.NumberToken,
-    };
 
     private static readonly Dictionary<SyntaxKind, int> binaryOperatorPrecedence = new()
     {
-        [SyntaxKind.AndKeyword]           = 6,
-        [SyntaxKind.OrKeyword]            = 6,
-        [SyntaxKind.EqualToken]           = 5,
-        [SyntaxKind.DifferentToken]       = 5,
-        [SyntaxKind.GreaterToken]         = 4,
-        [SyntaxKind.LessToken]            = 4,
-        [SyntaxKind.GreaterOrEqualToken]  = 4,
-        [SyntaxKind.LessOrEqualToken]     = 4,
-        [SyntaxKind.MultToken]            = 2,
-        [SyntaxKind.DivisionToken]        = 2,
-        [SyntaxKind.ModToken]             = 2,
-        [SyntaxKind.PlusToken]            = 1,
-        [SyntaxKind.MinusToken]           = 1
+        [SyntaxKind.AndKeyword]           = 1,
+        [SyntaxKind.OrKeyword]            = 1,
+        [SyntaxKind.EqualToken]           = 3,
+        [SyntaxKind.DifferentToken]       = 3,
+        [SyntaxKind.GreaterToken]         = 2,
+        [SyntaxKind.LessToken]            = 2,
+        [SyntaxKind.GreaterOrEqualToken]  = 2,
+        [SyntaxKind.LessOrEqualToken]     = 2,
+        [SyntaxKind.MultToken]            = 6,
+        [SyntaxKind.DivisionToken]        = 6,
+        [SyntaxKind.ModToken]             = 6,
+        [SyntaxKind.PlusToken]            = 5,
+        [SyntaxKind.MinusToken]           = 5
     };
 
     private static readonly Dictionary<SyntaxKind, int> unaryOperatorPrecedence = new()
     {
-        [SyntaxKind.NotKeyword] = 7,
-        [SyntaxKind.PlusToken]  = 3,
-        [SyntaxKind.MinusToken] = 3
+        [SyntaxKind.NotKeyword] = 4,
+        [SyntaxKind.PlusToken]  = 7,
+        [SyntaxKind.MinusToken] = 7
     };
 
     
@@ -58,17 +35,40 @@ public static class ParsingSupplies
         ["line"]    = LineParsing,
         ["segment"] = SegmentParsing,
         ["ray"]     = RayParsing,
+        ["measure"] = MeasureParsing,
         ["circle"]  = CircleParsing,
         ["arc"]     = ArcParsing
     };
 
-    public static float CreateRandomsCoordinates()
+    public static Dictionary<string, Func<ExpressionSyntax>> RandomsGeometricElements = new()
+    {
+        ["point"]   = CreateRandomPoint,
+        ["line"]    = () => new Line(CreateRandomPoint(), CreateRandomPoint()),
+        ["segment"] = () => new Segment(CreateRandomPoint(), CreateRandomPoint()),
+        ["ray"]     = () => new Ray(CreateRandomPoint(), CreateRandomPoint()),
+        ["measure"] = CreateRandomMeasure,
+        ["circle"]  = () => new Circle(CreateRandomPoint(), CreateRandomMeasure()),
+        ["arc"]     = () => new Arc(CreateRandomPoint(), CreateRandomPoint(), CreateRandomPoint(), CreateRandomMeasure())
+    };
+
+    public static float CreateRandomsCoordinates(int start = 100, int end = 1000)
     {
         Random random = new();
-        return (float)(random.Next(200, 700) + random.NextDouble());
+        return (float)(random.Next(start, end) + random.NextDouble());
+    }
+    private static Measure CreateRandomMeasure()
+    {
+        var points = CreateRandomPoints(2);
+        return new Measure(points[0], points[1]);
     }
 
-    public static Points[] CreateRandomPoints(int quantity)
+    public static Points CreateRandomPoint()
+    {
+        var points = CreateRandomPoints(1);
+        return points[0];
+    }
+
+    private static Points[] CreateRandomPoints(int quantity)
     {
         Points[] points = new Points[quantity];
 
@@ -107,19 +107,26 @@ public static class ParsingSupplies
         return new ConstantAssignmentSyntax(name, operatorToken, segment);
     }
 
+    private static ExpressionSyntax MeasureParsing(SyntaxToken name, SyntaxToken operatorToken)
+    {
+        var points = CreateRandomPoints(2);
+        var measure = new Measure(points[0], points[1]);
+        return new ConstantAssignmentSyntax(name, operatorToken, measure);
+    }
+
     private static ExpressionSyntax CircleParsing(SyntaxToken name, SyntaxToken operatorToken)
     {   
-        var center = CreateRandomPoints(1);
-        var measure = CreateRandomsCoordinates() / 2;
-        var circle = new Circle(center[0], measure);
+        var points = CreateRandomPoints(2);
+        var measure = new Measure(points[0], points[1]);
+        var circle = new Circle(points[0], measure);
 
         return new ConstantAssignmentSyntax(name, operatorToken, circle);
     }
 
     private static ExpressionSyntax ArcParsing(SyntaxToken name, SyntaxToken operatorToken)
     {   
-        var points = CreateRandomPoints(3);
-        var measure = CreateRandomsCoordinates() / 2;
+        var points = CreateRandomPoints(4);
+        var measure = new Measure(points[0], points[3]);
         var arc = new Arc(points[0], points[1], points[2], measure);
 
         return new ConstantAssignmentSyntax(name, operatorToken, arc);
@@ -139,14 +146,6 @@ public static class ParsingSupplies
             return value;
 
         return 0;
-    }
-
-    public static SyntaxKind GetKeywordKind(string token)
-    {
-        if (keywordKind.TryGetValue(token, out SyntaxKind value))
-            return value;
-
-        return SyntaxKind.IdentifierToken;
     }
 
     // Metodo que evalua los slash en el string

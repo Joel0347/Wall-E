@@ -1,5 +1,5 @@
-namespace G_Sharp;
-public class Utilities
+﻿namespace G_Sharp;
+public static class Utilities
 {
     public static float PointInLine(float m, float n, float x)
     {
@@ -27,12 +27,12 @@ public class Utilities
         double x_1 = (b + Math.Sqrt(D)) / (2 * a);
         double x_2 = (b - Math.Sqrt(D)) / (2 * a);
 
-        if (IsInRay(x_c, ray_end.X, x_1))
+        if (IsInSegment(x_c, ray_end.X, x_1))
         {
             float y_1 = PointInLine(m, n, (float)x_1);
             return new Points((float)x_1, y_1);
         }
-        else if (IsInRay(x_c, ray_end.X, x_2))
+        else if (IsInSegment(x_c, ray_end.X, x_2))
         {
             float y_2 = PointInLine(m, n, (float)x_2);
             return new Points((float)x_2, y_2); 
@@ -41,10 +41,14 @@ public class Utilities
         return new Points(0,0);
     }
 
-    private static bool IsInRay(double x_c, double x_end, double x_point)
+    public static bool IsInSegment(double x1, double x2, double x_point)
     {
-        double razon = (x_point - x_c) / (x_end - x_point);
-        return razon > 0;
+        var errorRange = 0.5;
+        if (Math.Abs(x_point - x2) <= errorRange || Math.Abs(x_point - x1) <= errorRange)
+            return true;
+
+        double razon = (x_point - x1) / (x2 - x_point);
+        return razon >= 0;
     }
 
     public static float DistanceBetweenPoints(Points p1, Points p2)
@@ -89,5 +93,13 @@ public class Utilities
 
         else
             return (point.Y > right.Y) ? 2 : 3;
+    }
+
+    public static float DistancePointLine(Points point, Line line)
+    {
+        var enumerador = (float)Math.Abs(line.M * point.X - point.Y + line.N);
+        var denominador = (float)Math.Sqrt(Math.Pow(line.M, 2) + 1);
+
+        return enumerador / denominador;
     }
 }

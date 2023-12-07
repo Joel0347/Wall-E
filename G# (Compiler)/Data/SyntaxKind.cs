@@ -31,20 +31,28 @@ public enum SyntaxKind
     LineToken,
     SegmentToken,
     RayToken,
+    MeasureToken,
     ClosedCurlyBracketToken,
     OpenCurlyBracketToken,
     CommentToken,
+    MathToken,
+    ColorToken,
+    SuspenseToken,
 
     // Expressions
     LiteralExpression,
     BinaryExpression,
     ParenthesizedExpression,
     UnaryExpression,
-    NameExpression,
-    AssignmentExpression,   
+    ConstantExpression,
+    ConstantAssignmentExpression,   
     FunctionExpression,
     AssignmentFunctionExpression,
+    LetInExpression,
+    ConditionalExpression,
+    SequenceExpression,
     DrawExpression,
+    VoidExpression,
 
     // Keywords
     AndKeyword,
@@ -59,9 +67,8 @@ public enum SyntaxKind
     GeometryKeyword,
     DrawKeyword,
     RestoreKeyword,
-    LetInExpression,
-    ConditionalExpression,
-    MeasureToken,
+    SequenceKeyword,
+    ImportKeyword
 }
 
 public static class Data

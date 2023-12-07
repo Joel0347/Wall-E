@@ -9,5 +9,11 @@ public static class Colors
         ["white"] = Color.White, ["gray"] = Color.Gray, ["black"]   = Color.Black
     };
 
-    public static List<Color> ColorDraw = new() { Color.DodgerBlue }; 
+    public static Stack<Color>? ColorDraw;
+
+    public static void InitializeColor()
+    {
+        ColorDraw = new();
+        ColorDraw.Push(Color.DodgerBlue);
+    }
 }
