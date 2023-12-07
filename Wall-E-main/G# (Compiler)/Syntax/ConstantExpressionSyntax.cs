@@ -8,7 +8,7 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
 
     public SyntaxToken IdentifierToken { get; }
 
-    private string returnType = "all";
+    private string returnType = "undefined";
     public override string ReturnType => returnType;
 
     public ConstantExpressionSyntax(SyntaxToken identifierToken)
@@ -21,7 +21,7 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
         return scope.Constants[IdentifierToken.Text].Expression;   
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         string name = IdentifierToken.Text;
 
@@ -32,7 +32,7 @@ public sealed class ConstantExpressionSyntax : ExpressionSyntax
             return false;
         }
 
-        returnType = SemanticCheck.GetType(value.Expression);
+        returnType = value.Type;
 
         return true;
     }

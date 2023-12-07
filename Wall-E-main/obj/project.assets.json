@@ -8,19 +8,24 @@
     "net7.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Claudia\\.nuget\\packages\\": {}
+    "C:\\Users\\joela\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\WallE.csproj",
+      "projectUniqueName": "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\WallE.csproj",
       "projectName": "WallE",
-      "projectPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\WallE.csproj",
-      "packagesPath": "C:\\Users\\Claudia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Claudia\\Documents\\MATCOM\\Programación\\Mio\\Proyectos\\WallE\\Branch Main\\Wall-E-main\\Wall-E-main\\obj\\",
+      "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\WallE.csproj",
+      "packagesPath": "C:\\Users\\joela\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\joela\\OneDrive\\Documentos\\GitHub\\Wall-E\\Wall-E-main\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Claudia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\joela\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

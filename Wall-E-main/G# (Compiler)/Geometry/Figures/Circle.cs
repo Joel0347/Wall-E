@@ -26,7 +26,7 @@ public sealed class Circle : Figure, IEquatable<Circle>
         return new Circle(Center, Measure);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -45,24 +45,22 @@ public sealed class Circle : Figure, IEquatable<Circle>
         object PointsInCircle()
         {
             float x;
-            float[] y;
-            Random random = new();
-            var position = random.Next(2);
+            float y;
+            Points point;
 
-            x = ParsingSupplies.CreateRandomsCoordinates((int)(Center.X - Radio - 1), (int)(Center.X + Radio + 1));
-            y = IsInCircle(x);
+            do
+            {
+                x = ParsingSupplies.CreateRandomsCoordinates();
+                y = ParsingSupplies.CreateRandomsCoordinates();
+                point = new Points(x, y);
+            }
+            while (Utilities.DistanceBetweenPoints(point, Center) > Radio);
 
-            return new Points(x, y[position]);
+            return point;
         }
 
-        return new InfiniteSequence(PointsInCircle, elements);
-    }
-
-    private float[] IsInCircle(float x)
-    {
-        float distance1 = (float)(Math.Sqrt(Math.Pow(Radio, 2) - Math.Pow(x - Center.X, 2))) + Center.Y;
-        float distance2 = (float)(-Math.Sqrt(Math.Pow(Radio, 2) - Math.Pow(x - Center.X, 2))) + Center.Y;
-        float[] result = { distance1, distance2 };
+        var result = new InfiniteSequence(PointsInCircle, elements);
+        result.valuesType = "point";
 
         return result;
     }

@@ -24,7 +24,7 @@ public sealed class Points : Figure, IEquatable<Points>
         return new Points(X, Y);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -40,7 +40,7 @@ public sealed class Points : Figure, IEquatable<Points>
 
     public override SequenceExpressionSyntax PointsInFigure()
     {
-        List<ExpressionSyntax> point = new() { new Points(X, Y) };
-        return new FiniteSequence(point);
+        List<Points> point = new() { new Points(X, Y) };
+        return new FiniteSequence<Points>(point);
     }
 }

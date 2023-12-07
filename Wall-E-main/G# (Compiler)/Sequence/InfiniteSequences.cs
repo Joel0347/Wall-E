@@ -8,9 +8,12 @@ namespace G_Sharp;
 
 public sealed class InfiniteSequence : SequenceExpressionSyntax
 {
-    public override object Count => null!;
+    public override long Count => -1;
     public Func<object> Func { get; }
     private Dictionary<int, object> Elements { get; }
+
+    public string valuesType = "undefined";
+    public override string ValuesType => valuesType;
 
     public override object this[int index]
     {
@@ -29,8 +32,18 @@ public sealed class InfiniteSequence : SequenceExpressionSyntax
         Elements = elements;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
+        if (Elements.Count == 0) return true;
+
+        string type = SemanticChecker.GetType(Elements[0]);
+
+        foreach (var element in Elements)
+        {
+            if (SemanticChecker.GetType(element) != type)
+                return false;
+        }
+
         return true;
     }
 
@@ -45,5 +58,18 @@ public sealed class InfiniteSequence : SequenceExpressionSyntax
             Elements.Remove(i);
 
         return new InfiniteSequence(Func, Elements);
+    }
+
+    public static object CreateInifniteSequence(InfiniteSequence sequence, Dictionary<int, object> values)
+    {
+        var func = sequence.Func;
+        return new InfiniteSequence(func, values);
+    }
+
+    public static object CreateInifniteSequence(InfiniteIntegerSequence sequence, Dictionary<int, object> values)
+    {
+        var first = sequence.First;
+        Func<object> func = () => first++;
+        return new InfiniteSequence(func, values);
     }
 }

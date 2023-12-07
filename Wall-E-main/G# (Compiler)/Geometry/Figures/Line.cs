@@ -30,12 +30,6 @@ public sealed class Line : Figure, IEquatable<Line>
         float y_start = Utilities.PointInLine(M, N, x_start);
         float y_end = Utilities.PointInLine(M, N, x_end);
 
-        if (M is float.NaN)
-        {
-            y_start = x_start;
-            y_end = x_end;
-        }
-
         Start = new Points(x_start, y_start);
         End = new Points(x_end, y_end); 
     }
@@ -45,7 +39,7 @@ public sealed class Line : Figure, IEquatable<Line>
         return new Line(P1, P2);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
@@ -75,6 +69,9 @@ public sealed class Line : Figure, IEquatable<Line>
             return new Points(x, y);
         }
 
-        return new InfiniteSequence(PointsInLine, elements);
+        var result = new InfiniteSequence(PointsInLine, elements);
+        result.valuesType = "point";
+
+        return result;
     }
 }

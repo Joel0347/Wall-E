@@ -16,12 +16,14 @@ public class EqualOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
 
-        if (leftType != rightType)
+        if (leftType != rightType && 
+            leftType != "undefined" && rightType != "undefined"
+            )
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '==' can't be " +
                             $"used between '{leftType}' and '{rightType}'");
@@ -33,12 +35,19 @@ public class EqualOperation : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        if (SemanticCheck.GetType(Left) == "measure")
+        //secuencias
+        if (SemanticChecker.GetType(Left) == "measure")
         {
             var measure1 = (Measure) Left;
             var measure2 = (Measure) Right;
             return (measure1.Value == measure2.Value) ? 1 : 0;
         }
+
+        if (Left is null && Right is null)
+            return 1;
+
+        if (Left is null || Right is null)
+            return 0;
 
         return Left.Equals(Right) ? 1 : 0;
     }

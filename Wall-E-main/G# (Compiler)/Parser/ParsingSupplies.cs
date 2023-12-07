@@ -51,10 +51,10 @@ public static class ParsingSupplies
         ["arc"]     = () => new Arc(CreateRandomPoint(), CreateRandomPoint(), CreateRandomPoint(), CreateRandomMeasure())
     };
 
-    public static float CreateRandomsCoordinates(int start = 100, int end = 1000)
+    public static float CreateRandomsCoordinates()
     {
         Random random = new();
-        return (float)(random.Next(start, end) + random.NextDouble());
+        return (float)(random.Next(200, 700) + random.NextDouble());
     }
     private static Measure CreateRandomMeasure()
     {

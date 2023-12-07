@@ -1,0 +1,8 @@
+
+point p1;
+point p2;
+
+color red;
+draw line(p1, p2);
+
+f(x) = x + 1;

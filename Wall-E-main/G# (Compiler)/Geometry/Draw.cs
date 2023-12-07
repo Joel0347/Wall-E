@@ -8,30 +8,24 @@ namespace G_Sharp;
 
 public class Draw : ExpressionSyntax
 {
-    private static List<string> drawableExpressions = new()
-    {
-        "point", "line", "segment", "ray", "circle", "arc"
-    };
-    public (ExpressionSyntax, Color, string) Geometries { get; }
+    public List<(Figure, Color, string)> Geometries { get; }
     public override SyntaxKind Kind => SyntaxKind.DrawExpression;
 
-    public SyntaxToken DrawToken { get; }
-    public ExpressionSyntax Parameters { get; }
+    public List<ExpressionSyntax> Parameters { get; }
     public Color Color { get; }
     public string Msg { get; }
 
     public override string ReturnType => "void";
 
-    public Draw(SyntaxToken drawToken, ExpressionSyntax parameters, Color color, string msg)
+    public Draw(List<ExpressionSyntax> parameters, Color color, string msg)
     {
-        DrawToken = drawToken;
         Parameters = parameters;
         Color = color;
         Msg = msg;
         Geometries = new();
     }
 
-    public Draw((ExpressionSyntax, Color, string) geometries, ExpressionSyntax parameters, Color color)
+    public Draw(List<(Figure, Color, string)> geometries, List<ExpressionSyntax> parameters, Color color)
     { 
         Geometries = geometries;
         Parameters = parameters;
@@ -40,37 +34,40 @@ public class Draw : ExpressionSyntax
 
     public override object Evaluate(Scope scope)
     {
-        (ExpressionSyntax, Color, string) geometries = (null!, Color.White, null!);
-
-        var value = Parameters.Evaluate(scope);
-
-        if (value is SequenceExpressionSyntax sequence)
+        foreach (var item in Parameters)
         {
-            geometries = (sequence, Color, Msg);
+            var value = item.Evaluate(scope);
+
+            if (value is FiniteSequence<object> sequence)
+            {
+                foreach (var element in sequence.Elements)
+                {
+                    if (element is ExpressionSyntax evalElement)
+                    {
+                        if ((int)evalElement.Kind <= 28 && (int)evalElement.Kind >= 22)
+                        {
+                            var geometryValue = (Figure)evalElement;
+                            Geometries.Add((geometryValue, Color, Msg));
+                        }
+                    }
+                }
+            }
+
+            else if (value is ExpressionSyntax val)
+            {
+                 if ((int)val.Kind <= 28 && (int)val.Kind >= 22)
+                 {
+                    var geometryValue = (Figure)value;
+                    Geometries.Add((geometryValue, Color, Msg));
+                 }
+            }          
         }
 
-        else if (value is ExpressionSyntax val)
-        {
-            if ((int)val.Kind <= 28 && (int)val.Kind >= 22)
-            {
-            geometries = (val, Color, Msg);
-            }
-        }  
-
-        return new Draw(geometries, Parameters, Color);
+        return new Draw(Geometries, Parameters, Color);
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
-        //if (!Parameters.Checker(scope))
-        //    return false;
-
-        //if (Parameters is SequenceExpressionSyntax sequence /*&& !drawableExpressions.Contains(sequence.ValuesType)*/)
-        //    return false;
-
-        //if (!drawableExpressions.Contains(Parameters.ReturnType))
-        //    return false;
-
         return true;
     }
 }

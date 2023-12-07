@@ -52,8 +52,6 @@ C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\ref\WallE.dll
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.sourcelink.json
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Clau\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
-C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
-C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.sourcelink.json
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.exe
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.deps.json
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
@@ -73,3 +71,81 @@ C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.pdb
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
 C:\Users\Claudia\Documents\MATCOM\Programación\Mio\Proyectos\WallE\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\ref\WallE.dll
+C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
+C:\Users\Claudia\Documents\GitHub\Wall-E\obj\Debug\net7.0-windows\WallE.sourcelink.json
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.Form1.resources
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.Properties.Resources.resources
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.csproj.GenerateResource.cache
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.GeneratedMSBuildEditorConfig.editorconfig
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.AssemblyInfoInputs.cache
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.AssemblyInfo.cs
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.csproj.CoreCompileInputs.cache
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.sourcelink.json
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.dll
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\refint\WallE.dll
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.pdb
+D:\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.exe
+D:\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.deps.json
+D:\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
+D:\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.dll
+D:\Branch Main\Wall-E-main\Wall-E-main\bin\Debug\net7.0-windows\WallE.pdb
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
+D:\Branch Main\Wall-E-main\Wall-E-main\obj\Debug\net7.0-windows\ref\WallE.dll
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\bin\Debug\net7.0-windows\WallE.exe
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\bin\Debug\net7.0-windows\WallE.deps.json
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\bin\Debug\net7.0-windows\WallE.dll
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\bin\Debug\net7.0-windows\WallE.pdb
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.Form1.resources
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.Properties.Resources.resources
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.csproj.GenerateResource.cache
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.AssemblyInfoInputs.cache
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.AssemblyInfo.cs
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.csproj.CoreCompileInputs.cache
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.sourcelink.json
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.dll
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\refint\WallE.dll
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.pdb
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
+C:\Users\joela\OneDrive\Documentos\Joel\C#\Proyecto de Programación III\Wall-E-main\obj\Debug\net7.0-windows\ref\WallE.dll
+D:\obj\Debug\net7.0-windows\WallE.Form1.resources
+D:\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
+D:\obj\Debug\net7.0-windows\WallE.Properties.Resources.resources
+D:\obj\Debug\net7.0-windows\WallE.csproj.GenerateResource.cache
+D:\obj\Debug\net7.0-windows\WallE.GeneratedMSBuildEditorConfig.editorconfig
+D:\obj\Debug\net7.0-windows\WallE.AssemblyInfoInputs.cache
+D:\obj\Debug\net7.0-windows\WallE.AssemblyInfo.cs
+D:\obj\Debug\net7.0-windows\WallE.csproj.CoreCompileInputs.cache
+D:\obj\Debug\net7.0-windows\WallE.sourcelink.json
+D:\obj\Debug\net7.0-windows\WallE.dll
+D:\obj\Debug\net7.0-windows\refint\WallE.dll
+D:\obj\Debug\net7.0-windows\WallE.pdb
+D:\bin\Debug\net7.0-windows\WallE.exe
+D:\bin\Debug\net7.0-windows\WallE.deps.json
+D:\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
+D:\bin\Debug\net7.0-windows\WallE.dll
+D:\bin\Debug\net7.0-windows\WallE.pdb
+D:\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
+D:\obj\Debug\net7.0-windows\ref\WallE.dll
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\bin\Debug\net7.0-windows\WallE.exe
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\bin\Debug\net7.0-windows\WallE.deps.json
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\bin\Debug\net7.0-windows\WallE.runtimeconfig.json
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\bin\Debug\net7.0-windows\WallE.dll
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\bin\Debug\net7.0-windows\WallE.pdb
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.Form1.resources
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.OpenWindow.resources
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.Properties.Resources.resources
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.csproj.GenerateResource.cache
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.AssemblyInfoInputs.cache
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.AssemblyInfo.cs
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.csproj.CoreCompileInputs.cache
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.sourcelink.json
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.dll
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\refint\WallE.dll
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.pdb
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\WallE.genruntimeconfig.cache
+C:\Users\joela\OneDrive\Documentos\GitHub\Wall-E\Wall-E-main\obj\Debug\net7.0-windows\ref\WallE.dll

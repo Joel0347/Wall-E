@@ -49,7 +49,6 @@
             ZoomPlus = new Button();
             ZoomMinus = new Button();
             Zoom = new Label();
-            StopDrawing = new Button();
             ((System.ComponentModel.ISupportInitialize)Grapher).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -138,7 +137,7 @@
             label2.Font = new Font("Bradley Hand ITC", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
             label2.ForeColor = SystemColors.ControlText;
             label2.ImageAlign = ContentAlignment.BottomLeft;
-            label2.Location = new Point(159, 251);
+            label2.Location = new Point(188, 255);
             label2.Name = "label2";
             label2.Size = new Size(250, 38);
             label2.TabIndex = 8;
@@ -169,7 +168,7 @@
             MoveUp.FlatStyle = FlatStyle.Flat;
             MoveUp.Font = new Font("Century Schoolbook", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             MoveUp.ForeColor = SystemColors.ControlText;
-            MoveUp.Location = new Point(487, 215);
+            MoveUp.Location = new Point(514, 215);
             MoveUp.Name = "MoveUp";
             MoveUp.Size = new Size(52, 37);
             MoveUp.TabIndex = 10;
@@ -183,7 +182,7 @@
             MoveDown.FlatStyle = FlatStyle.Flat;
             MoveDown.Font = new Font("Century Schoolbook", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             MoveDown.ForeColor = SystemColors.ControlText;
-            MoveDown.Location = new Point(487, 255);
+            MoveDown.Location = new Point(514, 255);
             MoveDown.Name = "MoveDown";
             MoveDown.Size = new Size(52, 34);
             MoveDown.TabIndex = 11;
@@ -197,7 +196,7 @@
             MoveRight.FlatStyle = FlatStyle.Flat;
             MoveRight.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
             MoveRight.ForeColor = SystemColors.ControlText;
-            MoveRight.Location = new Point(545, 215);
+            MoveRight.Location = new Point(572, 215);
             MoveRight.Name = "MoveRight";
             MoveRight.Size = new Size(49, 74);
             MoveRight.TabIndex = 12;
@@ -211,7 +210,7 @@
             MoveLeft.FlatStyle = FlatStyle.Flat;
             MoveLeft.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             MoveLeft.ForeColor = SystemColors.ControlText;
-            MoveLeft.Location = new Point(432, 215);
+            MoveLeft.Location = new Point(459, 215);
             MoveLeft.Name = "MoveLeft";
             MoveLeft.Size = new Size(49, 74);
             MoveLeft.TabIndex = 13;
@@ -223,7 +222,7 @@
             // 
             pictureBox2.BackgroundImage = Properties.Resources.eva_removebg_preview;
             pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox2.Location = new Point(221, 30);
+            pictureBox2.Location = new Point(237, 36);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(201, 218);
             pictureBox2.TabIndex = 14;
@@ -256,7 +255,7 @@
             // label1
             // 
             label1.Font = new Font("Bradley Hand ITC", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.Location = new Point(454, 182);
+            label1.Location = new Point(487, 182);
             label1.Name = "label1";
             label1.Size = new Size(118, 43);
             label1.TabIndex = 17;
@@ -265,10 +264,10 @@
             // Reset
             // 
             Reset.FlatStyle = FlatStyle.Popup;
-            Reset.Font = new Font("Bradley Hand ITC", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
-            Reset.Location = new Point(497, 12);
+            Reset.Font = new Font("Bradley Hand ITC", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            Reset.Location = new Point(471, 12);
             Reset.Name = "Reset";
-            Reset.Size = new Size(124, 62);
+            Reset.Size = new Size(134, 62);
             Reset.TabIndex = 18;
             Reset.Text = "Reset coordinates";
             Reset.UseVisualStyleBackColor = true;
@@ -278,9 +277,9 @@
             // 
             ZoomPlus.FlatStyle = FlatStyle.Flat;
             ZoomPlus.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
-            ZoomPlus.Location = new Point(453, 123);
+            ZoomPlus.Location = new Point(479, 123);
             ZoomPlus.Name = "ZoomPlus";
-            ZoomPlus.Size = new Size(52, 56);
+            ZoomPlus.Size = new Size(56, 56);
             ZoomPlus.TabIndex = 19;
             ZoomPlus.Text = "+";
             ZoomPlus.UseVisualStyleBackColor = true;
@@ -290,9 +289,9 @@
             // 
             ZoomMinus.FlatStyle = FlatStyle.Flat;
             ZoomMinus.Font = new Font("Century Schoolbook", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
-            ZoomMinus.Location = new Point(511, 123);
+            ZoomMinus.Location = new Point(541, 123);
             ZoomMinus.Name = "ZoomMinus";
-            ZoomMinus.Size = new Size(51, 56);
+            ZoomMinus.Size = new Size(56, 56);
             ZoomMinus.TabIndex = 20;
             ZoomMinus.Text = "-";
             ZoomMinus.TextAlign = ContentAlignment.TopCenter;
@@ -302,25 +301,12 @@
             // Zoom
             // 
             Zoom.Font = new Font("Bradley Hand ITC", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            Zoom.Location = new Point(454, 87);
+            Zoom.Location = new Point(487, 87);
             Zoom.Name = "Zoom";
             Zoom.Size = new Size(110, 33);
             Zoom.TabIndex = 21;
             Zoom.Text = "Zoom";
             Zoom.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // StopDrawing
-            // 
-            StopDrawing.AutoSize = true;
-            StopDrawing.FlatStyle = FlatStyle.Flat;
-            StopDrawing.Font = new Font("Bradley Hand ITC", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
-            StopDrawing.Location = new Point(368, 12);
-            StopDrawing.Name = "StopDrawing";
-            StopDrawing.Size = new Size(123, 62);
-            StopDrawing.TabIndex = 22;
-            StopDrawing.Text = "Stop \r\nDrawing";
-            StopDrawing.UseVisualStyleBackColor = true;
-            StopDrawing.Click += StopDrawing_Click;
             // 
             // Form1
             // 
@@ -328,7 +314,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(1924, 1043);
-            Controls.Add(StopDrawing);
             Controls.Add(MoveRight);
             Controls.Add(MoveLeft);
             Controls.Add(MoveUp);
@@ -383,6 +368,5 @@
         private Button ZoomPlus;
         private Button ZoomMinus;
         private Label Zoom;
-        private Button StopDrawing;
     }
 }

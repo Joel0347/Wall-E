@@ -4,7 +4,7 @@ public class RestOperation : ExpressionSyntax
 {
     public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
 
-    public override string ReturnType => SemanticCheck.GetType(Left);
+    public override string ReturnType => SemanticChecker.GetType(Left);
 
     public object Left { get; }
     public object Right { get; }
@@ -17,34 +17,62 @@ public class RestOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Checker(Scope scope)
+    private readonly static List<string> compatibility = new()
     {
-        string leftType = SemanticCheck.GetType(Left);
-        string rightType = SemanticCheck.GetType(Right);
+        "number", "measure", "undefined"
+    };
 
-        bool leftIsCompatible =  leftType == "number" || leftType == "measure";
-        bool rightIsCompatible = rightType == "number" || rightType == "measure";
+    public override bool Check(Scope scope)
+    {
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
+
+        bool leftIsCompatible =  compatibility.Contains(leftType);
+        bool rightIsCompatible = compatibility.Contains(rightType);
         bool sameType = leftType == rightType;
 
-        if (!sameType || !leftIsCompatible || !rightIsCompatible)
+        if (!leftIsCompatible || !rightIsCompatible)
         {
             Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
                             $"be used between '{leftType}' and '{rightType}'");
             return false;
         }
-        
+
+        if (!sameType && leftType != "undefined" && rightType != "undefined")
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return false;
+        }
+
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        if (SemanticCheck.GetType(Left) == "measure") 
+        string leftType = SemanticChecker.GetType(Left);
+        string rightType = SemanticChecker.GetType(Right);
+
+        if (leftType == "undefined" || rightType == "undefined")
+            return null!;
+
+        if (leftType == "measure") 
         {
             var leftValue = ((Measure)Left).Value;
             var rightValue = ((Measure)Right).Value;
             return new Measure((float) Math.Abs(leftValue - rightValue));
         }
 
-        return double.Parse(Left.ToString()!) - double.Parse(Right.ToString()!);
+        try
+        {
+            return double.Parse(Left.ToString()!) - double.Parse(Right.ToString()!);
+        }
+
+        catch
+        {
+            Error.SetError("SEMANTIC", $"Line '{OperationToken.Line}' : Operator '-' can't " +
+                            $"be used between '{leftType}' and '{rightType}'");
+            return null!;
+        }
     }
 }

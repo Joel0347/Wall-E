@@ -16,15 +16,31 @@ public class AndOperation : ExpressionSyntax
         OperationToken = operationToken;
     }
 
-    public override bool Checker(Scope scope)
+    public override bool Check(Scope scope)
     {
         return true;
     }
 
     public override object Evaluate(Scope scope)
     {
-        var left = (SemanticCheck.GetType(Left) == "sequence") ? ((SequenceExpressionSyntax) Left).Count : Left;
-        var right = (SemanticCheck.GetType(Right) == "sequence") ? ((SequenceExpressionSyntax)Right).Count : Right;
+        var leftType = SemanticChecker.GetType(Left);
+        var rightType = SemanticChecker.GetType(Right);
+
+        object left = Left;
+        object right = Right;
+       
+        if (leftType == "sequence")
+        {
+            var seq = (SequenceExpressionSyntax)Left;
+            left = seq.Count <= 0 ? null! : seq.Count;
+        }
+
+        if (rightType == "sequence")
+        { 
+            var seq = (SequenceExpressionSyntax)Right;
+            right = seq.Count <= 0 ? null! : seq.Count;
+        }
+
         bool leftIsFalse = Evaluator.DefaultFalseValues.Contains(left);
         bool rightIsFalse = Evaluator.DefaultFalseValues.Contains(right);
 

@@ -1,0 +1,4 @@
+import
+"C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E-main\\Files\\prueba1.txt";
+
+a = f(3);

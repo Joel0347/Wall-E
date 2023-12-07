@@ -13,14 +13,10 @@ namespace WallE
 {
     public partial class Form1 : Form
     {
-        private static CancellationTokenSource? cancellationTokenSource;
-        private static CancellationToken cancellationToken;
-
         private bool enabledRun = false;
         public static Graphics? graphic;
         public static List<string>? DirectoriesOfFiles = new();
-        private static List<(ExpressionSyntax, Color, string)> Geometries = new();
-        private static List<(ExpressionSyntax, Color, string)> Sequences = new();
+        private static List<(Figure, Color, string)> Geometries = new();
 
         public Form1()
         {
@@ -88,9 +84,9 @@ namespace WallE
                 {
                     if (result is Draw geometries)
                     {
-                        Geometries.Add(geometries.Geometries);
+                        Geometries.AddRange(geometries.Geometries);
                     }
-                    //Input.Text = result.ToString();
+                    Input.Text = result.ToString();
                 }
 
                 //MessageBoxButtons messageBoxButtons1 = MessageBoxButtons.OK;
@@ -115,7 +111,7 @@ namespace WallE
 
         }
 
-        private async void Run_Click(object sender, EventArgs e)
+        private void Run_Click(object sender, EventArgs e)
         {
             if (!enabledRun)
             {
@@ -126,26 +122,8 @@ namespace WallE
                 return;
             }
 
-            Sequences = MethodsDrawing.DrawFigure(Geometries, graphic!);
-
-            if (Sequences.Count > 0)
-            {
-                cancellationTokenSource = new();
-                cancellationToken = cancellationTokenSource.Token;
-
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    Sequences = MethodsDrawing.DrawFigure(Sequences, graphic!);
-                    await Task.Delay(5);
-                }
-            }
-            
+            MethodsDrawing.DrawFigure(Geometries, graphic!);
             enabledRun = false;
-        }
-
-        private void StopDrawing_Click(object sender, EventArgs e)
-        {
-            cancellationTokenSource?.Cancel();
         }
 
         #endregion
@@ -153,7 +131,6 @@ namespace WallE
         #region Resetear el textbox y el picturebox
         private void Clear_Click(object sender, EventArgs e)
         {
-            cancellationTokenSource?.Cancel();
             Graphics graphic = Grapher.CreateGraphics();
             graphic.Clear(Color.White);
             Input.Clear();
