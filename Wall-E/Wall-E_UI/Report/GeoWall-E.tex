@@ -1,0 +1,320 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage[letterpapper, left=20mm, right=20mm, top=20mm, bottom=20mm]{geometry}
+\usepackage{eucal}
+\begin{document}
+
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[width=9cm, height=5.5cm]{Images/img0.jpg}
+	\end{center}
+\end{figure}
+
+\begin{center}
+    {\large\texttt{Facultad de Matemática y Computación}}
+\end{center}
+
+
+\ 
+
+
+\
+
+
+\begin{center}
+   \textbf{\emph{\Huge{TERCER PROYECTO DE\\ PROGRAMACIÓN}}}
+\end{center}
+
+
+\ 
+
+
+\ 
+
+
+\
+
+
+\begin{center}
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=9cm, height=5cm]{Images/presentacion.jpg}
+		\end{center}
+	\end{figure}
+
+\end{center}
+
+\begin{figure}[b]
+	\begin{flushleft}
+			\textbf{\LARGE{Colaboladores:}  \space\space\space\space\space\space \space\space
+			\space\space\space\space  \space\space\space\space\space\space  
+			\space\space\space\space\space\space  \LARGE{Grupo:} \Large{C-113}}
+			
+
+			\ 
+
+
+			\textbf{\Large{Joel Aparicio Tamayo}} 
+			\\ 
+			\textbf{\Large{Claudia Hernández Pérez}}
+	\end{flushleft}
+\end{figure}
+
+
+
+\newpage
+
+\begin{center}
+	\textbf{{\Huge {Lenguaje G-Sharp}}}
+\end{center}
+
+
+\ 
+
+
+\begin{center}
+	\large\textbf{Estructura:}
+\end{center}
+
+
+La implementación del intérprete del lenguaje G\# se ha realizado en un proyecto de tipo \textit{Class Library} y consta de 
+un conjunto de archivos en lenguaje C\# que agrupan toda la lógica. Posee un \textit{Lexer}, un \textit{Parser}, un 
+\textit{Evaluator}, un \textit{Checker}, y por supuesto toda la sintaxis de cada expressión del lenguaje. Las expresiones
+soportadas en el lenguaje son:
+
+
+\
+
+
+• \textbf{UnaryExpressions}: Expresiones unarias con los operadores +, -, not.
+
+
+\ 
+
+
+• \textbf{BinaryExpressions}: Expresiones binarias con los operadores $+, -, *, /, \%, and, or, <, <=, >, >=, ==, !=$. 
+
+
+\ 
+
+
+• \textbf{LiteralExpressions}: Expresiones literales: números, strings, ...  
+
+
+\ 
+
+
+• \textbf{ConstantExpressions}: Asignaciones de constantes y evaluación.
+
+
+\ 
+
+
+• \textbf{FunctionExpressions}: Asignaciones de funciones y evaluación
+
+
+\ 
+
+
+• \textbf{SequenceExpressions}: Secuencias finitas e infinitas
+
+
+\ 
+
+
+• \textbf{EncapsulatingExpressions}: Expresiones que encapsulan otras: paréntesis, let-in, condicionales.
+
+
+\ 
+
+
+• \textbf{StatementExpressions}: Expresiones void, import.  
+
+
+\ 
+
+
+• \textbf{GeometryExpressions}: Expresiones geométricas: points, lines, ...  
+
+
+\ 
+
+
+
+\
+
+
+\begin{center}
+	\large\textbf{Lexing}
+\end{center}
+
+
+
+
+\
+
+
+El intérprete realiza el proceso de una forma bastante común: se recorre el texto caracter por 
+caracter y se agrupan en \textit{tokens}, que es el tipo básico para el análisis sintáctico. Si existe algún error
+por caracter inválido, se detecta y de devuelve un \textit{ErrorToken}. 
+
+
+\ 
+
+
+\begin{center}
+	\large\textbf{Parsing}
+\end{center}
+
+
+
+
+\
+
+
+El proceso de parsing convierte cada grupo de tokens en una expresión y devuelve un árbol sintáctico que contiene las
+expresiones a ser evaluadas.
+
+
+El funcionamiento del \textit{Parser} se basa en determinar según los tokens, qué tipo de expresión se está construyendo, 
+obtener de ellos la información necesaria y devolver una expresión de tipo \textit{IExpressionSyntax}. En caso de error,
+se devuelve un \textit{ErrorExpressionSyntax}.
+
+
+\ 
+
+
+\begin{center}
+	\large\textbf{IExpressionSyntax}
+\end{center}
+
+
+\
+
+
+\textit{IExpressionSyntax} es una interface que caracteriza a cada expresión del lenguaje. Posee los métodos de 
+\textit{Evaluate} y  \textit{Check} que garantizan que cada expresión pueda checkearse y evaluarse. Además contiene
+dos propiedades de solo lectura \textit{Kind} y \textit{ReturnType}, que permiten que cada expresión tenga un tipo 
+general y un tipo según su evaluación, respectivamente.
+
+
+\
+
+
+\begin{center}
+	\large\textbf{Checker}
+\end{center}
+
+
+\
+
+
+El \textit{Checker} realiza el chequeo semántico del árbol sintáctico que se generó en el proceso de parsing. Para
+ello simplemente se invoca al método \textit{Check} de la expresión en cuestión y se retorna true o false. 
+
+
+\ 
+
+
+\begin{center}
+	\large\textbf{Evaluator}
+\end{center}
+
+
+\ 
+
+
+Similar al \textit{Checker}, el \textit{Evaluator} solo invoca al método \textit{Evaluate} de la expresión en cuestión, y se
+devuelve un object que es el resultado de dicha evaluación. De esto puede deducise que resultaría muy cómodo evaluar cualquier
+expresión nueva que se inserte al lenguaje, pues solo tiene que implementar \textit{IExpressionSyntax}. 
+
+
+\ 
+
+
+\begin{center}
+	\large\textbf{Scope}
+\end{center}
+
+
+\
+
+
+El otro objeto importante del programa (dejando a un lado las expresiones en sí) es el \textit{Scope}, pues es donde se guardan
+los datos del entorno que engloba a la expresión en cuestión. El \textit{Scope} almacena las constantes y funciones declaradas
+y sus respectivos valores o cuerpos. 
+
+Este objecto brinda muchas facilidades para anidar entornos hijos dentro de otros más globales. Por ejemplo, en el caso de los
+let-in, las instrucciones entre en \textit{let} y el \textit{in} se ejecutan con un \textit{Scope} "hijo" que contiene los datos
+del \textit{Scope} global más los nuevos datos que se guarden como resultado de las evaluaciones de dichas instrucciones. Esos 
+datos desaparecen cuando se termina de evaluar el let-in, pues el \textit{Scope} "padre" nunca fue modificado.
+
+
+\
+
+
+\newpage
+
+\begin{center}
+	\textbf{{\Huge {Interfaz gráfica (UI)}}}
+\end{center}
+
+La interfaz gráfica está implementada en un proyecto de Windows Forms. Consta de dos formularios que interactuan constantemente uno
+con el otro. 
+
+\begin{center}
+	\large\textbf{Menú Principal}
+\end{center}
+
+La primera interacción con el usuario la tiene "OpenWindow": 
+
+
+$\gg$ "Start Drawing" ofrece acceso a la otra ventana, 
+
+
+$\gg$ "More About" se muestra el informe del proyecto, 
+
+
+$\gg$ "Exit" para salir de la aplicación.
+
+\
+
+\begin{center}
+	\large\textbf{Graficador}
+\end{center}
+
+\
+
+Esta ventana permite al usuario escribir en el lenguaje de G-Sharp en un textBox de donde se recibe la información para 
+que el compilador trabaje. Para ejecutar el código debe compilarse y estar correcto antes de correrlo, de no ser así se 
+imposibilita el acceso al botón "Run".
+
+
+$\gg$ "Compile" para compilar el código, 
+
+
+$\gg$ "Run" para correr el código compilado y sin errores para dibujar, 
+
+
+$\gg$ La sección de "Move it" permite desplazarte por el lienzo,
+
+
+$\gg$ La sección de "Zoom" permite aumentar y disminuir el tamaño de los elementos dibujados, 
+
+
+$\gg$ "Reset Coordinates" resetea los cambios de desplazamiento y de escala, 
+
+
+$\gg$ "Stop Drawing" si el usuario determina que quiere dejar de pintar un objeto que potencialmente es infinito este botón se lo permite,
+
+
+$\gg$ "View Files" para ver los documentos que están el carpeta files por defecto y los que se vayan creando, 
+
+
+$\gg$ "Clear" reinicia el textBox y el pictureBox, 
+
+
+$\gg$ "Save" guarda el código en un archivo txt para luego poder ser importado.
+
+\end{document}
