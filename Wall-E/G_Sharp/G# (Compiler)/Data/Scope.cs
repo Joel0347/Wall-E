@@ -39,6 +39,7 @@ public class Scope
     // Tipos de retorno por defecto
     public static readonly Dictionary<string, List<List<string>>> TypeOfParams = new()
     {
+        ["point"]     = new() { new() { "number" }, new() { "number" } },
         ["line"]      = new() { new() { "point" }, new() { "point" } },
         ["segment"]   = new() { new() { "point" }, new() { "point" } },
         ["ray"]       = new() { new() { "point" }, new() { "point" } },

@@ -1,10 +1,10 @@
 {
   "version": 3,
   "targets": {
-    "net7.0-windows7.0": {
+    "net8.0-windows7.0": {
       "G_Sharp/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "compile": {
           "bin/placeholder/G_Sharp.dll": {}
         },
@@ -22,44 +22,44 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net7.0-windows7.0": [
+    "net8.0-windows7.0": [
       "G_Sharp >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\joela\\.nuget\\packages\\": {},
+    "C:\\Users\\Yoel\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E_UI\\Wall-E_UI.csproj",
+      "projectUniqueName": "C:\\Users\\Yoel\\Downloads\\GeoWall-E-main\\Wall-E\\Wall-E_UI\\Wall-E_UI.csproj",
       "projectName": "Wall-E_UI",
-      "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E_UI\\Wall-E_UI.csproj",
-      "packagesPath": "C:\\Users\\joela\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\Wall-E_UI\\obj\\",
+      "projectPath": "C:\\Users\\Yoel\\Downloads\\GeoWall-E-main\\Wall-E\\Wall-E_UI\\Wall-E_UI.csproj",
+      "packagesPath": "C:\\Users\\Yoel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Yoel\\Downloads\\GeoWall-E-main\\Wall-E\\Wall-E_UI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\joela\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Yoel\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net7.0-windows"
+        "net8.0-windows"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net7.0-windows7.0": {
-          "targetAlias": "net7.0-windows",
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
           "projectReferences": {
-            "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\G_Sharp\\G_Sharp.csproj": {
-              "projectPath": "C:\\Users\\joela\\OneDrive\\Documentos\\Joel\\C#\\Proyecto de Programación III\\Wall-E\\G_Sharp\\G_Sharp.csproj"
+            "C:\\Users\\Yoel\\Downloads\\GeoWall-E-main\\Wall-E\\G_Sharp\\G_Sharp.csproj": {
+              "projectPath": "C:\\Users\\Yoel\\Downloads\\GeoWall-E-main\\Wall-E\\G_Sharp\\G_Sharp.csproj"
             }
           }
         }
@@ -68,11 +68,16 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
-      "net7.0-windows7.0": {
-        "targetAlias": "net7.0-windows",
+      "net8.0-windows7.0": {
+        "targetAlias": "net8.0-windows",
         "imports": [
           "net461",
           "net462",
@@ -92,7 +97,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

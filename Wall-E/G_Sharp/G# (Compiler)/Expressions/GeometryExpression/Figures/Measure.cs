@@ -28,7 +28,7 @@ public sealed class Measure : ExpressionSyntax
     // Evaluación
     public override object Evaluate(Scope scope)
     {
-        return this;
+        return new Measure(Value);
     }
 
     // Revisión

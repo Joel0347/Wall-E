@@ -51,18 +51,18 @@ public sealed class ConstantAssignmentSyntax : ExpressionSyntax
     {
         string name = IdentifierToken.Text;
 
-        //if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
-        //{
-        if (!Expression.Check(scope))
-            return false;
-
-        if (Expression.ReturnType == "void expression")
+        if ((int)Expression.Kind < 22 || (int)Expression.Kind > 28)
         {
-            Error.SetError("SEMANTIC", $"Line '{IdentifierToken.Line}' : Constant '{name}' " +
-                            $"can't be assigned to statement");
-            return false;
+            if (!Expression.Check(scope))
+                return false;
+
+            if (Expression.ReturnType == "void expression")
+            {
+                Error.SetError("SEMANTIC", $"Line '{IdentifierToken.Line}' : Constant '{name}' " +
+                                $"can't be assigned to statement");
+                return false;
+            }
         }
-        //}
 
         if (scope.Constants.ContainsKey(name))
         {

@@ -1,0 +1,11 @@
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\bin\Debug\net8.0\G_Sharp.deps.json
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\bin\Debug\net8.0\G_Sharp.dll
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\bin\Debug\net8.0\G_Sharp.pdb
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\G_Sharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\G_Sharp.AssemblyInfoInputs.cache
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\G_Sharp.AssemblyInfo.cs
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\G_Sharp.csproj.CoreCompileInputs.cache
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\G_Sharp.dll
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\refint\G_Sharp.dll
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\G_Sharp.pdb
+C:\Users\Yoel\Downloads\GeoWall-E-main\Wall-E\G_Sharp\obj\Debug\net8.0\ref\G_Sharp.dll

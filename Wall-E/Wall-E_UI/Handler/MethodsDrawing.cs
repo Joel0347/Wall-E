@@ -157,7 +157,7 @@ public static class MethodsDrawing
     }
     #endregion
 
-    #region Pintar secunecias
+    #region Pintar secuencias
     public static void DrawingSequence(ExpressionSyntax expression, Graphics graphics, Color color, string msg)
     {
         if (expression is FiniteSequence<object> finite)
@@ -193,7 +193,8 @@ public static class MethodsDrawing
         var figure = (ExpressionSyntax)sequence[0];
         var drawToken = new SyntaxToken(SyntaxKind.DrawKeyword,0, 0, "draw", "");
         var rest = sequence.RestOfSequence(1);
-        Sequences.Add(new Draw((rest, color, msg), rest, color));
+        var draw = new Draw((expression, color, msg), rest, color);
+        Sequences.Add(draw);
 
         if (drawings.TryGetValue(figure.Kind, out Action<ExpressionSyntax, Graphics, Color, string>? value))
         {
